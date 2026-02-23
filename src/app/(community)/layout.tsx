@@ -1,4 +1,4 @@
-import CommunityHeader from "@/libs/components/layout/CommunityHeader";
+import CommunityHeader from "@/components/layout/CommunityHeader";
 
 export default function CommunityLayout({
   children,

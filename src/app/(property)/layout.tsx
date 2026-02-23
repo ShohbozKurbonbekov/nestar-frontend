@@ -1,4 +1,4 @@
-import PropertyHeader from "@/libs/components/layout/PropertyHeader";
+import PropertyHeader from "@/components/layout/PropertyHeader";
 
 export default function PropertyLayout({
   children,

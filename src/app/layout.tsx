@@ -6,7 +6,8 @@ import theme from "../theme";
 
 // Main Font Family
 import { Inter } from "next/font/google";
-import Footer from "@/libs/components/layout/Footer";
+import Footer from "@/components/layout/Footer";
+import Navigation from "@/components/layout/Navigation";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -15,6 +16,7 @@ const inter = Inter({
 
 // ----------------------- Define meta deta ----------------
 export const metadata: Metadata = {
+  viewport: "width=device-width, initial-scale=1",
   title: "Nestar Real Estate platform",
   description:
     "Buy, sell, and rent properties easily. Explore listings, connect with agents, and manage your property needs all in one platform.",
@@ -53,6 +55,7 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
+            <Navigation />
             {children}
             <Footer />
           </ThemeProvider>
