@@ -7,7 +7,7 @@ import theme from "../theme";
 // Main Font Family
 import { Inter } from "next/font/google";
 import Footer from "@/components/layout/Footer";
-import Navigation from "@/components/layout/Navigation";
+import Navbar from "@/components/layout/Navbar";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -55,7 +55,7 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <Navigation />
+            <Navbar />
             {children}
             <Footer />
           </ThemeProvider>
