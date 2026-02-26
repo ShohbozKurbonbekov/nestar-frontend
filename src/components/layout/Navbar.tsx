@@ -1,19 +1,20 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { NavbarContainer } from "./NavbarContainer";
-import TopRegisterSection from "./TopRegisterSection";
+import TopIntroduction from "./TopIntroduction";
 
 // -------------------------- Component -----------------
 export default function Navbar() {
   const navbarEl = useRef<HTMLElement>(null);
-  const topRegEl = useRef<HTMLElement>(null);
+  const topIntroEl = useRef<HTMLElement>(null);
   const [isFixed, setIsFixed] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (navbarEl.current && topRegEl.current) {
+      if (navbarEl.current && topIntroEl.current) {
         const navbarHeight = navbarEl.current.getBoundingClientRect().height;
-        const topRegisHeight = topRegEl.current.getBoundingClientRect().height;
+        const topRegisHeight =
+          topIntroEl.current.getBoundingClientRect().height;
         setIsFixed(window.scrollY > navbarHeight + topRegisHeight);
       } else {
         setIsFixed(window.scrollY > 100);
@@ -27,15 +28,15 @@ export default function Navbar() {
   // -------------------------- Render -----------------
   return (
     <>
-      <TopRegisterSection ref={topRegEl} />
+      <TopIntroduction ref={topIntroEl} />
       <nav
-        className={`fixed w-full top-0 left-0 bg-white/80
-    transition-transform duration-500 ease-in-out shadow-lg backdrop-blur-md
+        className={`fixed w-full top-0 left-0 bg-white
+    transition-transform duration-700 ease-in-out shadow-lg backdrop-blur-md
      ${!isFixed && "-translate-y-full opacity-0 pointer-events-none"}`}
       >
         <NavbarContainer
           navLinkActiveClass="bg-blue-900"
-          logoSubtitleClass="text-slate-400"
+          logoSubtitleClass="text-slate-500"
           navLinksClass="text-blue-950"
           toggleBtnClass="text-blue-900"
         />

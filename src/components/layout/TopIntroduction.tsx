@@ -6,16 +6,21 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { Typography } from "@mui/material";
 
-interface TopRegisterSectionType {
-  refEl: HTMLElement;
-}
-const TopRegisterSection = forwardRef<HTMLElement>(({}, ref) => {
-  const [language, setLanguage] = React.useState<string>("english");
-  const [open, setOpen] = React.useState(false);
+const languages = [
+  { label: "English", value: "english" },
+  { label: "Korean", value: "korean" },
+  { label: "Russian", value: "russian" },
+];
 
+// ------------------------------------- Component -----------------------------------
+const TopIntroduction = forwardRef<HTMLElement>(({}, ref) => {
+  const [language, setLanguage] = React.useState<string>(languages[0].value);
+  const [open, setOpen] = useState(false);
+
+  // ------------------------------------- Handlers -----------------------------------
   const handleChange = (event: SelectChangeEvent<typeof language>) => {
     setLanguage(event.target.value);
   };
@@ -27,6 +32,8 @@ const TopRegisterSection = forwardRef<HTMLElement>(({}, ref) => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  // ------------------------------------- Render -----------------------------------
   return (
     <section
       className="bg-blue-950 p-4 flex flex-col md:flex-row flex-wrap gap-5 md:items:center"
@@ -102,9 +109,9 @@ const TopRegisterSection = forwardRef<HTMLElement>(({}, ref) => {
                 },
               }}
             >
-              <MenuItem value={"english"}>English</MenuItem>
-              <MenuItem value={"korean"}>Korean</MenuItem>
-              <MenuItem value={"russian"}>Russian</MenuItem>
+              {languages.map(({ label, value }) => (
+                <MenuItem value={value}>{label}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
@@ -113,4 +120,4 @@ const TopRegisterSection = forwardRef<HTMLElement>(({}, ref) => {
   );
 });
 
-export default TopRegisterSection;
+export default TopIntroduction;
