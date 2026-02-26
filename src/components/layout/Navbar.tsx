@@ -29,24 +29,14 @@ export default function Navbar() {
     transition-transform duration-700 ease-in-out shadow-lg backdrop-blur-md z-50
      ${!isFixed && "-translate-y-full opacity-0 pointer-events-none"}`}
       >
-        <NavbarContainer
-          navLinkActiveClass="bg-white"
-          logoSubtitleClass="text-slate-200"
-          navLinksClass="text-white"
-          toggleBtnClass="text-white"
-        />
+        <NavbarContainer />
       </nav>
       <nav
         className={`relative bg-black/20
          z-50`}
         ref={navbarEl}
       >
-        <NavbarContainer
-          logoSubtitleClass="text-slate-200"
-          navLinksClass="text-white"
-          toggleBtnClass="text-white"
-          navLinkActiveClass="bg-white"
-        />
+        <NavbarContainer />
       </nav>
     </>
   );
