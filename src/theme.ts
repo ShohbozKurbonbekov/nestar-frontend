@@ -28,7 +28,18 @@ const myThemes: ThemeOptions = {
       fontSize: "1.75rem",
       fontWeight: 600,
     },
-
+    h4: {
+      fontSize: "1.5rem",
+      fontWeight: 600,
+    },
+    h5: {
+      fontSize: "1.3rem",
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: "1.1rem",
+      fontWeight: 600,
+    },
     body1: {
       fontSize: "1rem",
       fontWeight: 400,

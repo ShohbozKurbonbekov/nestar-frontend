@@ -6,8 +6,8 @@ import theme from "../theme";
 
 // Main Font Family
 import { Inter } from "next/font/google";
-import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
