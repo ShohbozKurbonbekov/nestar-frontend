@@ -23,6 +23,7 @@ export default function LanguageSwitcher({
         onClick={(e) => setAnchorEl(e.currentTarget)}
         disableRipple
         className="flex items-center gap-1"
+        sx={{ p: 0 }}
       >
         <span className="text-lg text-white">{currentLang?.flag}</span>
         <span className="text-sm text-white">▾</span>
