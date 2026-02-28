@@ -171,7 +171,7 @@ export default function Footer() {
 
             <div className="mt-4 space-y-4">
               {/* App Store */}
-              <Box className="flex items-center gap-3 border border-slate-700 rounded-xl p-3 hover:border-slate-500 transition-colors duration-200 cursor-pointer">
+              <Box className="flex items-center gap-3 border border-slate-700 rounded-xl p-3 hover:border-slate-500 transition-colors duration-200 cursor-pointer max-w-64">
                 <AppleIcon className="text-white" />
                 <div>
                   <Typography variant="caption" className="text-slate-400">
@@ -187,7 +187,7 @@ export default function Footer() {
               </Box>
 
               {/* Play Store */}
-              <Box className="flex items-center gap-3 border border-slate-700 rounded-xl p-3 hover:border-slate-500 transition-colors duration-200 cursor-pointer">
+              <Box className="flex items-center gap-3 border border-slate-700 rounded-xl p-3 hover:border-slate-500 transition-colors duration-200 cursor-pointer max-w-64">
                 <AndroidIcon className="text-white" />
                 <div>
                   <Typography variant="caption" className="text-slate-400">
@@ -206,7 +206,7 @@ export default function Footer() {
         </div>
       </div>
       {/* Bottom Section */}
-      <div className="border-t border-slate-800 mt-12 py-6 text-sm text-slate-500">
+      <div className="border-t border-slate-600 mt-12 py-6 text-sm text-slate-500">
         <div className="max-w-8xl mx-auto w-full px-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <Typography variant="body2">
             © {new Date().getFullYear()} RealShoh. All rights reserved.

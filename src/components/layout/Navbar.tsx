@@ -32,7 +32,7 @@ export default function Navbar() {
         <NavbarContainer />
       </nav>
       <nav
-        className={`relative bg-black/20
+        className={`absolute top-0 left-0 w-full bg-black/20
          z-50`}
         ref={navbarEl}
       >

@@ -124,7 +124,7 @@ export const NavbarContainer = () => {
           {!authmember && (
             <Button
               onClick={() => setSinginOpen(true)}
-              className="text-white! capitalize mt-1 rounded-2xl px-3 py-2 bg-green-700"
+              className="text-white! capitalize mt-1 rounded-2xl px-3 py-2 bg-green-700 shadow-none"
               size="small"
               color="primary"
               variant="contained"

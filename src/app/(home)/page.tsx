@@ -1,19 +1,51 @@
+"use client";
 import { Typography } from "@mui/material";
-
+import HomepageSectionBlock from "./_components/HomepageSectionBlock";
+import TrendingProperties from "./_components/TrendingProperties";
+import PopularProperties from "./_components/PopularProperties";
+import Advertisement from "./_components/Advertisement";
+import TopProperties from "./_components/TopProperties";
+import TopAgents from "./TopAgents";
 export default function Home() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 h-250">
-      <div className="bg-red-400">
-        <Typography variant="h1" component="h1">
-          Part one
-        </Typography>
-      </div>
+    <>
+      {/*--------------Trend Properties-----------*/}
+      <HomepageSectionBlock
+        title="Trend Properties"
+        subtitle="The most liked and highly engaged listings on our platform"
+      >
+        <TrendingProperties />
+      </HomepageSectionBlock>
 
-      <div className="bg-gray-400">
-        <Typography variant="h1" component="h1">
-          Part two
-        </Typography>
-      </div>
-    </div>
+      {/*--------------Popular Properties-----------*/}
+
+      <HomepageSectionBlock
+        className="pt-0"
+        title="Discover the Most Popular Properties Right Now"
+        subtitle="Famous listings based on  user views"
+      >
+        <PopularProperties />
+      </HomepageSectionBlock>
+
+      {/*--------------Advertisement-----------*/}
+      <Advertisement />
+
+      {/*-------------- Top Properties-----------*/}
+
+      <HomepageSectionBlock
+        title="Top Properties"
+        subtitle=" The highest ranked listings based on engagement, demand, and market activity"
+      >
+        <TopProperties />
+      </HomepageSectionBlock>
+      {/*--------------Top Agents-----------*/}
+      <HomepageSectionBlock
+        title="Top Rated Real Estate Agents"
+        subtitle=" The highest ranked agents by users"
+        className="pt-0"
+      >
+        <TopAgents />
+      </HomepageSectionBlock>
+    </>
   );
 }

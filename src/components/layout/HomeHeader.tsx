@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function HomeHeader() {
   return (
-    <section className="absolute inset-0 min-h-screen w-full flex flex-row items-end justify-center">
+    <section className="min-h-screen w-full flex flex-row items-end justify-center">
       <Image
         src="/images/header-images/homepage-header.jpg"
         alt="Hero background"
