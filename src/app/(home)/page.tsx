@@ -1,11 +1,13 @@
 "use client";
-import { Typography } from "@mui/material";
 import HomepageSectionBlock from "./_components/HomepageSectionBlock";
 import TrendingProperties from "./_components/TrendingProperties";
 import PopularProperties from "./_components/PopularProperties";
 import Advertisement from "./_components/Advertisement";
 import TopProperties from "./_components/TopProperties";
 import TopAgents from "./TopAgents";
+import { Suspense } from "react";
+import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
+import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
 export default function Home() {
   return (
     <>
@@ -14,7 +16,9 @@ export default function Home() {
         title="Trend Properties"
         subtitle="The most liked and highly engaged listings on our platform"
       >
-        <TrendingProperties />
+        <Suspense fallback={<PropertySkeleton />}>
+          <TrendingProperties />
+        </Suspense>
       </HomepageSectionBlock>
 
       {/*--------------Popular Properties-----------*/}
@@ -24,7 +28,9 @@ export default function Home() {
         title="Discover the Most Popular Properties Right Now"
         subtitle="Famous listings based on  user views"
       >
-        <PopularProperties />
+        <Suspense fallback={<PropertySkeleton />}>
+          <PopularProperties />
+        </Suspense>
       </HomepageSectionBlock>
 
       {/*--------------Advertisement-----------*/}
@@ -44,7 +50,11 @@ export default function Home() {
         subtitle=" The highest ranked agents by users"
         className="pt-0"
       >
-        <TopAgents />
+        <Suspense fallback={<PropertySkeleton />}>
+          <Suspense fallback={<AgentSkeleton></AgentSkeleton>}>
+            <TopAgents />
+          </Suspense>
+        </Suspense>
       </HomepageSectionBlock>
     </>
   );

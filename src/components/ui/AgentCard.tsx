@@ -5,12 +5,10 @@ import {
   CardContent,
   Typography,
   Button,
-  Chip,
   Box,
   Divider,
-  IconButton,
 } from "@mui/material";
-import { motion, scale } from "framer-motion";
+import { motion } from "framer-motion";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
