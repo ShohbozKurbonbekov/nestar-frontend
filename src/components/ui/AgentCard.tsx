@@ -135,7 +135,7 @@ export default function AgentCard({
             >
               View Profile
             </Link>
-            <span className="absolute inset-0 bg-green-500  -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 rounded-md duration-300 ease-in-out"></span>
+            <span className="absolute inset-0 bg-green-500  -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 rounded-md duration-500 ease-in-out"></span>
           </Button>
         </CardContent>
       </Card>
