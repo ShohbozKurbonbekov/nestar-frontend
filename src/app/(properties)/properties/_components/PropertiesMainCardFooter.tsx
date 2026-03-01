@@ -1,24 +1,33 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import { IconButton, Typography, Button, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import Link from "next/link";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-interface PopularPropertiesFooterType {
+interface ProperiesMainCardFooterType {
   totalViews: number;
+  totalLikes: number;
   propertyLink: string;
 }
-export default function PopularPropertiesFooter({
+export default function ProperiesMainCardFooter({
+  totalLikes,
   totalViews,
   propertyLink,
-}: PopularPropertiesFooterType) {
+}: ProperiesMainCardFooterType) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center">
       <Tooltip title={totalViews} arrow placement="top">
         <IconButton>
           <RemoveRedEyeIcon className="text-slate-600" />
         </IconButton>
       </Tooltip>
 
+      <Tooltip title={totalLikes} arrow placement="top" className="mr-2">
+        <IconButton>
+          <FavoriteIcon className="text-slate-600" />
+        </IconButton>
+      </Tooltip>
       <Button
         variant="outlined"
         className="relative border border-green-500 text-sm capitalize text-green-700 rounded-lg group/button overflow-hidden hover:text-white z-10 px-5"

@@ -8,7 +8,7 @@ export default function PropertyLayout({
   return (
     <>
       <PropertyHeader />
-      {children}
+      <main>{children}</main>
     </>
   );
 }

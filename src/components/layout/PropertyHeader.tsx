@@ -9,7 +9,7 @@ export default function PropertyHeader() {
         alt="Hero background"
         fill
         priority
-        className="object-cover bg-no-repeat bg-center w-full h-full"
+        className="object-cover w-full h-full"
       />
       <PropertyHeaderIntro />
     </section>

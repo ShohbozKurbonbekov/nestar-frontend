@@ -4,7 +4,7 @@ import TrendingProperties from "./_components/TrendingProperties";
 import PopularProperties from "./_components/PopularProperties";
 import Advertisement from "./_components/Advertisement";
 import TopProperties from "./_components/TopProperties";
-import TopAgents from "./TopAgents";
+import TopAgents from "./_components/TopAgents";
 import { Suspense } from "react";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import AgentSkeleton from "@/components/skeletons/AgentSkeleton";

@@ -10,7 +10,7 @@ export default function PropertyHeaderIntro() {
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center z-30 text-center"
     >
-      <Typography variant="h1" color="white">
+      <Typography className="text-3xl  sm:text-4xl text-white! lg:text-5xl font-semibold">
         Discover a Place You’ll Love to Call Home
       </Typography>
       <Typography variant="body1" className="text-slate-200">
