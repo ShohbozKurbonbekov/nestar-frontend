@@ -18,8 +18,10 @@ import {
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function HomepageSearchCategory() {
+  const t = useTranslations("HomePage");
   const [location, setLocation] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [rooms, setRooms] = useState("");
@@ -42,10 +44,10 @@ export default function HomepageSearchCategory() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Find Your Perfect Property
+            {t("heroTitle")}
           </h1>
           <p className="mt-4 text-lg text-gray-200 max-w-2xl mx-auto">
-            Search apartments, houses, and villas tailored to your lifestyle.
+            {t("heroSubtitle")}
           </p>
         </motion.div>
 

@@ -1,0 +1,33 @@
+{
+  "Properties": {
+    "heroTitle": "Найдите место, которое вы назовёте домом",
+    "heroSubtitle": "Изучите проверенные квартиры, современные дома и роскошные виллы в лучших районах.",
+    "sortBy": "Сортировать",
+    "newest": "Сначала новые",
+    "highest": "По убыванию цены",
+    "lowest": "По возрастанию цены",
+    "searchByTitle": "Поиск по названию",
+    "locationOptions": {
+      "label": "Локация"
+    },
+    "propertyTypeOptions": {
+      "label": "Тип недвижимости"
+    },
+    "rooms": "Комнаты",
+    "bedrooms": "Спальни",
+    "squareOptions": {
+      "label": "Площадь",
+      "option1": "Мин",
+      "option2": "Макс"
+    },
+    "priceOptions": {
+      "label": "Цена",
+      "option1": "Мин",
+      "option2": "Макс"
+    },
+    "transactionTypeOptions": {
+      "label": "Тип сделки"
+    },
+    "searchButton": "Поиск"
+  }
+}

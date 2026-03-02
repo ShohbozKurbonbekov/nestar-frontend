@@ -10,7 +10,10 @@ import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
 import { useQuery } from "@apollo/client/react";
 import { GET_PROPERTIES } from "@/apollo/user/query";
+import { useTranslations } from "next-intl";
+
 export default function Home() {
+  const t = useTranslations("HomePage");
   const {
     loading: getPropertiesLoading,
     data: getProperties,
@@ -29,13 +32,12 @@ export default function Home() {
     },
   });
 
-  console.log("PUBLIC PROPERTIES: ", getProperties);
   return (
     <>
       {/*--------------Trend Properties-----------*/}
       <HomepageSectionBlock
-        title="Trend Properties"
-        subtitle="The most liked and highly engaged listings on our platform"
+        title={t("trendingTitle")}
+        subtitle={t("trendingSubtitle")}
       >
         <Suspense fallback={<PropertySkeleton />}>
           <TrendingProperties />
@@ -46,8 +48,8 @@ export default function Home() {
 
       <HomepageSectionBlock
         className="pt-0"
-        title="Discover the Most Popular Properties Right Now"
-        subtitle="Famous listings based on  user views"
+        title={t("popularTitle")}
+        subtitle={t("popularSubtitle")}
       >
         <Suspense fallback={<PropertySkeleton />}>
           <PopularProperties />
@@ -59,16 +61,13 @@ export default function Home() {
 
       {/*-------------- Top Properties-----------*/}
 
-      <HomepageSectionBlock
-        title="Top Properties"
-        subtitle=" The highest ranked listings based on engagement, demand, and market activity"
-      >
+      <HomepageSectionBlock title={t("topTitle")} subtitle={t("topSubtitle")}>
         <TopProperties />
       </HomepageSectionBlock>
       {/*--------------Top Agents-----------*/}
       <HomepageSectionBlock
-        title="Top Rated Real Estate Agents"
-        subtitle=" The highest ranked agents by users"
+        title={t("agentTitle")}
+        subtitle={t("agentSubtitle")}
         className="pt-0"
       >
         <Suspense fallback={<PropertySkeleton />}>

@@ -1,0 +1,33 @@
+{
+  "Properties": {
+    "heroTitle": "Discover a Place You’ll Love to Call Home",
+    "heroSubtitle": "Explore verified apartments, modern houses, and luxury villas across top locations.",
+    "sortBy": "Sort by",
+    "newest": "Newest",
+    "highest": "Highest Price",
+    "lowest": "Lowest Price",
+    "searchByTitle": "Search by Title",
+    "locationOptions": {
+      "label": "Location"
+    },
+    "propertyTypeOptions": {
+      "label": "Property Type"
+    },
+    "rooms": "Rooms",
+    "bedrooms": "Bedrooms",
+    "squareOptions": {
+      "label": "Square (㎡)",
+      "option1": "Min",
+      "option2": "Max"
+    },
+    "priceOptions": {
+      "label": "Price",
+      "option1": "Min",
+      "option2": "Max"
+    },
+    "transactionTypeOptions": {
+      "label": "Transaction Type"
+    },
+    "searchButton": "Search Propertiess"
+  }
+}

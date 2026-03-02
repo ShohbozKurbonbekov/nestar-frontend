@@ -1,0 +1,17 @@
+{
+  "HomePage": {
+    "heroTitle": "당신에게 딱 맞는 매물을 찾아보세요",
+    "heroSubtitle": "라이프스타일에 맞는 아파트, 주택, 빌라를 검색해보세요.",
+    "trendingTitle": "인기 상승 매물",
+    "trendingSubtitle": "사용자 참여와 관심도가 높은 매물",
+    "popularTitle": "지금 가장 인기 있는 매물",
+    "popularSubtitle": "사용자 조회수를 기반으로 한 인기 매물",
+    "browseMore": "더 보기",
+    "advertisementTitle": "프리미엄 라이프를 경험하세요",
+    "advertisementSubtitle": "건축미와 우아함, 그리고 편안함이 조화를 이루는 프리미엄 매물을 만나보세요.",
+    "topTitle": "추천 매물",
+    "topSubtitle": "참여도, 수요, 시장 활동을 기반으로 선정된 상위 매물",
+    "agentTitle": "평점이 높은 공인중개사",
+    "agentSubtitle": "사용자 평가를 기반으로 선정된 우수 중개사"
+  }
+}

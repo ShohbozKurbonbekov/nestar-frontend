@@ -1,7 +1,9 @@
-import HomepageSearchCategory from "@/app/(home)/_components/HomepageSearchCategory";
+import HomepageSearchCategory from "@/app/[locale]/(home)/_components/HomepageSearchCategory";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function HomeHeader() {
+  const t = useTranslations("HomePage");
   return (
     <section className="min-h-screen w-full flex flex-row items-end justify-center">
       <Image

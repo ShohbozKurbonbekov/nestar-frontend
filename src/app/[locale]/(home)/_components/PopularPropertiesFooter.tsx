@@ -1,7 +1,7 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { IconButton, Typography, Button, Tooltip } from "@mui/material";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 interface PopularPropertiesFooterType {
   totalViews: number;

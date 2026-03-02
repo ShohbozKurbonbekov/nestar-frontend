@@ -1,8 +1,7 @@
 "use client";
 import { Button, Typography } from "@mui/material";
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import {
   Avatar,
   IconButton,
@@ -21,21 +20,35 @@ import { LANGUAGE_OPTIONS, NAVBAR_LINKS } from "@/libs/data/static-data";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import AuthSigninup from "../ui/AuthSign-in-up";
 import Drawer from "@mui/material/Drawer";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 
 const mobileLinkClasses =
   "w-full rounded-lg px-4 py-3 bg-slate-700 text-white transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] capitalize";
 
 // -------------------------- Component -----------------
 export const NavbarContainer = () => {
+  const router = useRouter();
+  const path = usePathname();
+  const t = useTranslations("Navbar");
+
   const authmember = false;
   const pathname = usePathname();
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState(useLocale());
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [signinOpen, setSinginOpen] = useState(false);
   const [mobileMenuEl, setMobileMenuEl] = useState<null | HTMLElement>(null);
   const mobileMenuOpen = Boolean(mobileMenuEl);
 
+  const navLinks = [
+    { label: t("home"), href: "/" },
+    { label: t("properties"), href: "/properties" },
+    { label: t("agents"), href: "/agents" },
+    { label: t("community"), href: "/community" },
+    { label: t("CS"), href: "/CS" },
+  ];
   // --------------------------  Handlers ----------------
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -50,6 +63,10 @@ export const NavbarContainer = () => {
   };
   const handleCloseMobileMenu = () => {
     setMobileMenuEl(null);
+  };
+
+  const changeLanguage = (locale: string) => {
+    router.replace(pathname, { locale });
   };
 
   // -------------------------- Render -----------------
@@ -74,7 +91,7 @@ export const NavbarContainer = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-5">
           <ul className="flex items-center gap-5">
-            {NAVBAR_LINKS.map((item) => (
+            {navLinks.map((item) => (
               <li key={item.href} className="relative">
                 <Link href={item.href} className={`text-sm  text-slate-50`}>
                   {item.label}
@@ -129,12 +146,13 @@ export const NavbarContainer = () => {
               color="primary"
               variant="contained"
             >
-              Singup / Singin
+              {t("singupin")}
             </Button>
           )}
 
           {/* Language Select */}
           <LanguageSwitcher
+            changeLanguage={changeLanguage}
             language={language}
             languageOptions={LANGUAGE_OPTIONS}
             setLanguage={setLanguage}
@@ -156,6 +174,7 @@ export const NavbarContainer = () => {
           </IconButton>
           {/* Language Select */}
           <LanguageSwitcher
+            changeLanguage={changeLanguage}
             language={language}
             languageOptions={LANGUAGE_OPTIONS}
             setLanguage={setLanguage}

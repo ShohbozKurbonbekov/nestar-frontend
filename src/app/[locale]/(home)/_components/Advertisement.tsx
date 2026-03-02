@@ -1,11 +1,12 @@
 "use client";
-
+import { useTranslations } from "next-intl";
 import { useState, useRef } from "react";
 import { PlayArrow } from "@mui/icons-material";
 import { ADVERTISEMENT_VIDEOS } from "@/libs/data/static-data";
 import { Typography } from "@mui/material";
 
 export default function Advertisement() {
+  const t = useTranslations("HomePage");
   const [activeVideo, setActiveVideo] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -103,15 +104,14 @@ export default function Advertisement() {
       {/* CENTER CONTENT */}
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white px-6">
         <Typography variant="h1" className="max-w-xl px-4">
-          Experience Luxury Living
+          {t("advertisementTitle")}
         </Typography>
 
         <Typography
           variant="inherit"
           className="mt-6 max-w-2xl text-lg md:text-xl text-white/80 leading-relaxed px-4"
         >
-          Discover premium properties designed for modern lifestyles, where
-          architecture meets elegance and comfort.
+          {t("advertisementSubtitle")}
         </Typography>
       </div>
     </section>

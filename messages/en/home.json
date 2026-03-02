@@ -1,0 +1,17 @@
+{
+  "HomePage": {
+    "heroTitle": "Find Your Perfect Property",
+    "heroSubtitle": "Search apartments, houses, and villas tailored to your lifestyle.",
+    "trendingTitle": "Trend Properties",
+    "trendingSubtitle": "The most liked and highly engaged listings on our platform",
+    "popularTitle": "Discover the Most Popular Properties Right Now",
+    "popularSubtitle": "Famous listings based on user views",
+    "browseMore": "Browse More",
+    "advertisementTitle": "Experience Luxury Living",
+    "advertisementSubtitle": "Discover premium properties designed for modern lifestyles, where architecture meets elegance and comfort.",
+    "topTitle": "Top Properties",
+    "topSubtitle": "The highest ranked listings based on engagement, demand, and market activity",
+    "agentTitle": "Top Rated Real Estate Agents",
+    "agentSubtitle": "The highest ranked agents by users"
+  }
+}

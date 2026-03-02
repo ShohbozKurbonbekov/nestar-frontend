@@ -1,0 +1,10 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "properties": "Properties",
+    "agents": "Agents",
+    "community": "Community",
+    "CS": "CS",
+    "singupin": "Signup / Signin"
+  }
+}

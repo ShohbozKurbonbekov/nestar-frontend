@@ -1,16 +1,18 @@
 "use client";
 import { FormControl, Select, MenuItem, Typography } from "@mui/material";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type SortOption = "newest" | "price_desc" | "price_asc";
 
 export default function PropertySort() {
+  const t = useTranslations("Properties");
   const [sort, setSort] = useState<SortOption>("newest");
 
   return (
     <div className="max-w-8xl px-4 mx-auto flex justify-end gap-5 mb-5 items-center">
       <Typography variant="body1" className=" capitalize">
-        Sort by
+        {t("sortBy")}
       </Typography>
 
       {/* Right Side Select */}
@@ -33,9 +35,9 @@ export default function PropertySort() {
               },
             }}
           >
-            <MenuItem value="newest">Newest</MenuItem>
-            <MenuItem value="price_desc">Highest Price</MenuItem>
-            <MenuItem value="price_asc">Lowest Price</MenuItem>
+            <MenuItem value="newest">{t("newest")}</MenuItem>
+            <MenuItem value="price_desc">{t("highest")}</MenuItem>
+            <MenuItem value="price_asc">{t("lowest")}</MenuItem>
           </Select>
         </FormControl>
       </div>

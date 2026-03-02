@@ -1,20 +1,20 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Button } from "@mui/material";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-interface ProperiesMainCardFooterType {
+interface TopPropertiesFooterType {
   totalViews: number;
   totalLikes: number;
   propertyLink: string;
 }
-export default function ProperiesMainCardFooter({
+export default function TopPropertiesFooter({
   totalLikes,
   totalViews,
   propertyLink,
-}: ProperiesMainCardFooterType) {
+}: TopPropertiesFooterType) {
   return (
     <div className="flex items-center">
       <Tooltip title={totalViews} arrow placement="top">

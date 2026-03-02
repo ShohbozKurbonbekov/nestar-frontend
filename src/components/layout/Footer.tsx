@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Typography, IconButton, Box } from "@mui/material";
 import FacebookRounded from "@mui/icons-material/FacebookRounded";
 import Instagram from "@mui/icons-material/Instagram";

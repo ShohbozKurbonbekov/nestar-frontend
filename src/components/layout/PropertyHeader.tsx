@@ -1,7 +1,9 @@
-import PropertyHeaderIntro from "@/app/(properties)/properties/_components/PropertyHeaderIntro";
+import PropertyHeaderIntro from "@/app/[locale]/(properties)/properties/_components/PropertyHeaderIntro";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function PropertyHeader() {
+  const t = useTranslations("Properties");
   return (
     <section className="h-[80vh] relative w-full flex flex-row items-center justify-center px-6">
       <Image

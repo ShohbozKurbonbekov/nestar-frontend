@@ -36,3 +36,21 @@ export const ADVERTISEMENT_VIDEOS = [
 ];
 
 // ---------------------------  Agents ------------------
+export const messageLoaders = {
+  en: async () => ({
+    home: (await import("../../../messages/en/home.json")).default,
+    navbar: (await import("../../../messages/en/navbar.json")).default,
+    properties: (await import("../../../messages/en/properties.json")).default,
+  }),
+  ko: async () => ({
+    home: (await import("../../../messages/ko/home.json")).default,
+    navbar: (await import("../../../messages/ko/navbar.json")).default,
+    properties: (await import("../../../messages/ko/properties.json")).default,
+  }),
+
+  ru: async () => ({
+    home: (await import("../../../messages/ru/home.json")).default,
+    navbar: (await import("../../../messages/ru/navbar.json")).default,
+    properties: (await import("../../../messages/ru/properties.json")).default,
+  }),
+};

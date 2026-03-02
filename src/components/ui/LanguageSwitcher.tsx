@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 
 interface LanguageSwitcherType {
+  changeLanguage: (locale: string) => void;
   language: string;
   languageOptions: { code: string; label: string; flag: string }[];
   setLanguage: (langauge: string) => void;
@@ -11,6 +12,7 @@ export default function LanguageSwitcher({
   languageOptions,
   language,
   setLanguage,
+  changeLanguage,
 }: LanguageSwitcherType) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -35,6 +37,7 @@ export default function LanguageSwitcher({
             key={lang.code}
             onClick={() => {
               setLanguage(lang.code);
+              changeLanguage(lang.code);
               setAnchorEl(null);
             }}
           >

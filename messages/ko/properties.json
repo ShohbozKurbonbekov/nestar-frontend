@@ -1,0 +1,33 @@
+{
+  "Properties": {
+    "heroTitle": "마음에 드는 집을 찾아보세요",
+    "heroSubtitle": "인기 지역의 검증된 아파트, 현대적인 주택, 고급 빌라를 확인해보세요.",
+    "sortBy": "정렬 기준",
+    "newest": "최신순",
+    "highest": "높은 가격순",
+    "lowest": "낮은 가격순",
+    "searchByTitle": "제목으로 검색",
+    "locationOptions": {
+      "label": "지역"
+    },
+    "propertyTypeOptions": {
+      "label": "매물 유형"
+    },
+    "rooms": "방 수",
+    "bedrooms": "침실 수",
+    "squareOptions": {
+      "label": "면적",
+      "option1": "최소",
+      "option2": "최대"
+    },
+    "priceOptions": {
+      "label": "가격",
+      "option1": "최소",
+      "option2": "최대"
+    },
+    "transactionTypeOptions": {
+      "label": "거래 유형"
+    },
+    "searchButton": "매물 검색"
+  }
+}

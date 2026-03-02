@@ -17,7 +17,7 @@ import Image from "next/image";
 import LocationPinIcon from "@mui/icons-material/LocationPin";
 import { useState } from "react";
 import { FavoriteBorder } from "@mui/icons-material";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 interface AgentCardType {
   agentFeaturedTag?: React.ReactNode;

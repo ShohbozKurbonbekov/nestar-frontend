@@ -19,6 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import { SearchSharp } from "@mui/icons-material";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { useTranslations } from "next-intl";
 
 // ---------------------------- SX styles ---------------------
 const textStyles = {
@@ -57,6 +58,7 @@ const buttonActiveClasses = "border-0 bg-blue-400 text-white";
 
 // ---------------------------- Component ---------------------
 export default function PropertiesSearchCategory() {
+  const t = useTranslations("Properties");
   const [activeRoom, setActiveRoom] = useState<number>(0);
   const [activeBedroom, setActiveBedroom] = useState<number>(0);
 
@@ -68,7 +70,7 @@ export default function PropertiesSearchCategory() {
         <TextField
           fullWidth
           size="small"
-          placeholder="Search by Title"
+          placeholder={t("searchByTitle")}
           variant="outlined"
           sx={{
             "& .mui-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input": {
@@ -87,7 +89,7 @@ export default function PropertiesSearchCategory() {
         />
         <SearchSharp className="p-0 absolute top-1/2 -translate-y-1/2 left-3 text-slate-400 text-3xl " />
         <IconButton className=" p-0 absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 text-3xl">
-          <RestartAltIcon className="" />
+          <RestartAltIcon />
         </IconButton>
       </div>
 
@@ -96,7 +98,9 @@ export default function PropertiesSearchCategory() {
       {/* 2 Locations */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Location</span>
+          <span className="font-semibold text-gray-700">
+            {t("locationOptions.label")}
+          </span>
         </AccordionSummary>
         <AccordionDetails className="border-0">
           <div className={gridClasses}>
@@ -114,7 +118,9 @@ export default function PropertiesSearchCategory() {
       {/* 3 Property Type */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Property Type</span>
+          <span className="font-semibold text-gray-700">
+            {t("propertyTypeOptions.label")}
+          </span>
         </AccordionSummary>
         <AccordionDetails>
           <div className={gridClasses}>
@@ -132,7 +138,7 @@ export default function PropertiesSearchCategory() {
       {/* 4 Rooms */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Rooms</span>
+          <span className="font-semibold text-gray-700">{t("rooms")}</span>
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-wrap gap-2">
@@ -164,7 +170,7 @@ export default function PropertiesSearchCategory() {
       {/* 5 Bedrooms */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Bedrooms</span>
+          <span className="font-semibold text-gray-700">{t("bedrooms")}</span>
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-wrap gap-2">
@@ -196,21 +202,23 @@ export default function PropertiesSearchCategory() {
       {/* 6 Square (Min / Max) */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Square (㎡)</span>
+          <span className="font-semibold text-gray-700">
+            {t("squareOptions.label")}{" "}
+          </span>
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex gap-3">
             <TextField
               fullWidth
               size="small"
-              label="Min"
+              label={t("squareOptions.option1")}
               type="number"
               sx={textStyles}
             />
             <TextField
               fullWidth
               size="small"
-              label="Max"
+              label={t("squareOptions.option2")}
               type="number"
               sx={textStyles}
             />
@@ -221,21 +229,23 @@ export default function PropertiesSearchCategory() {
       {/* 7 Price (Min / Max) */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Price</span>
+          <span className="font-semibold text-gray-700">
+            {t("priceOptions.label")}
+          </span>
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex gap-3">
             <TextField
               fullWidth
               size="small"
-              label="Min"
+              label={t("priceOptions.option1")}
               type="number"
               sx={textStyles}
             />
             <TextField
               fullWidth
               size="small"
-              label="Max"
+              label={t("priceOptions.option2")}
               type="number"
               sx={textStyles}
             />
@@ -246,7 +256,9 @@ export default function PropertiesSearchCategory() {
       {/* 8 Rent or Barter */}
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <span className="font-semibold text-gray-700">Transaction Type</span>
+          <span className="font-semibold text-gray-700">
+            {t("transactionTypeOptions.label")}
+          </span>
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -271,7 +283,7 @@ export default function PropertiesSearchCategory() {
           size="medium"
           className=" capitalize bg-slate-500 text-white border-0 py-3 "
         >
-          <Typography variant="body1">Search Properties</Typography>
+          <Typography variant="body1">{t("searchButton")}</Typography>
         </Button>
       </div>
     </div>
