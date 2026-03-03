@@ -28,7 +28,7 @@ const mobileLinkClasses =
   "w-full rounded-lg px-4 py-3 bg-slate-700 text-white transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] capitalize";
 
 // -------------------------- Component -----------------
-export const NavbarContainer = () => {
+export function NavbarContainer() {
   const router = useRouter();
   const path = usePathname();
   const t = useTranslations("Navbar");
@@ -280,4 +280,4 @@ export const NavbarContainer = () => {
       <AuthSigninup onClose={setSinginOpen} open={signinOpen} />
     </>
   );
-};
+}
