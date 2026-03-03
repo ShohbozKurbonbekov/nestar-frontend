@@ -8,29 +8,10 @@ import TopAgents from "./_components/TopAgents";
 import { Suspense } from "react";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
-import { useQuery } from "@apollo/client/react";
-import { GET_PROPERTIES } from "@/apollo/user/query";
 import { useTranslations } from "next-intl";
 
 export default function Home() {
   const t = useTranslations("HomePage");
-  const {
-    loading: getPropertiesLoading,
-    data: getProperties,
-    error: getPropertiesError,
-    refetch: getPropertiesRefetch,
-  } = useQuery(GET_PROPERTIES, {
-    fetchPolicy: "network-only",
-    variables: {
-      input: {
-        page: 1,
-        limit: 5,
-        sort: "propertyRank",
-        direction: "DESC",
-        search: {},
-      },
-    },
-  });
 
   return (
     <>

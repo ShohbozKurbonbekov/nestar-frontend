@@ -2,8 +2,8 @@ import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import { ApolloWrapper } from "../apollo/ApolloWrapper";
 import { Inter } from "next/font/google";
+import ApolloWrapper from "@/apollo/ApolloWrapper";
 
 const inter = Inter({
   subsets: ["latin"],

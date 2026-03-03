@@ -1,32 +1,15 @@
 "use client";
 
-import { HttpLink } from "@apollo/client";
-import {
-  ApolloNextAppProvider,
-  ApolloClient,
-  InMemoryCache,
-} from "@apollo/client-integration-nextjs";
+import { ReactNode } from "react";
+import { useApollo } from "./client";
+import { ApolloProvider } from "@apollo/client";
 
-function makeClient() {
-  const httpLink = new HttpLink({
-    // Use an absolute URL for SSR
-    uri: "http://localhost:3007/graphql",
-    fetchOptions: {
-      // Optional: Next.js-specific fetch options
-      // Note: This doesn't work with `export const dynamic = "force-static"`
-    },
-  });
-
-  return new ApolloClient({
-    cache: new InMemoryCache(),
-    link: httpLink,
-  });
+interface Props {
+  children: ReactNode;
+  initialState?: any;
 }
 
-export function ApolloWrapper({ children }: React.PropsWithChildren) {
-  return (
-    <ApolloNextAppProvider makeClient={makeClient}>
-      {children}
-    </ApolloNextAppProvider>
-  );
+export default function ApolloWrapper({ children, initialState }: Props) {
+  const client = useApollo(initialState);
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
