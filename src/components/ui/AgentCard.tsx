@@ -35,7 +35,7 @@ export default function AgentCard({
   const [liked, setLiked] = useState<boolean>(false);
   const imageUrl = agent?.memberImage
     ? `${serverApi}/${agent.memberImage}`
-    : "/public/images/default-user.png";
+    : "/images/default-user.png";
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}

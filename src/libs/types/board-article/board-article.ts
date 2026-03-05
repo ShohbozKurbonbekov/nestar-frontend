@@ -16,8 +16,8 @@ export interface BoardArticle {
   articleLikes: number;
   articleComments: number;
   memberId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   /** from aggregation **/
   meLiked?: MeLiked[];
   memberData?: Member;

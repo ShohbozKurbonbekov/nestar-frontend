@@ -1,6 +1,6 @@
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CarouselBullets from "@/components/ui/CarouselBullets";
 import { Button, Chip, IconButton } from "@mui/material";
 import { Link } from "@/i18n/navigation";
@@ -27,7 +27,6 @@ const initialInput: AgentsInquiry = {
 // -------------------------- Carousel Options ----------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
-  duration: 40,
   align: "start",
   slidesToScroll: 1,
 };
@@ -111,25 +110,6 @@ export default function TopAgents() {
               </div>
             ))
           )}
-          {/* {topAgents.map((number) => (
-            <div
-              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-3"
-              key={number}
-            >
-              <AgentCard
-                agentLink="/agents/id:ffgj"
-                agentFeaturedTag={
-                  <div className="absolute top-4 left-4">
-                    <Chip
-                      label={`Top Agent`}
-                      size="small"
-                      className="bg-white/90 font-semibold"
-                    />
-                  </div>
-                }
-              />
-            </div>
-          ))} */}
         </div>
 
         {/* // dots */}

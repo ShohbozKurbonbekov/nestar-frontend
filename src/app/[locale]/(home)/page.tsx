@@ -8,6 +8,7 @@ import TopAgents from "./_components/TopAgents";
 import { Suspense } from "react";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import { useTranslations } from "next-intl";
+import HomepageArticles from "./_components/HomepageArticles";
 
 export default function Home() {
   const t = useTranslations("HomePage");
@@ -47,6 +48,13 @@ export default function Home() {
         className="pt-0"
       >
         <TopAgents />
+      </HomepageSectionBlock>
+      <HomepageSectionBlock
+        className="pt-0 pb-20"
+        title="What People Are Reading"
+        subtitle="The most viewed and talked-about articles on the platform right now"
+      >
+        <HomepageArticles />
       </HomepageSectionBlock>
     </>
   );
