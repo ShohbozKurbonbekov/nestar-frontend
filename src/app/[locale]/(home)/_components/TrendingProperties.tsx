@@ -6,32 +6,58 @@ import CarouselBullets from "@/components/ui/CarouselBullets";
 import PropertyCard from "@/components/ui/PropertyCard";
 import TrendingPropertiesFooter from "./TrendingPropertiesFooter";
 import PropertiesTags from "./PropertiesTags";
+import { Property } from "@/libs/types/property/property";
+import { useQuery } from "@apollo/client";
+import { GET_PROPERTIES } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
+import Emty from "@/components/ui/Emty";
+import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
+
+const initialInput = {
+  page: 1,
+  limit: 8,
+  sort: "propertyLikes",
+  direction: "DESC",
+  search: {},
+};
 
 // ---------------------------------- Carousel Options ------------------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
   align: "start",
   slidesToScroll: 1,
-  duration: 40,
 };
 
 // ---------------------------------- Component ------------------------------
-interface TrendingPropertiesType {
-  initialInput?: number[];
-}
-const DEFAULT_INPUT = [1, 2, 3, 4, 5, 6];
+export default function TrendingProperties() {
+  const [trendingProperties, setTrendingProperties] = useState<Property[]>([]);
 
-export default function TrendingProperties({
-  initialInput = DEFAULT_INPUT,
-}: TrendingPropertiesType) {
-  const [trendingProperties, setTrendingProperties] =
-    useState<number[]>(initialInput);
+  const {
+    loading: getPropertiesLoading,
+    data: getPropertiesData,
+    error: getPropertiesError,
+    refetch: getPropertiesRefetch,
+  } = useQuery(GET_PROPERTIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: {
+        page: 1,
+        limit: 8,
+        sort: "propertyLikes",
+        direction: "DESC",
+        search: {},
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setTrendingProperties(data?.getProperties.list);
+    },
+  });
 
+  // ------------------------ Carousel setup --------------
   const [emblaRef, carouselApi] = useEmblaCarousel(carouselOptions);
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
   const [allCarouselNumbers, setAllCarouselNumbers] = useState<number[]>([]);
-
-  // ---------------------------------- Handlers ------------------------------
   const onSelect = useCallback((carouselApi: EmblaCarouselType) => {
     setCarouselIndex(carouselApi.selectedScrollSnap());
   }, []);
@@ -52,32 +78,44 @@ export default function TrendingProperties({
     };
   }, [carouselApi, onSelect]);
 
+  // ---------------------------------- Handlers ------------------------------
+
   // ---------------------------------- Render ------------------------------
+
+  if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
   return (
     <div className="overflow-hidden" ref={emblaRef}>
       <div className="flex">
-        {trendingProperties.map((number) => (
-          <div
-            className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-2"
-            key={number}
-          >
-            <PropertyCard
-              featuredTags={
-                <PropertiesTags
-                  propertyType={"Barter"}
-                  propertyTag="trending"
-                />
-              }
-              cardFooter={
-                <TrendingPropertiesFooter
-                  totalLikes={10}
-                  propertyLink="/properties/id:jb"
-                  totalViews={20}
-                />
-              }
-            />
-          </div>
-        ))}
+        {trendingProperties.length === 0 ? (
+          <Emty
+            title="No trending Properties
+"
+          />
+        ) : (
+          trendingProperties.map((property) => (
+            <div
+              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-2"
+              key={property._id}
+            >
+              <PropertyCard
+                property={property}
+                featuredTags={
+                  <PropertiesTags
+                    propertyType={property.propertyBarter ? "Barter" : "Rent"}
+                    propertyTag="trending"
+                  />
+                }
+                cardFooter={
+                  <TrendingPropertiesFooter
+                    totalLikes={property.propertyLikes}
+                    propertyLink={`/properties/${property._id}`}
+                    totalViews={property.propertyViews}
+                  />
+                }
+              />
+            </div>
+          ))
+        )}
       </div>
 
       {/* // dots */}

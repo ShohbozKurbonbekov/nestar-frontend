@@ -8,14 +8,19 @@ interface PropertySkeletonType {
   imageHeight?: number;
 }
 export default function PropertySkeleton({
-  classes = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 shadow-sm",
+  classes = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3",
   columns = 3,
   imageHeight,
 }: PropertySkeletonType) {
   return (
     <div className={`${classes}`}>
       {Array.from({ length: columns }, (_, i) => (
-        <div key={i} className={"bg-white w-full rounded-2xl overflow-hidden"}>
+        <div
+          key={i}
+          className={
+            "bg-white w-full rounded-2xl overflow-hidden border-slate-300/80"
+          }
+        >
           {/* Image Skeleton */}
           <Skeleton
             variant="rectangular"

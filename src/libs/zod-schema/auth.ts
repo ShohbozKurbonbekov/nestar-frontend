@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MemberType } from "../enums/member.enum";
 
 // -------------------- Login -----------------
 export const loginSchema = z.object({
@@ -26,8 +27,15 @@ export const signupSchema = z.object({
     .string()
     .min(9, "Phone number must be valid")
     .regex(/^[0-9+\-() ]+$/, "Invalid phone format"),
-  role: z.enum(["USER", "AGENT"]),
+  role: z
+    .string()
+    .min(1, "Use one of member type.")
+    .refine((val) => ["USER", "AGENT"].includes(val), {
+      message: "Use one of member type.",
+    }),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type SignupFormValues = z.infer<typeof signupSchema>;
+export type LoginFormInputs = z.input<typeof loginSchema>;
+export type SignupFormInputs = z.input<typeof signupSchema>;

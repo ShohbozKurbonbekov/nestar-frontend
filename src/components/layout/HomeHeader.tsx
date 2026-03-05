@@ -9,7 +9,7 @@ export default function HomeHeader() {
       <Image
         src="/images/header-images/homepage-header.jpg"
         alt="Hero background"
-        fill
+        fill={true}
         priority
         className="object-cover bg-no-repeat bg-center "
       />

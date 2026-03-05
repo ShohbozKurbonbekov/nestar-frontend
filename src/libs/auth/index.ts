@@ -23,10 +23,10 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
       updateStorage({ jwtToken });
       updateUserInfo(jwtToken);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.warn("login err", err);
     logOut();
-    throw new Error("Login Err");
+    throw err[0];
   }
 };
 
@@ -60,7 +60,7 @@ const requestJwtToken = async ({
         await sweetMixinErrorAlert("User has been blocked!");
         break;
     }
-    throw new Error("token error");
+    throw err.graphQLErrors;
   }
 };
 
@@ -82,10 +82,10 @@ export const signUp = async (
       updateStorage({ jwtToken });
       updateUserInfo(jwtToken);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.warn("login err", err);
     logOut();
-    throw new Error("Login Err");
+    throw err[0];
   }
 };
 
@@ -130,7 +130,7 @@ const requestSignUpJwtToken = async ({
         await sweetMixinErrorAlert("User has been blocked!");
         break;
     }
-    throw new Error("token error");
+    throw err.graphQLErrors;
   }
 };
 

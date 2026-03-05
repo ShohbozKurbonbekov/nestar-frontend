@@ -1,0 +1,10 @@
+import { LikeGroup } from "@/libs/enums/like.enum";
+
+export interface Like {
+  _id: string;
+  likeGroup: LikeGroup;
+  likeRefId: string;
+  memberId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

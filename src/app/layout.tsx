@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning className={inter.variable}>
+    <html className={inter.variable}>
       <body>
         <ApolloWrapper>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>

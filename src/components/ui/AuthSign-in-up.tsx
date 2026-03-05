@@ -1,5 +1,5 @@
 "use client";
-
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useState } from "react";
 import {
   Dialog,
@@ -12,22 +12,28 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
-  DialogTitle,
+  IconButton,
+  FormHelperText,
+  FormLabel,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  LoginFormInputs,
   LoginFormValues,
   loginSchema,
+  SignupFormInputs,
   SignupFormValues,
   signupSchema,
 } from "@/libs/zod-schema/auth";
 import React from "react";
-
+import { useRouter } from "next/navigation";
+import { logIn, signUp } from "@/libs/auth";
+import { sweetMixinErrorAlert } from "@/libs/sweetAlert";
 const borderStyle = {
   "& .mui-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input": {
-    padding: "15px  50px 15px",
+    padding: "0",
   },
   "& .mui-18p5xg2-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline": {
     border: "2px solid #CBD5E1CC",
@@ -49,28 +55,50 @@ interface AuthSigninupType {
 
 const AuthSigninup: React.FC<AuthSigninupType> = React.memo(
   ({ onClose, open }) => {
+    const router = useRouter();
     const [mode, setMode] = useState<"login" | "signup">("login");
 
     // Separate forms for full type safety
-    const loginForm = useForm<LoginFormValues>({
+    const loginForm = useForm<LoginFormInputs>({
       resolver: zodResolver(loginSchema),
     });
 
-    const signupForm = useForm<SignupFormValues>({
+    const signupForm = useForm<SignupFormInputs>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
-        role: "USER",
+        role: "",
       },
     });
 
-    const handleLogin = (data: LoginFormValues) => {
-      console.log("login", data);
-      loginForm.reset();
+    const handleLogin = async (data: LoginFormValues) => {
+      try {
+        await logIn(data.memberNick, data.memberPassword);
+        onClose(false);
+        router.push(`/`);
+        loginForm.reset();
+      } catch (error: any) {
+        console.log("Error in AuthSigninup: ", error);
+        onClose(false);
+        await sweetMixinErrorAlert(error.message);
+      }
     };
 
-    const handleSignup = (data: SignupFormValues) => {
-      console.log("signup", data);
-      signupForm.reset();
+    const handleSignup = async (data: SignupFormValues) => {
+      try {
+        await signUp(
+          data.memberNick,
+          data.memberPassword,
+          data.memberPhone,
+          data.role,
+        );
+        onClose(false);
+        signupForm.reset();
+
+        router.push("/");
+      } catch (error: any) {
+        onClose(false);
+        await sweetMixinErrorAlert(error.message);
+      }
     };
 
     const switchMode = () => {
@@ -84,10 +112,20 @@ const AuthSigninup: React.FC<AuthSigninupType> = React.memo(
       <Dialog
         open={open}
         onClose={() => onClose(false)}
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
       >
-        <DialogContent className="flex flex-col gap-4 mt-2">
+        <DialogContent className="flex flex-col gap-4 mt-2 items-start ">
+          <IconButton
+            className="p-0 self-end"
+            onClick={() => {
+              loginForm.reset();
+              signupForm.reset();
+              onClose(false);
+            }}
+          >
+            <CancelIcon className="text-slate-400" />
+          </IconButton>
           <div className="w-full px-6 py-4">
             <Tabs
               value={mode}
@@ -144,7 +182,7 @@ const AuthSigninup: React.FC<AuthSigninupType> = React.memo(
                     Not account yet?{" "}
                     <span
                       onClick={switchMode}
-                      className="cursor-pointer font-semibold text-black hover:underline"
+                      className="cursor-pointer font-semibold  hover:underline capitalize text-blue-400"
                     >
                       Signup
                     </span>
@@ -194,19 +232,45 @@ const AuthSigninup: React.FC<AuthSigninupType> = React.memo(
                     sx={borderStyle}
                   />
 
-                  <FormControl>
-                    <RadioGroup row {...signupForm.register("role")}>
-                      <FormControlLabel
-                        value="USER"
-                        control={<Radio />}
-                        label="Signup as User"
-                      />
-                      <FormControlLabel
-                        value="AGENT"
-                        control={<Radio />}
-                        label="Signup as Agent"
-                      />
-                    </RadioGroup>
+                  <FormControl error={!!signupForm.formState.errors.role}>
+                    <FormLabel sx={{ fontSize: "0.85rem" }}>
+                      Select Member Type
+                    </FormLabel>
+
+                    <Controller
+                      name="role"
+                      control={signupForm.control}
+                      render={({ field }) => (
+                        <RadioGroup row {...field}>
+                          <FormControlLabel
+                            value="USER"
+                            control={<Radio />}
+                            label="Signup as User"
+                            sx={{
+                              "& .MuiTypography-root": {
+                                fontSize: "0.8rem",
+                                color: "rgba(0,0,0,0.7)",
+                              },
+                            }}
+                          />
+                          <FormControlLabel
+                            value="AGENT"
+                            control={<Radio />}
+                            label="Signup as Agent"
+                            sx={{
+                              "& .MuiTypography-root": {
+                                fontSize: "0.8rem",
+                                color: "rgba(0,0,0,0.7)",
+                              },
+                            }}
+                          />
+                        </RadioGroup>
+                      )}
+                    />
+
+                    <FormHelperText>
+                      {signupForm.formState.errors.role?.message}
+                    </FormHelperText>
                   </FormControl>
 
                   <Button

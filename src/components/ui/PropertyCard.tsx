@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { Typography, IconButton } from "@mui/material";
 import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
 import BedOutlined from "@mui/icons-material/BedOutlined";
@@ -9,8 +8,12 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import React, { useState } from "react";
 import { Bookmark, Favorite } from "@mui/icons-material";
+import { Property } from "@/libs/types/property/property";
+import { serverApi } from "@/libs/config";
+import Image from "next/image";
 
 interface PropertyCardType {
+  property: Property;
   mainCardClasses?: string;
   featuredTags?: React.ReactNode;
   cardFooter: React.ReactNode;
@@ -18,24 +21,27 @@ interface PropertyCardType {
 const PropertyCard: React.FC<PropertyCardType> = React.memo(
   ({
     mainCardClasses = "group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 w-full",
+    property,
     featuredTags,
     cardFooter,
   }) => {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
 
+    const imageUrl = property?.propertyImages[0]
+      ? `${serverApi}/${property?.propertyImages[0]}`
+      : `/images/default-property.png`;
     return (
       <div className={mainCardClasses}>
         {/* Image Wrapper */}
-        <div className="relative h-64 w-full overflow-hidden">
+        <div className="relative h-64 w-full overflow-hidden ">
           {/* Image */}
           <Image
-            src="/images/header-images/homepage-header.jpg"
-            alt={"image"}
+            src={imageUrl}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            alt={property?.propertyTitle}
+            className="object-cover transition-transform duration-500 group-hover:scale-110 w-full h-full"
             loading="lazy"
-            quality={80}
           />
 
           {/* Featured Tags */}
@@ -43,7 +49,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
 
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-black/60 -translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out flex items-center justify-center gap-4">
-            {/* LIKE BUTTON */}
+            {/* TODO Toggle Like  */}
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -51,12 +57,14 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
               }}
               className="bg-white hover:bg-red-300 hover:text-white transition"
             >
-              {liked ? (
+              {property?.meLiked?.[0]?.myFavorite ? (
                 <Favorite className="text-red-500" />
               ) : (
                 <FavoriteBorder />
               )}
             </IconButton>
+
+            {/* TODO Toggle Save  */}
 
             <IconButton
               onClick={(e) => {
@@ -77,37 +85,45 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
         {/* Content */}
         <div className="p-6">
           <Typography variant="h6" className="capitalize truncate">
-            Elegant Studio Flat
+            {property?.propertyTitle}
           </Typography>
 
           <div className="flex items-center text-gray-500 mt-2">
             <LocationOnOutlined sx={{ fontSize: 18 }} />
             <Typography variant="body2" className="ml-1 truncate">
-              Ingraham St, Brooklyn, NY 11237
+              {property?.propertyAddress}
             </Typography>
           </div>
 
           {/* Features */}
-          <div className="flex gap-4 mt-4 flex-wrap text-gray-600">
+          <div className="flex gap-4 mt-4  text-gray-600 ">
             <div className="flex items-center gap-1">
               <BedOutlined sx={{ fontSize: 16 }} />
-              <Typography variant="body2">3 Beds</Typography>
+              <Typography variant="body2" className="truncate">
+                {property?.propertyBeds ?? 0} Bed
+                {property?.propertyBeds > 0 ? "s" : ""}
+              </Typography>
             </div>
 
             <div className="flex items-center gap-1">
               <BedroomParentIcon sx={{ fontSize: 16 }} />
-              <Typography variant="body2">3 rooms</Typography>
+              <Typography variant="body2" className="truncate">
+                {property?.propertyRooms ?? 0} Room
+                {property?.propertyRooms > 0 ? "s" : ""}
+              </Typography>
             </div>
 
             <div className="flex items-center gap-1">
               <SquareFootOutlined sx={{ fontSize: 16 }} />
-              <Typography variant="body2">4043 Sqft</Typography>
+              <Typography variant="body2" className="truncate">
+                {property?.propertySquare ?? 0} Sqft
+              </Typography>
             </div>
           </div>
 
           <div className="border-t mt-6 pt-4 flex items-center justify-between">
-            <Typography variant="h6" className="text-gray-800">
-              ${(8060).toLocaleString()}
+            <Typography variant="h6" className="text-gray-800 truncate">
+              ${property?.propertyPrice.toLocaleString()}
             </Typography>
 
             {cardFooter && cardFooter}
