@@ -7,7 +7,6 @@ import TopProperties from "./_components/TopProperties";
 import TopAgents from "./_components/TopAgents";
 import { Suspense } from "react";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
-import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
 import { useTranslations } from "next-intl";
 
 export default function Home() {
@@ -20,9 +19,7 @@ export default function Home() {
         title={t("trendingTitle")}
         subtitle={t("trendingSubtitle")}
       >
-        <Suspense fallback={<PropertySkeleton />}>
-          <TrendingProperties />
-        </Suspense>
+        <TrendingProperties />
       </HomepageSectionBlock>
 
       {/*--------------Popular Properties-----------*/}
@@ -49,11 +46,7 @@ export default function Home() {
         subtitle={t("agentSubtitle")}
         className="pt-0"
       >
-        <Suspense fallback={<PropertySkeleton />}>
-          <Suspense fallback={<AgentSkeleton></AgentSkeleton>}>
-            <TopAgents />
-          </Suspense>
-        </Suspense>
+        <TopAgents />
       </HomepageSectionBlock>
     </>
   );

@@ -6,7 +6,22 @@ import CarouselBullets from "@/components/ui/CarouselBullets";
 import PropertyCard from "@/components/ui/PropertyCard";
 import PropertiesTags from "./PropertiesTags";
 import TopPropertiesFooter from "./TopPropertiesFooter";
+import { Property } from "@/libs/types/property/property";
+import { PropertiesInquiry } from "@/libs/types/property/property.input";
+import { Direction } from "@/libs/enums/common.enum";
+import Emty from "@/components/ui/Emty";
+import { GET_PROPERTIES } from "@/apollo/user/query";
+import { useQuery } from "@apollo/client";
+import { T } from "@/libs/types/common";
+import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 
+const initialInput: PropertiesInquiry = {
+  page: 1,
+  limit: 8,
+  sort: "propertyRank",
+  direction: Direction.DESC,
+  search: {},
+};
 // ---------------------------------- Carousel Options ------------------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
@@ -16,15 +31,24 @@ const carouselOptions: EmblaOptionsType = {
 };
 
 // ---------------------------------- Component ------------------------------
-interface TopPropertiesType {
-  initialInput?: number[];
-}
-const DEFAULT_INPUT = [1, 2, 3, 4, 5, 6];
 
-export default function TopProperties({
-  initialInput = DEFAULT_INPUT,
-}: TopPropertiesType) {
-  const [topProperties, setTopProperties] = useState<number[]>(initialInput);
+export default function TopProperties() {
+  const [topProperties, setTopProperties] = useState<Property[]>([]);
+  const {
+    loading: getPropertiesLoading,
+    data: getPropertiesData,
+    error: getPropertiesError,
+    refetch: getPropertiesRefetch,
+  } = useQuery(GET_PROPERTIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: initialInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setTopProperties(data?.getProperties.list);
+    },
+  });
 
   const [emblaRef, carouselApi] = useEmblaCarousel(carouselOptions);
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
@@ -52,28 +76,41 @@ export default function TopProperties({
   }, [carouselApi, onSelect]);
 
   // ---------------------------------- Render ------------------------------
+
+  if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
   return (
     <div className="overflow-hidden" ref={emblaRef}>
       <div className="flex">
-        {topProperties.map((number) => (
-          <div
-            className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-2"
-            key={number}
-          >
-            <PropertyCard
-              featuredTags={
-                <PropertiesTags propertyType={"Barter"} propertyTag="Top" />
-              }
-              cardFooter={
-                <TopPropertiesFooter
-                  totalLikes={10}
-                  propertyLink="/properties/id:jb"
-                  totalViews={20}
-                />
-              }
-            />
-          </div>
-        ))}
+        {topProperties.length === 0 ? (
+          <Emty
+            title="No Top Properties
+"
+          />
+        ) : (
+          topProperties.map((property) => (
+            <div
+              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-2"
+              key={property._id}
+            >
+              <PropertyCard
+                property={property}
+                featuredTags={
+                  <PropertiesTags
+                    propertyType={property.propertyBarter ? "Barter" : "Rent"}
+                    propertyTag="Top"
+                  />
+                }
+                cardFooter={
+                  <TopPropertiesFooter
+                    propertyLink={`/properties/${property._id}`}
+                    totalViews={property.propertyViews}
+                    totalLikes={property.propertyLikes}
+                  />
+                }
+              />
+            </div>
+          ))
+        )}
       </div>
 
       {/* // dots */}

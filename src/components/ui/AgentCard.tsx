@@ -18,16 +18,24 @@ import LocationPinIcon from "@mui/icons-material/LocationPin";
 import { useState } from "react";
 import { FavoriteBorder } from "@mui/icons-material";
 import { Link } from "@/i18n/navigation";
+import { Member } from "@/libs/types/member/member";
+import { serverApi } from "@/libs/config";
+import BlueHoveredBtn from "./Blue-hovered-btn";
 
 interface AgentCardType {
   agentFeaturedTag?: React.ReactNode;
   agentLink: string;
+  agent: Member;
 }
 export default function AgentCard({
   agentFeaturedTag,
   agentLink,
+  agent,
 }: AgentCardType) {
   const [liked, setLiked] = useState<boolean>(false);
+  const imageUrl = agent?.memberImage
+    ? `${serverApi}/${agent.memberImage}`
+    : "/public/images/default-user.png";
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
@@ -43,8 +51,8 @@ export default function AgentCard({
         {/* Image Section */}
         <Box className="relative w-full aspect-square overflow-hidden">
           <Image
-            src={"/agent.jpg"}
-            alt={"agent"}
+            src={imageUrl}
+            alt={agent.memberNick}
             className="w-full h-full object-cover"
             fill={true}
             loading="lazy"
@@ -59,16 +67,18 @@ export default function AgentCard({
           {/* Bottom Info Over Image */}
           <div className="absolute bottom-4 left-4 text-white">
             <div className="flex items-center gap-2">
-              <Typography variant="h6">Daniel</Typography>
+              <Typography variant="h6" className="truncate">
+                {agent?.memberNick}
+              </Typography>
               <VerifiedIcon fontSize="small" className="text-blue-400" />
             </div>
             <Typography
               variant="body2"
-              className="opacity-80 gap-1 flex flex-items"
+              className="opacity-80 gap-1 flex flex-items truncate"
             >
               <LocationPinIcon fontSize="small" className="text-blue-400" />
 
-              {"Seoul kwangido"}
+              {agent?.memberAddress}
             </Typography>
           </div>
         </Box>
@@ -79,7 +89,7 @@ export default function AgentCard({
             <div className="flex flex-col items-center">
               <HomeWorkIcon fontSize="small" />
               <Typography variant="subtitle1" className="font-semibold">
-                20
+                {agent?.memberProperties ?? 0}
               </Typography>
               <Typography variant="caption" className="text-gray-500">
                 Properties
@@ -90,7 +100,9 @@ export default function AgentCard({
 
             <div className="flex flex-col items-center">
               <VisibilityIcon fontSize="small" />
-              <Typography variant="subtitle1">100</Typography>
+              <Typography variant="subtitle1">
+                {agent?.memberViews ?? 0}
+              </Typography>
               <Typography variant="caption" className="text-gray-500">
                 Views
               </Typography>
@@ -103,7 +115,7 @@ export default function AgentCard({
                 whileTap={{ scale: 1.25 }}
                 onClick={() => setLiked((prev) => !prev)}
               >
-                {liked ? (
+                {agent?.meLiked?.[0]?.myFavorite ? (
                   <FavoriteIcon
                     fontSize="small"
                     className="text-red-500 cursor-pointer"
@@ -115,7 +127,9 @@ export default function AgentCard({
                   />
                 )}
               </motion.div>
-              <Typography variant="subtitle1">300 </Typography>
+              <Typography variant="subtitle1">
+                {agent?.memberLikes ?? 0}
+              </Typography>
               <Typography variant="caption" className="text-gray-500">
                 Likes
               </Typography>
@@ -123,20 +137,11 @@ export default function AgentCard({
           </div>
 
           {/* Visit Button */}
-          <Button
-            variant="outlined"
-            size="small"
-            fullWidth
-            className="rounded-lg py-2 group relative overflow-hidden hover:border-0"
-          >
-            <Link
-              href={agentLink}
-              className="group-hover:text-white capitalize relative z-10"
-            >
-              View Profile
-            </Link>
-            <span className="absolute inset-0 bg-green-500  -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 rounded-md duration-500 ease-in-out"></span>
-          </Button>
+          <BlueHoveredBtn
+            pathname={agentLink}
+            btnText={"viewProfile"}
+            translationTargetText={"HomePage"}
+          />
         </CardContent>
       </Card>
     </motion.div>

@@ -8,7 +8,22 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import AgentCard from "@/components/ui/AgentCard";
 import { useTranslations } from "next-intl";
+import { AgentsInquiry } from "@/libs/types/member/member.input";
+import { Direction } from "@/libs/enums/common.enum";
+import { Member } from "@/libs/types/member/member";
+import { useQuery } from "@apollo/client";
+import { GET_AGENTS } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
+import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
+import Emty from "@/components/ui/Emty";
 
+const initialInput: AgentsInquiry = {
+  page: 1,
+  limit: 8,
+  sort: "memberRank",
+  direction: Direction.DESC,
+  search: {},
+};
 // -------------------------- Carousel Options ----------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
@@ -17,16 +32,25 @@ const carouselOptions: EmblaOptionsType = {
   slidesToScroll: 1,
 };
 // -------------------------- Component ----------------------
-interface TopAgentsType {
-  initialInput?: number[];
-}
-const DEFAULT_INPUT = [1, 2, 3, 4, 5, 6];
 
-export default function TopAgents({
-  initialInput = DEFAULT_INPUT,
-}: TopAgentsType) {
+export default function TopAgents() {
   const t = useTranslations("HomePage");
-  const [topAgents, setTopAgents] = useState<number[]>(initialInput);
+  const [topAgents, setTopAgents] = useState<Member[]>([]);
+
+  const {
+    loading: getAgentsLoading,
+    data: getAgentsData,
+    error: getAgentsError,
+    refetch: getAgentsRefetch,
+  } = useQuery(GET_AGENTS, {
+    fetchPolicy: "cache-and-network",
+    variables: { input: initialInput },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setTopAgents(data?.getAgents?.list);
+    },
+  });
+
   // ------------------------ Carousel Setup ------------------------
   const [carouselRef, carouselApi] = useEmblaCarousel(carouselOptions);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -55,11 +79,39 @@ export default function TopAgents({
   const scrollPrev = () => carouselApi?.scrollPrev();
   const scrollNext = () => carouselApi?.scrollNext();
 
+  if (getAgentsLoading) return <AgentSkeleton columns={4} />;
   return (
     <div className="relative flex flex-col gap-5">
       <div className="overflow-hidden relative" ref={carouselRef}>
         <div className="flex">
-          {topAgents.map((number) => (
+          {topAgents.length === 0 ? (
+            <Emty
+              title="No Top Agents
+          "
+            />
+          ) : (
+            topAgents.map((agent) => (
+              <div
+                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-2"
+                key={agent._id}
+              >
+                <AgentCard
+                  agentLink={`/agents/${agent._id}`}
+                  agentFeaturedTag={
+                    <div className="absolute top-4 left-4">
+                      <Chip
+                        label={`Top Agent`}
+                        size="small"
+                        className="bg-white/90 font-semibold"
+                      />
+                    </div>
+                  }
+                  agent={agent}
+                />
+              </div>
+            ))
+          )}
+          {/* {topAgents.map((number) => (
             <div
               className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-3"
               key={number}
@@ -77,7 +129,7 @@ export default function TopAgents({
                 }
               />
             </div>
-          ))}
+          ))} */}
         </div>
 
         {/* // dots */}

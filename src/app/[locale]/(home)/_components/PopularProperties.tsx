@@ -1,12 +1,11 @@
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropertyCard from "@/components/ui/PropertyCard";
 import PopularPropertiesFooter from "./PopularPropertiesFooter";
 import CarouselBullets from "@/components/ui/CarouselBullets";
 import PropertiesTags from "./PropertiesTags";
-import { Button, IconButton } from "@mui/material";
-import { Link } from "@/i18n/navigation";
+import { IconButton } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
