@@ -32,9 +32,7 @@ export default function Home() {
         title={t("popularTitle")}
         subtitle={t("popularSubtitle")}
       >
-        <Suspense fallback={<PropertySkeleton />}>
-          <PopularProperties />
-        </Suspense>
+        <PopularProperties />
       </HomepageSectionBlock>
 
       {/*--------------Advertisement-----------*/}

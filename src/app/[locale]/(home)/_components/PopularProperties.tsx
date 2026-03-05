@@ -9,26 +9,48 @@ import { Button, IconButton } from "@mui/material";
 import { Link } from "@/i18n/navigation";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { useTranslations } from "next-intl";
+import { PropertiesInquiry } from "@/libs/types/property/property.input";
+import { Direction } from "@/libs/enums/common.enum";
+import { Property } from "@/libs/types/property/property";
+import { useQuery } from "@apollo/client";
+import { GET_PROPERTIES } from "@/apollo/user/query";
+import { T } from "@/libs/types/common";
+import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
+import Emty from "@/components/ui/Emty";
+import BlueHoveredBtn from "@/components/ui/Blue-hovered-btn";
 
+const initialInput: PropertiesInquiry = {
+  page: 1,
+  limit: 8,
+  sort: "propertyViews",
+  direction: Direction.DESC,
+  search: {},
+};
 // -------------------------- Carousel Options ----------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
-  duration: 40,
   align: "start",
   slidesToScroll: 1,
 };
 // -------------------------- Component ----------------------
-interface PopularPropertiesType {
-  initialInput?: number[];
-}
-const DEFAULT_INPUT = [1, 2, 3, 4, 5, 6];
-export default function PropularProperties({
-  initialInput = DEFAULT_INPUT,
-}: PopularPropertiesType) {
-  const t = useTranslations("HomePage");
-  const [popularProperties, setPopularProperties] =
-    useState<number[]>(initialInput);
+export default function PropularProperties() {
+  const [popularProperties, setPopularProperties] = useState<Property[]>([]);
+
+  const {
+    loading: getPropertiesLoading,
+    data: getPropertiesData,
+    error: getPropertiesError,
+    refetch: getPropertiesRefetch,
+  } = useQuery(GET_PROPERTIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: initialInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setPopularProperties(data?.getProperties.list);
+    },
+  });
   // ------------------------ Carousel Setup ------------------------
   const [carouselRef, carouselApi] = useEmblaCarousel(carouselOptions);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -57,28 +79,43 @@ export default function PropularProperties({
   const scrollPrev = () => carouselApi?.scrollPrev();
   const scrollNext = () => carouselApi?.scrollNext();
 
+  // ------------------------ Handlers ------------------------
+
+  // ------------------------ Render ------------------------
+  if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
   return (
     <div className="relative flex flex-col gap-5">
       <div className="overflow-hidden relative" ref={carouselRef}>
         <div className="flex">
-          {popularProperties.map((number) => (
-            <div
-              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-2"
-              key={number}
-            >
-              <PropertyCard
-                featuredTags={
-                  <PropertiesTags propertyTag="Popular" propertyType="barter" />
-                }
-                cardFooter={
-                  <PopularPropertiesFooter
-                    propertyLink="/properties/id:egwiegb"
-                    totalViews={10}
-                  />
-                }
-              />
-            </div>
-          ))}
+          {popularProperties.length === 0 ? (
+            <Emty
+              title="No Popular Properties
+"
+            />
+          ) : (
+            popularProperties.map((property) => (
+              <div
+                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-2"
+                key={property._id}
+              >
+                <PropertyCard
+                  property={property}
+                  featuredTags={
+                    <PropertiesTags
+                      propertyType={property.propertyBarter ? "Barter" : "Rent"}
+                      propertyTag="Popular"
+                    />
+                  }
+                  cardFooter={
+                    <PopularPropertiesFooter
+                      propertyLink={`/properties/${property._id}`}
+                      totalViews={property.propertyViews}
+                    />
+                  }
+                />
+              </div>
+            ))
+          )}
         </div>
 
         {/* // dots */}
@@ -108,15 +145,11 @@ export default function PropularProperties({
 
       {/* Browse more */}
       <div className="mx-auto">
-        <Button className="capitalize border-blue-600 border rounded-lg px-4 py-2 relative overflow-hidden group">
-          <Link
-            href="/properties"
-            className="relative z-10 group-hover:text-white"
-          >
-            {t("browseMore")}
-          </Link>
-          <span className="absolute inset-0 bg-blue-600 -translate-x-full opacity-0 group-hover:translate-x-0 duration-500 rounded-r-lg ease-in-out  transition-transform group-hover:opacity-100"></span>
-        </Button>
+        <BlueHoveredBtn
+          pathname="/properties"
+          btnText="browseMore"
+          translationTargetText="HomePage"
+        />
       </div>
     </div>
   );

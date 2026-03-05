@@ -12,12 +12,14 @@ import { GET_PROPERTIES } from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
 import Emty from "@/components/ui/Emty";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
+import { PropertiesInquiry } from "@/libs/types/property/property.input";
+import { Direction } from "@/libs/enums/common.enum";
 
-const initialInput = {
+const initialInput: PropertiesInquiry = {
   page: 1,
   limit: 8,
   sort: "propertyLikes",
-  direction: "DESC",
+  direction: Direction.DESC,
   search: {},
 };
 
@@ -94,7 +96,7 @@ export default function TrendingProperties() {
         ) : (
           trendingProperties.map((property) => (
             <div
-              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] p-2"
+              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-2"
               key={property._id}
             >
               <PropertyCard

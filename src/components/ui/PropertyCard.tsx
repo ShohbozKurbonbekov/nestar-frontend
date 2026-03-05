@@ -34,7 +34,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
     return (
       <div className={mainCardClasses}>
         {/* Image Wrapper */}
-        <div className="relative h-64 w-full overflow-hidden ">
+        <div className="relative h-64 w-full ">
           {/* Image */}
           <Image
             src={imageUrl}
@@ -96,7 +96,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
           </div>
 
           {/* Features */}
-          <div className="flex gap-4 mt-4  text-gray-600 ">
+          <div className="flex gap-4 mt-4  text-gray-600 truncate">
             <div className="flex items-center gap-1">
               <BedOutlined sx={{ fontSize: 16 }} />
               <Typography variant="body2" className="truncate">
