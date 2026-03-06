@@ -9,7 +9,7 @@ import { IconButton } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
-import { Direction } from "@/libs/enums/common.enum";
+import { Direction, Message } from "@/libs/enums/common.enum";
 import { Property } from "@/libs/types/property/property";
 import { useQuery } from "@apollo/client";
 import { GET_PROPERTIES } from "@/apollo/user/query";
@@ -17,6 +17,12 @@ import { T } from "@/libs/types/common";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import Emty from "@/components/ui/Emty";
 import BlueHoveredBtn from "@/components/ui/Blue-hovered-btn";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetProperty } from "@/services/Property.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
 
 const initialInput: PropertiesInquiry = {
   page: 1,
@@ -79,7 +85,19 @@ export default function PropularProperties() {
   const scrollNext = () => carouselApi?.scrollNext();
 
   // ------------------------ Handlers ------------------------
+  const likePropertyHandler = async (user: CustomJwtPayload, id: string) => {
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
+      await likeTargetProperty(id);
+
+      await sweetTopSmallSuccessAlert("succes", 1000);
+    } catch (err: any) {
+      console.log("ERROR, likePropertyHandler:", err.message);
+      await sweetMixinErrorAlert(err.message);
+    }
+  };
   // ------------------------ Render ------------------------
   if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
   return (
@@ -98,6 +116,7 @@ export default function PropularProperties() {
                 key={property._id}
               >
                 <PropertyCard
+                  likePropertyHandler={likePropertyHandler}
                   property={property}
                   featuredTags={
                     <PropertiesTags

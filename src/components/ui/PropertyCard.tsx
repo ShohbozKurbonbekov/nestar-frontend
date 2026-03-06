@@ -11,8 +11,13 @@ import { Bookmark, Favorite } from "@mui/icons-material";
 import { Property } from "@/libs/types/property/property";
 import { serverApi } from "@/libs/config";
 import Image from "next/image";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { priceFormatter } from "@/libs/utils/priceFormatter";
 
 interface PropertyCardType {
+  likePropertyHandler: (user: CustomJwtPayload, id: string) => Promise<void>;
   property: Property;
   mainCardClasses?: string;
   featuredTags?: React.ReactNode;
@@ -24,10 +29,10 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
     property,
     featuredTags,
     cardFooter,
+    likePropertyHandler,
   }) => {
-    const [liked, setLiked] = useState(false);
+    const user = useReactiveVar(userVar);
     const [saved, setSaved] = useState(false);
-
     const imageUrl = property?.propertyImages[0]
       ? `${serverApi}/${property?.propertyImages[0]}`
       : `/images/default-property.png`;
@@ -53,7 +58,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                setLiked((prev) => !prev);
+                likePropertyHandler(user, property._id);
               }}
               className="bg-white hover:bg-red-300 hover:text-white transition"
             >
@@ -123,7 +128,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
 
           <div className="border-t mt-6 pt-4 flex items-center justify-between">
             <Typography variant="h6" className="text-gray-800 truncate">
-              ${property?.propertyPrice.toLocaleString()}
+              {priceFormatter(property?.propertyPrice)}
             </Typography>
 
             {cardFooter && cardFooter}

@@ -200,3 +200,13 @@ const deleteUserInfo = () => {
     memberBlocks: 0,
   });
 };
+
+export const initializeAuth = () => {
+  const accessToken = getJwtToken();
+
+  if (accessToken) {
+    updateUserInfo(accessToken);
+  } else {
+    deleteUserInfo();
+  }
+};

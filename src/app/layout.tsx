@@ -4,6 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { Inter } from "next/font/google";
 import ApolloWrapper from "@/apollo/ApolloWrapper";
+import AppInitializer from "@/libs/auth/AppInitializer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body>
         <ApolloWrapper>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+            <AppInitializer>
+              <ThemeProvider theme={theme}>{children}</ThemeProvider>
+            </AppInitializer>
           </AppRouterCacheProvider>
         </ApolloWrapper>
       </body>

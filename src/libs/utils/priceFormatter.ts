@@ -4,8 +4,11 @@ type PriceOptions = {
   compact?: boolean;
 };
 
-export function formatPrice(value: number, options: PriceOptions = {}): string {
-  const { locale = "en-US", currency = "USD", compact = false } = options;
+export function priceFormatter(
+  value: number,
+  options: PriceOptions = {},
+): string {
+  const { locale = "en-US", currency = "USD", compact = true } = options;
 
   return new Intl.NumberFormat(locale, {
     style: "currency",

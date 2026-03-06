@@ -8,12 +8,18 @@ import PropertiesTags from "./PropertiesTags";
 import TopPropertiesFooter from "./TopPropertiesFooter";
 import { Property } from "@/libs/types/property/property";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
-import { Direction } from "@/libs/enums/common.enum";
+import { Direction, Message } from "@/libs/enums/common.enum";
 import Emty from "@/components/ui/Emty";
 import { GET_PROPERTIES } from "@/apollo/user/query";
 import { useQuery } from "@apollo/client";
 import { T } from "@/libs/types/common";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetProperty } from "@/services/Property.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
 
 const initialInput: PropertiesInquiry = {
   page: 1,
@@ -53,8 +59,6 @@ export default function TopProperties() {
   const [emblaRef, carouselApi] = useEmblaCarousel(carouselOptions);
   const [carouselIndex, setCarouselIndex] = useState<number>(0);
   const [allCarouselNumbers, setAllCarouselNumbers] = useState<number[]>([]);
-
-  // ---------------------------------- Handlers ------------------------------
   const onSelect = useCallback((carouselApi: EmblaCarouselType) => {
     setCarouselIndex(carouselApi.selectedScrollSnap());
   }, []);
@@ -75,6 +79,21 @@ export default function TopProperties() {
     };
   }, [carouselApi, onSelect]);
 
+  // ---------------------------------- Handlers ------------------------------
+
+  const likePropertyHandler = async (user: CustomJwtPayload, id: string) => {
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+      await likeTargetProperty(id);
+
+      await sweetTopSmallSuccessAlert("succes", 1000);
+    } catch (err: any) {
+      console.log("ERROR, likePropertyHandler:", err.message);
+      await sweetMixinErrorAlert(err.message);
+    }
+  };
   // ---------------------------------- Render ------------------------------
 
   if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
@@ -93,6 +112,7 @@ export default function TopProperties() {
               key={property._id}
             >
               <PropertyCard
+                likePropertyHandler={likePropertyHandler}
                 property={property}
                 featuredTags={
                   <PropertiesTags

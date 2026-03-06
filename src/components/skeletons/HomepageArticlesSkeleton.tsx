@@ -9,11 +9,9 @@ function HomepageArticleSkeleton({ variant }: HomepageArticleSkeletonType) {
     return (
       <div
         className={
-          "w-full h-full rounded-xl flex flex-col gap-5 justify-between border border-slate-200 p-3"
+          "w-full h-full rounded-xl flex flex-col gap-5 justify-end border border-slate-200 p-3"
         }
       >
-        <p className="py-20"></p>
-
         <div className="flex flex-col gap-2">
           <Skeleton
             variant="rectangular"

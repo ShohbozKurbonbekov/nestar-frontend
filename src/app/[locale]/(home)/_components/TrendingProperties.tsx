@@ -13,7 +13,14 @@ import { T } from "@/libs/types/common";
 import Emty from "@/components/ui/Emty";
 import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
-import { Direction } from "@/libs/enums/common.enum";
+import { Direction, Message } from "@/libs/enums/common.enum";
+import { Member } from "@/libs/types/member/member";
+import { likeTargetProperty } from "@/services/Property.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 
 const initialInput: PropertiesInquiry = {
   page: 1,
@@ -38,7 +45,6 @@ export default function TrendingProperties() {
     loading: getPropertiesLoading,
     data: getPropertiesData,
     error: getPropertiesError,
-    refetch: getPropertiesRefetch,
   } = useQuery(GET_PROPERTIES, {
     fetchPolicy: "cache-and-network",
     variables: {
@@ -82,6 +88,19 @@ export default function TrendingProperties() {
 
   // ---------------------------------- Handlers ------------------------------
 
+  const likePropertyHandler = async (user: CustomJwtPayload, id: string) => {
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+      await likeTargetProperty(id);
+
+      await sweetTopSmallSuccessAlert("succes", 1000);
+    } catch (err: any) {
+      console.log("ERROR, likePropertyHandler:", err.message);
+      await sweetMixinErrorAlert(err.message);
+    }
+  };
   // ---------------------------------- Render ------------------------------
 
   if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
@@ -100,6 +119,7 @@ export default function TrendingProperties() {
               key={property._id}
             >
               <PropertyCard
+                likePropertyHandler={likePropertyHandler}
                 property={property}
                 featuredTags={
                   <PropertiesTags
