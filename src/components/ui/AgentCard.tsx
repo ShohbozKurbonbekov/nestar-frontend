@@ -21,18 +21,23 @@ import { Link } from "@/i18n/navigation";
 import { Member } from "@/libs/types/member/member";
 import { serverApi } from "@/libs/config";
 import BlueHoveredBtn from "./Blue-hovered-btn";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
 interface AgentCardType {
   agentFeaturedTag?: React.ReactNode;
   agentLink: string;
   agent: Member;
+  likeAgentHandler: (user: CustomJwtPayload, id: string) => Promise<void>;
 }
 export default function AgentCard({
   agentFeaturedTag,
   agentLink,
   agent,
+  likeAgentHandler,
 }: AgentCardType) {
-  const [liked, setLiked] = useState<boolean>(false);
+  const user = useReactiveVar(userVar);
   const imageUrl = agent?.memberImage
     ? `${serverApi}/${agent.memberImage}`
     : "/images/default-user.png";
@@ -113,7 +118,7 @@ export default function AgentCard({
             <div className="flex flex-col items-center">
               <motion.div
                 whileTap={{ scale: 1.25 }}
-                onClick={() => setLiked((prev) => !prev)}
+                onClick={() => likeAgentHandler(user, agent._id)}
               >
                 {agent?.meLiked?.[0]?.myFavorite ? (
                   <FavoriteIcon

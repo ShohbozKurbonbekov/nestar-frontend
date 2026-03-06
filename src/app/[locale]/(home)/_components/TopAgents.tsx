@@ -9,13 +9,19 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import AgentCard from "@/components/ui/AgentCard";
 import { useTranslations } from "next-intl";
 import { AgentsInquiry } from "@/libs/types/member/member.input";
-import { Direction } from "@/libs/enums/common.enum";
+import { Direction, Message } from "@/libs/enums/common.enum";
 import { Member } from "@/libs/types/member/member";
 import { useQuery } from "@apollo/client";
 import { GET_AGENTS } from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
 import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
 import Emty from "@/components/ui/Emty";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetAgent } from "@/services/Agent.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
 
 const initialInput: AgentsInquiry = {
   page: 1,
@@ -78,6 +84,22 @@ export default function TopAgents() {
   const scrollPrev = () => carouselApi?.scrollPrev();
   const scrollNext = () => carouselApi?.scrollNext();
 
+  // -------------------------- Handlers ---------------------
+  const likeAgentHandler = async (user: CustomJwtPayload, id: string) => {
+    try {
+      if (!id) return;
+      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+      await likeTargetAgent(id);
+
+      await sweetTopSmallSuccessAlert("succes", 1000);
+    } catch (err: any) {
+      console.log("ERROR, likeAgentHandler:", err.message);
+      await sweetMixinErrorAlert(err.message);
+    }
+  };
+
+  // ----------------------------- Render ---------------------
   if (getAgentsLoading) return <AgentSkeleton columns={4} />;
   return (
     <div className="relative flex flex-col gap-5">
@@ -95,6 +117,7 @@ export default function TopAgents() {
                 key={agent._id}
               >
                 <AgentCard
+                  likeAgentHandler={likeAgentHandler}
                   agentLink={`/agents/${agent._id}`}
                   agentFeaturedTag={
                     <div className="absolute top-4 left-4">
