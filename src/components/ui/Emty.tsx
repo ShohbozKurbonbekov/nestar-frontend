@@ -7,11 +7,11 @@ interface EmtyType {
 }
 const Emty = ({ title = "No Result Found" }: EmtyType) => {
   return (
-    <div className="py-5 w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center">
       <Lottie
         animationData={emty}
         loop={true}
-        className="w-full [&>svg]:w-full max-h-[70vh] sm:max-h-[80vh]"
+        className="w-full h-72 sm:h-100 lg:h-120"
       />
       <p className="text-gray-500 text-lg">{title}</p>
     </div>

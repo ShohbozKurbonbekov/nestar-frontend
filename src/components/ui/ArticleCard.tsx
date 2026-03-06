@@ -1,152 +1,148 @@
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import { BoardArticle } from "@/libs/types/board-article/board-article";
-import { serverApi } from "@/libs/config";
 import Image from "next/image";
+import { Card, Chip, Typography } from "@mui/material";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import { serverApi } from "@/libs/config";
+import { timeFormatter } from "@/libs/utils/timeFormatter";
+import { useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 type ArticleCardType = {
-  variant: "featured" | "vertical" | "horizontal";
-  article: BoardArticle;
+  id: string;
+  image: string | undefined;
+  category: string;
+  title: string;
+  author: string | undefined;
+  date: string;
+  comments: number;
+  variant: "vertical" | "main";
 };
 
-export default function ArticleCard({ article, variant }: ArticleCardType) {
-  const imageUrl = article?.articleImage
-    ? `${serverApi}/${article.articleImage}`
-    : "/public/images/default-blog.png";
+export default function ArticleCard({
+  image,
+  category,
+  title,
+  author,
+  date,
+  comments,
+  variant,
+  id,
+}: ArticleCardType) {
+  const imageUrl = image ? `${serverApi}/${image}` : "/images/default-blog.png";
 
-  if (variant === "featured") {
+  const locale = useLocale();
+
+  if (variant === "main") {
     return (
-      <div className="group relative w-full rounded-xl overflow-hidden cursor-pointer h-80  sm:h-96  md:h-[80vh] lg:h-full ">
-        <Image
-          src={imageUrl}
-          alt={article?.articleTitle}
-          fill
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+      <Link href={`/community/${id}`}>
+        <Card className="relative h-full w-full overflow-hidden rounded-xl group cursor-pointer shadow-md hover:shadow-xl transition-all duration-300">
+          {/* Background Image */}
+          <div className="absolute inset-0">
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+          </div>
 
-        {/* gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
 
-        <div className="absolute bottom-0 p-6 text-white w-full">
-          <span className="inline-block bg-white/90 text-black text-xs font-medium px-3 py-1 rounded mb-3">
-            {article?.articleCategory}
-          </span>
+          {/* Content */}
+          <div className="relative z-10 flex flex-col justify-end h-full p-5 text-white">
+            {/* Top */}
+            <div>
+              <Chip
+                label={category}
+                size="small"
+                className="py-2 px-3 rounded-xl text-gray-700 bg-slate-200"
+              />
 
-          <h2 className="relative w-fit text-2xl font-semibold">
-            {article?.articleTitle}
-            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
-          </h2>
-
-          <div className="flex items-center gap-4 text-sm mt-4 opacity-90 flex-wrap">
-            <div className="flex items-center gap-1">
-              <PersonOutlineIcon fontSize="small" />
-              {article.memberData?.memberNick ?? "Unknown"}
+              <Typography
+                variant="h6"
+                className="mt-3 font-semibold leading-snug line-clamp-2 relative"
+              >
+                {title}
+              </Typography>
             </div>
 
-            <div className="flex items-center gap-1">
-              <CalendarTodayOutlinedIcon fontSize="small" />
-              {article?.createdAt}
-            </div>
+            {/* Bottom Metadata */}
+            <div className="flex items-center gap-4 text-sm text-white/90">
+              <div className="flex items-center gap-1">
+                <PersonOutlineIcon fontSize={"small"} />
+                <span>{author ?? "Uknown"}</span>
+              </div>
 
-            <div className="flex items-center gap-1">
-              <ChatBubbleOutlineIcon fontSize="small" />
-              {article?.articleComments ?? 0}
+              <div className="flex items-center gap-1">
+                <CalendarTodayOutlinedIcon fontSize="small" />
+                <span>{timeFormatter(date)}</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <ChatBubbleOutlineIcon fontSize="small" />
+                <span>{comments}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Link>
+    );
+  } else if (variant === "vertical") {
+    return (
+      <Link href={`/community/${id}`}>
+        <Card className="w-full h-full rounded-xl overflow-hidden group shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col">
+          {/* IMAGE SECTION */}
+          <div className="relative w-full h-7/12 overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+
+            {/* Category badge */}
+            <div className="absolute top-3 left-3">
+              <Chip
+                label={category}
+                size="small"
+                className="bg-white font-semibold"
+              />
+            </div>
+          </div>
+
+          {/* CONTENT SECTION */}
+          <div className="flex-1 flex flex-col justify-between p-4">
+            {/* Title */}
+            <Typography
+              variant="h6"
+              className="font-semibold leading-snug line-clamp-2"
+            >
+              {title}
+            </Typography>
+
+            {/* Metadata */}
+            <div className="flex md:flex-col xl:flex-row gap-y-2 gap-x-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <PersonOutlineIcon fontSize="small" />
+                <span>{author}</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <CalendarTodayOutlinedIcon fontSize="small" />
+                <span>{timeFormatter(date)}</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <ChatBubbleOutlineIcon fontSize="small" />
+                <span>{comments}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Link>
     );
   }
-
-  /* VERTICAL CARD (COLUMN 2) */
-  if (variant === "vertical") {
-    return (
-      <div className="group flex flex-col lg:h-full bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-80">
-        <div className="relative h-3/4 overflow-hidden">
-          <Image
-            fill
-            src={imageUrl}
-            alt={article?.articleTitle}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-
-          <span className="absolute top-3 left-3 bg-white text-xs px-3 py-1 rounded shadow">
-            {article?.articleCategory}
-          </span>
-        </div>
-
-        <div className="flex flex-col justify-between flex-1 p-4">
-          <h3 className="relative w-fit text-lg font-semibold">
-            {article?.articleTitle}
-            <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
-          </h3>
-
-          <div className="flex items-center gap-3 text-sm text-gray-600 mt-4 flex-wrap">
-            <div className="flex items-center gap-1">
-              <PersonOutlineIcon fontSize="small" />
-              {article?.memberData?.memberNick ?? "Unknown"}
-            </div>
-
-            <div className="flex items-center gap-1">
-              <CalendarTodayOutlinedIcon fontSize="small" />
-              {article?.createdAt}
-            </div>
-
-            <div className="flex items-center gap-1">
-              <ChatBubbleOutlineIcon fontSize="small" />
-              {article?.articleComments}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  /* HORIZONTAL CARD (COLUMN 3) */
-  if (variant === "horizontal") {
-    return (
-      <div className="group grid grid-cols-2 h-full bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <div className="overflow-hidden">
-          <Image
-            src={imageUrl}
-            alt={article?.articleTitle}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-
-        <div className="flex flex-col justify-between p-3">
-          <div>
-            <span className="text-xs bg-gray-200 px-2 py-1 rounded">
-              {article?.articleCategory}
-            </span>
-
-            <h4 className="relative w-fit text-sm font-semibold mt-2">
-              {article?.articleTitle}
-              <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
-            </h4>
-          </div>
-
-          <div className="text-xs text-gray-600 flex flex-col gap-1 mt-2">
-            <div className="flex items-center gap-1">
-              <PersonOutlineIcon fontSize="small" />
-              {article?.memberData?.memberNick}
-            </div>
-
-            <div className="flex items-center gap-1">
-              <CalendarTodayOutlinedIcon fontSize="small" />
-              {article?.createdAt}
-            </div>
-
-            <div className="flex items-center gap-1">
-              <ChatBubbleOutlineIcon fontSize="small" />
-              {article?.articleComments ?? 0}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return null;
 }

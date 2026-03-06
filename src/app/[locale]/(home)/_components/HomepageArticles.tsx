@@ -1,15 +1,19 @@
+"use client";
 import { GET_BOARD_ARTICLES } from "@/apollo/user/query";
+import HomepageArticlesSkeleton from "@/components/skeletons/HomepageArticlesSkeleton";
 import ArticleCard from "@/components/ui/ArticleCard";
+import Emty from "@/components/ui/Emty";
 import { Direction } from "@/libs/enums/common.enum";
 import { BoardArticle } from "@/libs/types/board-article/board-article";
 import { BoardArticlesInquiry } from "@/libs/types/board-article/board-article.input";
 import { T } from "@/libs/types/common";
 import { useQuery } from "@apollo/client";
+import Image from "next/image";
 import { useState } from "react";
 
 const initialInput: BoardArticlesInquiry = {
   page: 1,
-  limit: 3,
+  limit: 5,
   sort: "articleViews",
   direction: Direction.DESC,
   search: {},
@@ -33,41 +37,40 @@ export default function HomepageArticles() {
     },
   });
 
-  return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 min-h-175">
-      {/* COLUMN 1 */}
-      <div className="lg:col-span-5 md:col-span-2">
-        {articles?.length && articles[0] ? (
-          <ArticleCard article={articles[0]} variant="featured" />
-        ) : (
-          <div>Blog</div>
-        )}
+  if (getArticlesLoading) {
+    return <HomepageArticlesSkeleton />;
+  }
+  return articles.length === 0 ? (
+    <Emty title="No Articles" />
+  ) : (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="h-64 sm:h-80 md:h-full">
+        <ArticleCard
+          id={articles[0]?._id}
+          variant="main"
+          title={articles[0]?.articleTitle}
+          author={articles[0]?.memberData?.memberNick}
+          category={articles[0]?.articleCategory}
+          comments={articles[0]?.articleComments}
+          date={articles[0]?.createdAt}
+          image={articles[0]?.articleImage}
+        />
       </div>
-
-      {/* COLUMN 2 */}
-      <div className="lg:col-span-3 md:col-span-1 grid grid-rows-2 gap-4">
-        {articles
-          .filter((_, i) => i === 1 || i === 2)
-          .map((article) => (
+      <div className="grid sm:grid-cols-2  lg:grid-cols-2 gap-4">
+        {articles.slice(1).map((article) => (
+          <div className="h-64 lg:h-80" key={article._id}>
             <ArticleCard
-              article={article}
-              key={article._id}
+              id={article?._id}
               variant="vertical"
+              title={article?.articleTitle}
+              author={article?.memberData?.memberNick}
+              category={article?.articleCategory}
+              comments={article?.articleComments}
+              date={article?.createdAt}
+              image={article?.articleImage}
             />
-          ))}
-      </div>
-
-      {/* COLUMN 3 */}
-      <div className="lg:col-span-4 md:col-span-1 grid grid-rows-6 gap-4">
-        {articles
-          .filter((_, i) => i > 2 && i <= 5)
-          .map((article) => (
-            <ArticleCard
-              article={article}
-              key={article._id}
-              variant="horizontal"
-            />
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );
