@@ -59,7 +59,7 @@ export default function AgentCard({
             src={imageUrl}
             alt={agent.memberNick}
             className="w-full h-full object-cover"
-            fill={true}
+            fill
             loading="lazy"
           />
 

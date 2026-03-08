@@ -13,6 +13,8 @@
     "topTitle": "추천 매물",
     "topSubtitle": "참여도, 수요, 시장 활동을 기반으로 선정된 상위 매물",
     "agentTitle": "평점이 높은 공인중개사",
-    "agentSubtitle": "사용자 평가를 기반으로 선정된 우수 중개사"
+    "agentSubtitle": "사용자 평가를 기반으로 선정된 우수 중개사",
+    "articleTitle": "사람들이 읽고 있는 것",
+    "articleSubtitle": "현재 플랫폼에서 가장 많이 조회되고 가장 많이 이야기되는 기사들"
   }
 }

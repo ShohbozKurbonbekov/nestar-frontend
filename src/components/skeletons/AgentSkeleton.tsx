@@ -44,7 +44,7 @@ export default function AgentSkeleton({
               <Skeleton
                 variant="rectangular"
                 height={40}
-                width="100%"
+                width="40%"
                 animation="wave"
               />
             </div>

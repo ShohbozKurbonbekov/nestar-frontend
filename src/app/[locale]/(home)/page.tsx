@@ -51,8 +51,8 @@ export default function Home() {
       </HomepageSectionBlock>
       <HomepageSectionBlock
         className="pt-0 pb-20"
-        title="What People Are Reading"
-        subtitle="The most viewed and talked-about articles on the platform right now"
+        title={t("articleTitle")}
+        subtitle={t("articleSubtitle")}
       >
         <HomepageArticles />
       </HomepageSectionBlock>

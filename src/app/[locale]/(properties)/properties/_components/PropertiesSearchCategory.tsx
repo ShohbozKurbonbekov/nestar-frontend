@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Accordion,
   AccordionSummary,
@@ -8,20 +7,33 @@ import {
   FormControlLabel,
   TextField,
   Button,
-  Radio,
-  RadioGroup,
-  FormControl,
   Divider,
   Typography,
-  IconButton,
+  Autocomplete,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SearchSharp } from "@mui/icons-material";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useTranslations } from "next-intl";
+import { PropertyLocation, PropertyType } from "@/libs/enums/property.enum";
+import { useRouter } from "next/navigation";
+import { usePropertiesFilter } from "@/libs/hooks/PropertiesFilter";
+import { initialInput } from "../page";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { PRICE_OPTIONS, PROPERTY_SQUARE } from "@/libs/data/static-data";
+import { priceFormatter } from "@/libs/utils/priceFormatter";
 
 // ---------------------------- SX styles ---------------------
+
+const inputClasses = {
+  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#9ca3af",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#9ca3af",
+  },
+};
 const textStyles = {
   "&:hover": {
     border: "0",
@@ -58,17 +70,398 @@ const buttonActiveClasses = "border-0 bg-blue-400 text-white";
 
 // ---------------------------- Component ---------------------
 export default function PropertiesSearchCategory() {
+  const router = useRouter();
+  const { filters, setFilters } = usePropertiesFilter();
+
+  const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(
+    Object.keys(PropertyLocation) as PropertyLocation[],
+  );
+  const [propertyType, setPropertyType] = useState<PropertyType[]>(
+    Object.keys(PropertyType) as PropertyType[],
+  );
+  const [searchText, setSearchText] = useState<string>("");
   const t = useTranslations("Properties");
-  const [activeRoom, setActiveRoom] = useState<number>(0);
-  const [activeBedroom, setActiveBedroom] = useState<number>(0);
+
+  const price_options = useMemo(() => PRICE_OPTIONS, []);
+  const property_square = useMemo(() => PROPERTY_SQUARE, []);
+  /** LIFECYCLES **/
+  useEffect(() => {
+    if (filters?.search?.locationList?.length === 0) {
+      delete filters.search.locationList;
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+
+    if (filters?.search?.typeList?.length === 0) {
+      delete filters.search.typeList;
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+
+    if (filters?.search?.roomsList?.length === 0) {
+      delete filters.search.roomsList;
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+
+    if (filters?.search?.options?.length === 0) {
+      delete filters.search.options;
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+
+    if (filters?.search?.bedsList?.length === 0) {
+      delete filters.search.bedsList;
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+  }, [filters]);
+  // ---------------------------- Handlers ---------------------
+  const propertyLocationSelectHandler = async (e: any) => {
+    try {
+      const isChecked = e.target.checked;
+      const value = e.target.value;
+      if (isChecked) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              locationList: [...(filters?.search?.locationList || []), value],
+            },
+          })}`,
+          { scroll: false },
+        );
+      } else if (filters?.search?.locationList?.includes(value)) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              locationList: filters?.search?.locationList?.filter(
+                (item: string) => item !== value,
+              ),
+            },
+          })}`,
+          { scroll: false },
+        );
+      }
+
+      if (filters?.search?.typeList?.length === 0) {
+        alert("Error happened with Location");
+      }
+
+      console.log("propertyLocationSelectHandler:", e.target.value);
+    } catch (err: any) {
+      console.log("ERROR, propertyLocationSelectHandler:", err);
+    }
+  };
+
+  const propertyTypeSelectHandler = async (e: any) => {
+    try {
+      const isChecked = e.target.checked;
+      const value = e.target.value;
+      if (isChecked) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              typeList: [...(filters?.search?.typeList || []), value],
+            },
+          })}`,
+          { scroll: false },
+        );
+      } else if (filters?.search?.typeList?.includes(value)) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              typeList: filters?.search?.typeList?.filter(
+                (item: string) => item !== value,
+              ),
+            },
+          })}`,
+          { scroll: false },
+        );
+      }
+
+      if (filters?.search?.typeList?.length == 0) {
+        alert("Error in Property type");
+      }
+
+      console.log("propertyTypeSelectHandler:", e.target.value);
+    } catch (err: any) {
+      console.log("ERROR, propertyTypeSelectHandler:", err);
+    }
+  };
+
+  const propertyRoomSelectHandler = async (number: Number) => {
+    try {
+      if (number !== 0) {
+        if (filters?.search?.roomsList?.includes(number)) {
+          router.push(
+            `/properties?input=${JSON.stringify({
+              ...filters,
+              search: {
+                ...filters.search,
+                roomsList: filters?.search?.roomsList?.filter(
+                  (item: Number) => item !== number,
+                ),
+              },
+            })}`,
+            { scroll: false },
+          );
+        } else {
+          router.push(
+            `/properties?input=${JSON.stringify({
+              ...filters,
+              search: {
+                ...filters.search,
+                roomsList: [...(filters?.search?.roomsList || []), number],
+              },
+            })}`,
+            { scroll: false },
+          );
+        }
+      } else {
+        console.log("ELSE: ", number);
+        delete filters?.search.roomsList;
+        setFilters({ ...filters });
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+            },
+          })}`,
+          { scroll: false },
+        );
+      }
+
+      console.log("propertyRoomSelectHandler:", number);
+    } catch (err: any) {
+      console.log("ERROR, propertyRoomSelectHandler:", err);
+    }
+  };
+
+  const propertyOptionSelectHandler = async (e: any) => {
+    try {
+      const isChecked = e.target.checked;
+      const value = e.target.value;
+      if (isChecked) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              options: [...(filters?.search?.options || []), value],
+            },
+          })}`,
+          { scroll: false },
+        );
+      } else if (filters?.search?.options?.includes(value)) {
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+              options: filters?.search?.options?.filter(
+                (item: string) => item !== value,
+              ),
+            },
+          })}`,
+          { scroll: false },
+        );
+      }
+
+      console.log("propertyOptionSelectHandler:", e.target.value);
+    } catch (err: any) {
+      console.log("ERROR, propertyOptionSelectHandler:", err);
+    }
+  };
+
+  const propertyBedSelectHandler = async (number: Number) => {
+    try {
+      if (number !== 0) {
+        if (filters?.search?.bedsList?.includes(number)) {
+          router.push(
+            `/properties?input=${JSON.stringify({
+              ...filters,
+              search: {
+                ...filters.search,
+                bedsList: filters?.search?.bedsList?.filter(
+                  (item: Number) => item !== number,
+                ),
+              },
+            })}`,
+            { scroll: false },
+          );
+        } else {
+          router.push(
+            `/properties?input=${JSON.stringify({
+              ...filters,
+              search: {
+                ...filters.search,
+                bedsList: [...(filters?.search?.bedsList || []), number],
+              },
+            })}`,
+            { scroll: false },
+          );
+        }
+      } else {
+        delete filters?.search.bedsList;
+        setFilters({ ...filters });
+        router.push(
+          `/properties?input=${JSON.stringify({
+            ...filters,
+            search: {
+              ...filters.search,
+            },
+          })}`,
+          { scroll: false },
+        );
+      }
+
+      console.log("propertyBedSelectHandler:", number);
+    } catch (err: any) {
+      console.log("ERROR, propertyBedSelectHandler:", err);
+    }
+  };
+
+  const propertySquareHandler = async (value: number, type: string) => {
+    if (type === "start") {
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+            squaresRange: { ...filters.search.squaresRange, start: value },
+          },
+        })}`,
+        { scroll: false },
+      );
+    } else {
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+            squaresRange: { ...filters.search.squaresRange, end: value },
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+  };
+
+  const propertyPriceHandler = async (value: number, type: string) => {
+    if (type === "start") {
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+            pricesRange: { ...filters.search.pricesRange, start: value * 1 },
+          },
+        })}`,
+        { scroll: false },
+      );
+    } else {
+      router.push(
+        `/properties?input=${JSON.stringify({
+          ...filters,
+          search: {
+            ...filters.search,
+            pricesRange: { ...filters.search.pricesRange, end: value * 1 },
+          },
+        })}`,
+        { scroll: false },
+      );
+    }
+  };
+
+  const refreshHandler = async () => {
+    try {
+      setSearchText("");
+      setFilters(initialInput);
+      router.push(`/properties?input=${JSON.stringify(initialInput)}`, {
+        scroll: false,
+      });
+    } catch (err: any) {
+      console.log("ERROR, refreshHandler:", err);
+    }
+  };
 
   // ---------------------------- Render ---------------------
   return (
     <div className="w-full bg-white rounded-2xl p-6 border border-slate-300/80  space-y-4">
       {/* 1 Title Search */}
+      <div className="flex flex-row items-center justify-center">
+        <div className="flex gap-1 mt-3">
+          <RestartAltIcon
+            fontSize="medium"
+            color="action"
+            className="active:-rotate-90 transition-all duration-300 ease-linear cursor-pointer"
+            onClick={refreshHandler}
+          />
+          <Typography variant="body1" className="text-gray-500">
+            {t("reStart")}
+          </Typography>
+        </div>
+      </div>
       <div className="relative">
         <TextField
           fullWidth
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setFilters({
+                ...filters,
+                search: {
+                  ...filters.search,
+                  text: searchText.trim(),
+                },
+              });
+            }
+          }}
           size="small"
           placeholder={t("searchByTitle")}
           variant="outlined"
@@ -88,9 +481,19 @@ export default function PropertiesSearchCategory() {
           }}
         />
         <SearchSharp className="p-0 absolute top-1/2 -translate-y-1/2 left-3 text-slate-400 text-3xl " />
-        <IconButton className=" p-0 absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 text-3xl">
-          <RestartAltIcon />
-        </IconButton>
+        <HighlightOffIcon
+          className="p-0 absolute top-1/2 -translate-y-1/2 right-3 text-slate-300 text-3xl cursor-pointer hover:text-slate-500 active:scale-95 transition-all ease-linear duration-200"
+          onClick={() => {
+            setSearchText("");
+            setFilters({
+              ...filters,
+              search: {
+                ...filters.search,
+                text: "",
+              },
+            });
+          }}
+        />
       </div>
 
       <Divider />
@@ -104,10 +507,19 @@ export default function PropertiesSearchCategory() {
         </AccordionSummary>
         <AccordionDetails className="border-0">
           <div className={gridClasses}>
-            {["Seoul", "Gongju", "Busan"].map((city) => (
+            {propertyLocation.map((city) => (
               <FormControlLabel
                 key={city}
-                control={<Checkbox />}
+                control={
+                  <Checkbox
+                    color="default"
+                    value={city}
+                    checked={(filters?.search?.locationList || []).includes(
+                      city,
+                    )}
+                    onChange={propertyLocationSelectHandler}
+                  />
+                }
                 label={city}
               />
             ))}
@@ -124,10 +536,17 @@ export default function PropertiesSearchCategory() {
         </AccordionSummary>
         <AccordionDetails>
           <div className={gridClasses}>
-            {["Apartment", "House", "Villa", "Studio"].map((type) => (
+            {propertyType.map((type) => (
               <FormControlLabel
                 key={type}
-                control={<Checkbox />}
+                control={
+                  <Checkbox
+                    color={"default"}
+                    value={type}
+                    onChange={propertyTypeSelectHandler}
+                    checked={(filters?.search?.typeList || []).includes(type)}
+                  />
+                }
                 label={type}
               />
             ))}
@@ -142,15 +561,21 @@ export default function PropertiesSearchCategory() {
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outlined"
+              size="small"
+              className={`${buttonDefaultClasses} ${!filters?.search?.roomsList ? buttonActiveClasses : ""}`}
+              onClick={() => propertyRoomSelectHandler(0)}
+            >
+              any
+            </Button>
             {[1, 2, 3, 4].map((room: number) => (
               <Button
                 key={room}
                 variant="outlined"
                 size="small"
-                className={`${buttonDefaultClasses} ${activeRoom === room ? buttonActiveClasses : ""}`}
-                onClick={() =>
-                  setActiveRoom((prev) => (prev === room ? 0 : room))
-                }
+                className={`${buttonDefaultClasses} ${filters?.search?.roomsList?.includes(room) ? buttonActiveClasses : ""}`}
+                onClick={() => propertyRoomSelectHandler(room)}
               >
                 {room}
               </Button>
@@ -158,8 +583,8 @@ export default function PropertiesSearchCategory() {
             <Button
               variant="outlined"
               size="small"
-              className={`${buttonDefaultClasses} ${activeRoom === 5 ? buttonActiveClasses : ""}`}
-              onClick={() => setActiveRoom((prev) => (prev === 5 ? 0 : 5))}
+              className={`${buttonDefaultClasses} ${filters?.search?.roomsList?.includes(5) ? buttonActiveClasses : ""}`}
+              onClick={() => propertyRoomSelectHandler(5)}
             >
               5+
             </Button>
@@ -174,15 +599,21 @@ export default function PropertiesSearchCategory() {
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outlined"
+              size="small"
+              className={`${buttonDefaultClasses} ${!filters?.search?.bedsList ? buttonActiveClasses : ""}`}
+              onClick={() => propertyBedSelectHandler(0)}
+            >
+              any
+            </Button>
             {[1, 2, 3, 4].map((bedroom) => (
               <Button
                 key={bedroom}
                 variant="outlined"
                 size="small"
-                className={`${buttonDefaultClasses} ${activeBedroom === bedroom ? buttonActiveClasses : ""}`}
-                onClick={() =>
-                  setActiveBedroom((prev) => (prev === bedroom ? 0 : bedroom))
-                }
+                className={`${buttonDefaultClasses} ${filters?.search?.bedsList?.includes(bedroom) ? buttonActiveClasses : ""}`}
+                onClick={() => propertyBedSelectHandler(bedroom)}
               >
                 {bedroom}
               </Button>
@@ -190,8 +621,8 @@ export default function PropertiesSearchCategory() {
             <Button
               variant="outlined"
               size="small"
-              className={`${buttonDefaultClasses} ${activeBedroom === 5 ? buttonActiveClasses : ""}`}
-              onClick={() => setActiveBedroom((prev) => (prev === 5 ? 0 : 5))}
+              className={`${buttonDefaultClasses} ${filters?.search?.bedsList?.includes(5) ? buttonActiveClasses : ""}`}
+              onClick={() => propertyBedSelectHandler(5)}
             >
               5+
             </Button>
@@ -203,24 +634,59 @@ export default function PropertiesSearchCategory() {
       <Accordion sx={accordionStyles}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <span className="font-semibold text-gray-700">
-            {t("squareOptions.label")}{" "}
+            {t("squareOptions.label")}
           </span>
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex gap-3">
-            <TextField
+            <Autocomplete
               fullWidth
-              size="small"
-              label={t("squareOptions.option1")}
-              type="number"
-              sx={textStyles}
+              freeSolo
+              options={property_square}
+              value={filters?.search?.squaresRange?.start}
+              onChange={(event, newValue) => {
+                if (typeof newValue === "number")
+                  propertySquareHandler(newValue, "start");
+                else if (typeof newValue === "string")
+                  propertySquareHandler(Number(newValue), "start");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("squareOptions.option1")}
+                  placeholder="0"
+                  size="small"
+                  sx={inputClasses}
+                />
+              )}
+              getOptionLabel={(option) =>
+                typeof option === "number" ? String(option) : option
+              }
             />
-            <TextField
+
+            <Autocomplete
               fullWidth
-              size="small"
-              label={t("squareOptions.option2")}
-              type="number"
-              sx={textStyles}
+              freeSolo
+              options={property_square}
+              value={filters?.search?.squaresRange?.end}
+              onChange={(event, newValue) => {
+                if (typeof newValue === "number")
+                  propertySquareHandler(newValue, "end");
+                else if (typeof newValue === "string")
+                  propertySquareHandler(Number(newValue), "end");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("squareOptions.option2")}
+                  placeholder="0"
+                  size="small"
+                  sx={inputClasses}
+                />
+              )}
+              getOptionLabel={(option) =>
+                typeof option === "number" ? String(option) : option
+              }
             />
           </div>
         </AccordionDetails>
@@ -235,19 +701,68 @@ export default function PropertiesSearchCategory() {
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex gap-3">
-            <TextField
+            <Autocomplete
               fullWidth
-              size="small"
-              label={t("priceOptions.option1")}
-              type="number"
-              sx={textStyles}
+              freeSolo
+              options={price_options}
+              renderOption={(props, option) => (
+                <li {...props} key={option}>
+                  {priceFormatter(option)}
+                </li>
+              )}
+              value={filters?.search?.pricesRange?.start}
+              onChange={(event, newValue) => {
+                if (typeof newValue === "number")
+                  propertyPriceHandler(newValue, "start");
+                else if (typeof newValue === "string")
+                  propertyPriceHandler(Number(newValue), "start");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("priceOptions.option1")}
+                  placeholder="0"
+                  size="small"
+                />
+              )}
+              getOptionLabel={(option) =>
+                typeof option === "number"
+                  ? priceFormatter(option)
+                  : priceFormatter(Number(option))
+              }
+              sx={inputClasses}
             />
-            <TextField
+
+            <Autocomplete
               fullWidth
-              size="small"
-              label={t("priceOptions.option2")}
-              type="number"
-              sx={textStyles}
+              freeSolo
+              options={price_options}
+              renderOption={(props, option) => (
+                <li {...props} key={option}>
+                  {priceFormatter(option)}
+                </li>
+              )}
+              value={filters?.search?.pricesRange?.end}
+              onChange={(event, newValue) => {
+                if (typeof newValue === "number")
+                  propertyPriceHandler(newValue, "end");
+                else if (typeof newValue === "string")
+                  propertyPriceHandler(Number(newValue), "end");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("priceOptions.option2")}
+                  placeholder="0"
+                  size="small"
+                  sx={inputClasses}
+                />
+              )}
+              getOptionLabel={(option) =>
+                typeof option === "number"
+                  ? priceFormatter(option)
+                  : priceFormatter(Number(option))
+              }
             />
           </div>
         </AccordionDetails>
@@ -261,31 +776,27 @@ export default function PropertiesSearchCategory() {
           </span>
         </AccordionSummary>
         <AccordionDetails>
-          <FormControl>
-            <RadioGroup>
-              <FormControlLabel value="rent" control={<Radio />} label="Rent" />
+          <div className={gridClasses}>
+            {[
+              { name: "propertyBarter", label: "Barter" },
+              { name: "propertyRent", label: "Rent" },
+            ].map(({ label, name }) => (
               <FormControlLabel
-                value="barter"
-                control={<Radio />}
-                label="Barter"
+                key={name}
+                control={
+                  <Checkbox
+                    value={name}
+                    color="default"
+                    onChange={propertyOptionSelectHandler}
+                    checked={(filters?.search?.options || []).includes(name)}
+                  />
+                }
+                label={label}
               />
-              <FormControlLabel value="sell" control={<Radio />} label="Sell" />
-            </RadioGroup>
-          </FormControl>
+            ))}
+          </div>
         </AccordionDetails>
       </Accordion>
-
-      {/* 🔎 Search Button */}
-      <div>
-        <Button
-          fullWidth
-          variant="outlined"
-          size="medium"
-          className=" capitalize bg-slate-500 text-white border-0 py-3 "
-        >
-          <Typography variant="body1">{t("searchButton")}</Typography>
-        </Button>
-      </div>
     </div>
   );
 }

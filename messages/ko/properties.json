@@ -6,6 +6,7 @@
     "newest": "최신순",
     "highest": "높은 가격순",
     "lowest": "낮은 가격순",
+    "reStart": "전체 다시 시작",
     "searchByTitle": "제목으로 검색",
     "locationOptions": {
       "label": "지역"

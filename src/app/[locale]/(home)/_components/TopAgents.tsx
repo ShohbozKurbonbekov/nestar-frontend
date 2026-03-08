@@ -113,7 +113,7 @@ export default function TopAgents() {
           ) : (
             topAgents.map((agent) => (
               <div
-                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-2"
+                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] overflow-hidden p-3"
                 key={agent._id}
               >
                 <AgentCard

@@ -17,7 +17,7 @@ import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { priceFormatter } from "@/libs/utils/priceFormatter";
 
 interface PropertyCardType {
-  likePropertyHandler: (user: CustomJwtPayload, id: string) => Promise<void>;
+  likePropertyHandler?: (user: CustomJwtPayload, id: string) => Promise<void>;
   property: Property;
   mainCardClasses?: string;
   featuredTags?: React.ReactNode;
@@ -44,7 +44,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
           <Image
             src={imageUrl}
             fill
-            alt={property?.propertyTitle}
+            alt={property?.propertyTitle ?? "Property-title"}
             className="object-cover transition-transform duration-500 group-hover:scale-110 w-full h-full"
             loading="lazy"
           />
@@ -58,7 +58,9 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                likePropertyHandler(user, property._id);
+                if (likePropertyHandler) {
+                  likePropertyHandler(user, property._id);
+                }
               }}
               className="bg-white hover:bg-red-300 hover:text-white transition"
             >

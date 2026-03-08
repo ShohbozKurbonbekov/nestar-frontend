@@ -54,3 +54,11 @@ export const messageLoaders = {
     properties: (await import("../../../messages/ru/properties.json")).default,
   }),
 };
+
+// ---------------------------  Price Options -----------------
+export const PRICE_OPTIONS = [
+  0, 50000, 100000, 150000, 200000, 300000, 400000, 500000, 600000, 700000,
+  800000, 900000, 1000000, 1200000, 1400000, 1600000, 1800000, 2000000,
+];
+
+export const PROPERTY_SQUARE = [0, 25, 50, 75, 100, 125, 150, 200, 300, 500];
