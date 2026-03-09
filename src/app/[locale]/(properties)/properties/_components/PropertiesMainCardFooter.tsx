@@ -34,6 +34,7 @@ export default function ProperiesMainCardFooter({
       >
         <Link
           href={propertyLink}
+          scroll={false}
           className="relative group-hover/button:text-white z-10"
         >
           Detail

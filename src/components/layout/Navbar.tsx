@@ -25,14 +25,14 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed w-full top-0 left-0 bg-black/30
+        className={`fixed w-full top-0 left-0 bg-black/40
     transition-transform duration-700 ease-in-out shadow-lg backdrop-blur-md z-50
      ${!isFixed && "-translate-y-full opacity-0 pointer-events-none"}`}
       >
         <NavbarContainer />
       </nav>
       <nav
-        className={`absolute top-0 left-0 w-full bg-black/20
+        className={`absolute top-0 left-0 w-full bg-black/40
          z-50`}
         ref={navbarEl}
       >

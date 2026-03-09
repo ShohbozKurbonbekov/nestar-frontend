@@ -29,7 +29,6 @@ export default function PropertiesMain({
 }: PropertiesMainType) {
   const router = useRouter();
   const { filters } = usePropertiesFilter();
-
   // ---------------------------------- Handlers -------------------
   const handlePaginationChange = async (_: any, value: number) => {
     filters.page = Number(value);
@@ -81,7 +80,7 @@ export default function PropertiesMain({
                   property={property}
                   cardFooter={
                     <ProperiesMainCardFooter
-                      propertyLink={`/properies/${property?._id}`}
+                      propertyLink={`/properties/${property?._id}`}
                       totalLikes={property?.propertyLikes}
                       totalViews={property?.propertyViews}
                     />

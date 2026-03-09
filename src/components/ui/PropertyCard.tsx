@@ -1,5 +1,5 @@
 "use client";
-import { Typography, IconButton } from "@mui/material";
+import { Typography, IconButton, Chip } from "@mui/material";
 import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
 import BedOutlined from "@mui/icons-material/BedOutlined";
 import BedroomParentIcon from "@mui/icons-material/BedroomParent";
@@ -15,6 +15,37 @@ import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { priceFormatter } from "@/libs/utils/priceFormatter";
+import { PropertyType } from "@/libs/enums/property.enum";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import VillaIcon from "@mui/icons-material/Villa";
+import HomeIcon from "@mui/icons-material/Home";
+
+const propertyConfig = {
+  [PropertyType.APARTMENT]: {
+    label: "Apartment",
+    icon: <ApartmentIcon className="text-base" />,
+    style:
+      "bg-slate-100 text-slate-700 border border-slate-200 group-hover:bg-slate-200",
+  },
+  [PropertyType.VILLA]: {
+    label: "Villa",
+    icon: <VillaIcon className="text-base" />,
+    style:
+      "bg-amber-100 text-amber-700 border border-amber-200 group-hover:bg-amber-200",
+  },
+  [PropertyType.HOUSE]: {
+    label: "House",
+    icon: <HomeIcon className="text-base" />,
+    style:
+      "bg-emerald-100 text-emerald-700 border border-emerald-200 group-hover:bg-emerald-200",
+  },
+};
+
+const typeStyles: Record<"propertyBarter" | "propertyRent" | "both", string> = {
+  propertyRent: "bg-blue-100 text-blue-700 border-blue-200",
+  propertyBarter: "bg-purple-100 text-purple-700 border-purple-200",
+  both: "bg-emerald-100 text-emerald-700 border-emerald-200",
+};
 
 interface PropertyCardType {
   likePropertyHandler?: (user: CustomJwtPayload, id: string) => Promise<void>;
@@ -36,10 +67,12 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
     const imageUrl = property?.propertyImages[0]
       ? `${serverApi}/${property?.propertyImages[0]}`
       : `/images/default-property.png`;
+
+    const item = propertyConfig[property?.propertyType];
     return (
       <div className={mainCardClasses}>
         {/* Image Wrapper */}
-        <div className="relative h-64 w-full ">
+        <div className="relative h-64 w-full overflow-hidden">
           {/* Image */}
           <Image
             src={imageUrl}
@@ -50,7 +83,27 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
           />
 
           {/* Featured Tags */}
-          {featuredTags && featuredTags}
+          {featuredTags ? (
+            featuredTags
+          ) : (
+            <Chip
+              className={`absolute bottom-2 left-2 font-semibold tracking-wide px-2 py-1 shadow-sm border 
+                  ${
+                    property.propertyBarter && property.propertyRent
+                      ? typeStyles["both"]
+                      : property.propertyBarter
+                        ? typeStyles["propertyBarter"]
+                        : typeStyles["propertyRent"]
+                  }`}
+              label={
+                property?.propertyBarter && property?.propertyRent
+                  ? "Rent & Barter"
+                  : property?.propertyBarter
+                    ? "Barter"
+                    : "Rent"
+              }
+            />
+          )}
 
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-black/60 -translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out flex items-center justify-center gap-4">
@@ -91,6 +144,15 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
 
         {/* Content */}
         <div className="p-6">
+          <div className="mb-1">
+            <Chip
+              icon={item.icon}
+              label={item.label}
+              className={`
+        ${item.style} font-medium tracking-wide px-2 py-1 rounded-lg transition duration-200
+      `}
+            />
+          </div>
           <Typography variant="h6" className="capitalize truncate">
             {property?.propertyTitle}
           </Typography>

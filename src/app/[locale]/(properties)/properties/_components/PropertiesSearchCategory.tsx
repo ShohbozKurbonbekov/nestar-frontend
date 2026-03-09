@@ -19,7 +19,7 @@ import { useTranslations } from "next-intl";
 import { PropertyLocation, PropertyType } from "@/libs/enums/property.enum";
 import { useRouter } from "next/navigation";
 import { usePropertiesFilter } from "@/libs/hooks/PropertiesFilter";
-import { initialInput } from "../page";
+import { initialInput } from "../(list)/page";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { PRICE_OPTIONS, PROPERTY_SQUARE } from "@/libs/data/static-data";
 import { priceFormatter } from "@/libs/utils/priceFormatter";

@@ -1,7 +1,7 @@
 "use client";
 import { PropertiesFilter } from "@/libs/hooks/PropertiesFilter";
-import PropertiesMain from "./_components/PropertiesMain";
-import PropertiesSort from "./_components/PropertiesSort";
+import PropertiesMain from "../_components/PropertiesMain";
+import PropertiesSort from "../_components/PropertiesSort";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
 import { Direction } from "@/libs/enums/common.enum";
 import { useEffect, useState } from "react";
@@ -55,11 +55,11 @@ export default function Property() {
   });
 
   useEffect(() => {
-    if (queriesInput) {
-      const inputValues = JSON.parse(queriesInput);
+    if (queries.get("input")) {
+      const inputValues = JSON.parse(queries.get("input") ?? "/properties");
       setInitial(inputValues);
     }
-  }, [queriesInput]);
+  }, [queries]);
 
   return (
     <section className="py-20">
