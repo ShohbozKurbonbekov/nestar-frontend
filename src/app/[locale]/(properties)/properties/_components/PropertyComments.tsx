@@ -3,6 +3,7 @@ import ForumIcon from "@mui/icons-material/Forum";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { Comment } from "@/libs/types/comment/comment";
+import { serverApi } from "@/libs/config";
 
 interface PropertyCommentsType {
   comments: Comment[];
@@ -38,7 +39,11 @@ export default function PropertyComments({
           >
             {/* MEMBER IMAGE */}
             <Avatar
-              src={comment.memberData?.memberImage}
+              src={
+                comment.memberData?.memberImage
+                  ? `${serverApi}/${comment.memberData?.memberImage}`
+                  : ""
+              }
               alt={comment.memberData?.memberNick}
             />
 
