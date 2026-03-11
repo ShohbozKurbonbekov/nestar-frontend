@@ -1,14 +1,19 @@
-import { PropertyType } from "@/libs/enums/property.enum";
+import { PropertyLocation, PropertyType } from "@/libs/enums/property.enum";
 import React from "react";
 import SquareFootOutlined from "@mui/icons-material/SquareFootOutlined";
-import FavoriteBorderOutlined from "@mui/icons-material/FavoriteBorderOutlined";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
 import MeetingRoomOutlined from "@mui/icons-material/MeetingRoomOutlined";
 import BedOutlined from "@mui/icons-material/BedOutlined";
 import CalendarMonthOutlined from "@mui/icons-material/CalendarMonthOutlined";
 import HomeWorkOutlined from "@mui/icons-material/HomeWorkOutlined";
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack, IconButton } from "@mui/material";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
+import { firstLetterCapitalizer } from "@/libs/utils/firstLetterCapitalizer";
 
 // ---------------------------Helper Function -------------------------
 function StatItem({
@@ -20,27 +25,34 @@ function StatItem({
   value?: string | number;
   label: string;
 }) {
-  if (!value) return null;
+  if (value === "undefined" || value === null) return null;
 
   return (
-    <div className="flex flex-row items-center gap-2 overflow-hidden">
+    <div className="flex flex-row items-center gap-2">
       <Box className="text-slate-500">{icon}</Box>
 
-      <Box>
-        <Typography variant="body1" className="text-slate-900 capitalize">
+      <div className="line-clamp-1">
+        <Typography
+          variant="body1"
+          className="text-slate-900 capitalize line-clamp-1"
+        >
           {value}
         </Typography>
 
-        <Typography variant="body2" className="text-slate-500  capitalize">
+        <Typography
+          variant="body2"
+          className="text-slate-500  capitalize line-clamp-1"
+        >
           {label}
         </Typography>
-      </Box>
+      </div>
     </div>
   );
 }
 
 // ---------------------------Main Function ------------------------
 interface PropertyStatisticsType {
+  _id: string;
   propertySquare: number;
   propertyLikes: number;
   propertyViews: number;
@@ -48,6 +60,10 @@ interface PropertyStatisticsType {
   propertyBedrooms: number;
   propertyYearBuilt?: Date;
   propertyType: PropertyType;
+  propertyLiked: boolean | undefined;
+  propertyLocation: PropertyLocation;
+
+  likePropertyHandler?: (user: CustomJwtPayload, id: string) => Promise<void>;
 }
 
 const PropertyStatistics: React.FC<PropertyStatisticsType> = React.memo(
@@ -59,7 +75,12 @@ const PropertyStatistics: React.FC<PropertyStatisticsType> = React.memo(
     propertyType,
     propertyViews,
     propertyYearBuilt,
+    likePropertyHandler,
+    _id,
+    propertyLiked,
+    propertyLocation,
   }) => {
+    const user = useReactiveVar(userVar);
     // --------------------------- Render -------------------------
     return (
       <Box className="border border-slate-300/80 rounded-2xl p-5 md:p-6 bg-white">
@@ -70,11 +91,35 @@ const PropertyStatistics: React.FC<PropertyStatisticsType> = React.memo(
             label="Square"
           />
 
-          <StatItem
-            icon={<FavoriteBorderOutlined />}
-            value={propertyLikes}
-            label="Likes"
-          />
+          <div className="flex flex-row items-center gap-2 overflow-hidden">
+            <IconButton
+              className="text-slate-500 bg-slate-100 hover:bg-slate-200 border border-slate-200"
+              onClick={(e) => {
+                if (likePropertyHandler) {
+                  likePropertyHandler(user, _id).then();
+                }
+              }}
+            >
+              {!!propertyLiked && propertyLiked ? (
+                <Favorite className="text-red-500" />
+              ) : (
+                <FavoriteBorder />
+              )}
+            </IconButton>
+
+            <Box>
+              <Typography variant="body1" className="text-slate-900 capitalize">
+                {propertyLikes}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                className="text-slate-500  capitalize"
+              >
+                Likes
+              </Typography>
+            </Box>
+          </div>
 
           <StatItem
             icon={<VisibilityOutlined />}
@@ -114,8 +159,14 @@ const PropertyStatistics: React.FC<PropertyStatisticsType> = React.memo(
 
           <StatItem
             icon={<HomeWorkOutlined />}
-            value={propertyType}
+            value={firstLetterCapitalizer(propertyType)}
             label="Property Type"
+          />
+
+          <StatItem
+            icon={<LocationOnIcon />}
+            value={firstLetterCapitalizer(propertyLocation)}
+            label="Location"
           />
         </div>
       </Box>

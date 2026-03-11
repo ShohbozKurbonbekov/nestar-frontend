@@ -1,15 +1,19 @@
 "use client";
 
-import { GET_COMMENTS, GET_PROPERTY } from "@/apollo/user/query";
+import {
+  GET_COMMENTS,
+  GET_PROPERTIES,
+  GET_PROPERTY,
+} from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
 import { Property } from "@/libs/types/property/property";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import { useParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import PropertyGallery from "../../_components/PropertyGallery";
 import PropertyIntroduction from "../../_components/PropertyIntroduction";
-import PropertyStatistics from "./PropertyStatistics";
+import PropertyStatistics from "../../_components/PropertyStatistics";
 import { Direction, Message } from "@/libs/enums/common.enum";
 import {
   CommentInput,
@@ -18,23 +22,38 @@ import {
 import { Comment } from "@/libs/types/comment/comment";
 import PropertyComments from "../../_components/PropertyComments";
 import { CommentGroup } from "@/libs/enums/comment.enum";
-import PostComment from "../../_components/PostComment";
+import PostComment from "../../../../../../components/ui/PostComment";
 import { userVar } from "@/apollo/store";
 import { CREATE_COMMENT } from "@/apollo/user/mutation";
-import { sweetErrorHandling } from "@/libs/sweetAlert";
+import {
+  sweetErrorHandling,
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
+import AgentInfo from "../../_components/AgentInfo";
+import SameLocationProperties from "../../_components/SameLocationProperties";
+import PropertyTrendingProperties from "../../_components/PropertyTrendingProperties";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetProperty } from "@/services/Property.service";
+import { PropertyLocation } from "@/libs/enums/property.enum";
 
+// --------------------------------- Initial Comment ---------------------------
 const initialComment = {
   page: 1,
   limit: 5,
   sort: "createdAt",
   direction: Direction.DESC,
   search: {
-    commentRefId: "685e773785c28b7ead85cfb5",
+    commentRefId: "",
   },
 };
+
+// --------------------------------- Component ---------------------------
 export default function PropertyDetail() {
   const user = useReactiveVar(userVar);
   const params = useParams();
+  const [relatedProperties, setRelatedProperties] = useState<Property[]>([]);
+  const [trendingProperties, setTrendingProperties] = useState<Property[]>([]);
 
   const [property, setProperty] = useState<Property | null>(null);
   const [propertyId, setPropertyId] = useState<string | null>(null);
@@ -50,9 +69,8 @@ export default function PropertyDetail() {
     commentRefId: "",
   });
   {
-    /*  Apollo Fetch  */
+    /*  ***************************************** Apollo Fetch  ***************************************** */
   }
-
   const [createComment] = useMutation(CREATE_COMMENT);
 
   const {
@@ -66,7 +84,35 @@ export default function PropertyDetail() {
     skip: !propertyId,
     notifyOnNetworkStatusChange: true,
     onCompleted: (data: T) => {
-      if (data?.getProperty) setProperty(data?.getProperty);
+      if (data?.getProperty) setProperty(data.getProperty);
+    },
+  });
+
+  const {
+    loading: getPropertiesLoading,
+    data: getPropertiesData,
+    error: getPropertiesError,
+    refetch: getPropertiesRefetch,
+  } = useQuery(GET_PROPERTIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: {
+        page: 1,
+        limit: 6,
+        sort: "createdAt",
+        direction: Direction.DESC,
+        search: {
+          locationList: property?.propertyLocation
+            ? [property?.propertyLocation]
+            : [],
+        },
+      },
+    },
+    skip: !propertyId && !property,
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      if (data?.getProperties?.list)
+        setRelatedProperties(data?.getProperties?.list);
     },
   });
 
@@ -83,11 +129,33 @@ export default function PropertyDetail() {
     skip: !propertyId,
     notifyOnNetworkStatusChange: true,
     onCompleted: (data: T) => {
-      if (data?.getComments?.list) setPropertyComments(data?.getComments?.list);
-      setTotalComments(data?.getComments?.metaCounter[0]?.total ?? 0);
+      if (data?.getComments?.list) setPropertyComments(data.getComments.list);
+      setTotalComments(data.getComments?.metaCounter?.[0]?.total ?? 0);
     },
   });
 
+  const {
+    loading: getTrendingPropertiesLoading,
+    data: getTrendingPropertiesData,
+    error: getTrendingPropertiesError,
+  } = useQuery(GET_PROPERTIES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: {
+        page: 1,
+        limit: 4,
+        sort: "propertyLikes",
+        direction: Direction.DESC,
+        search: {},
+      },
+    },
+    skip: !property,
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setTrendingProperties(data?.getProperties.list);
+    },
+  });
+  /*  ***************************************** Apollo End  ***************************************** */
   /** LIFECYCLES **/
   useEffect(() => {
     if (params.propertyId) {
@@ -98,24 +166,15 @@ export default function PropertyDetail() {
           commentRefId: String(params.propertyId),
         },
       }));
-      setInsertCommentData({
-        ...insertCommentData,
+      setInsertCommentData((prev) => ({
+        ...prev,
         commentRefId: String(params.propertyId),
-      });
+      }));
     }
   }, [params]);
 
-  useEffect(() => {
-    if (commentInquery.search.commentRefId) {
-      getCommentsRefetch({ input: commentInquery });
-    }
-  }, [commentInquery]);
-  console.log("Comments: ", propertyComments);
-  if (getPropertyLoading)
-    return <DetailPageLoading subtitle="Fetching property detail..." />;
-
   // ------------------------------- Handlers -----------------
-  const createCommentHandler = async () => {
+  const createCommentHandler = useCallback(async () => {
     try {
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
       await createComment({ variables: { input: insertCommentData } });
@@ -126,19 +185,63 @@ export default function PropertyDetail() {
     } catch (err: any) {
       await sweetErrorHandling(err);
     }
-  };
-  const onPageChange = async (event: ChangeEvent<unknown>, value: number) => {
-    commentInquery.page = value;
-    setCommentInquery({ ...commentInquery });
-  };
-  if (!propertyId || !property) return;
+  }, [
+    user._id,
+    createComment,
+    insertCommentData,
+    setInsertCommentData,
+    commentInquery,
+    getCommentsData,
+  ]);
+
+  const onPageChange = useCallback(
+    async (event: ChangeEvent<unknown>, value: number) => {
+      setCommentInquery({ ...commentInquery, page: value });
+    },
+    [],
+  );
+
+  const likePropertyHandler = useCallback(
+    async (user: CustomJwtPayload, id: string) => {
+      try {
+        if (!id) return;
+        if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+        await likeTargetProperty(id);
+        getPropertyRefetch({ input: id });
+
+        property &&
+          getPropertiesRefetch({
+            input: {
+              page: 1,
+              limit: 6,
+              sort: "createdAt",
+              direction: Direction.DESC,
+              search: {
+                locationList: [property?.propertyLocation],
+              },
+            },
+          });
+
+        await sweetTopSmallSuccessAlert("succes", 1000);
+      } catch (err: any) {
+        console.log("ERROR, likePropertyHandler:", err.message);
+        await sweetMixinErrorAlert(err.message);
+      }
+    },
+    [],
+  );
+  if (getPropertyLoading || !property || !propertyId)
+    return <DetailPageLoading subtitle="Fetching property detail..." />;
+
+  // ------------------------------- Render -----------------
   return (
     <section className="py-20 bg-white">
       {/*  Apollo Fetch  */}
       <PropertyGallery images={property.propertyImages} />
       <PropertyIntroduction
         propertyCreation={property.createdAt}
-        propertyLocation={property.propertyLocation}
+        propertyAddress={property.propertyAddress}
         propertyPrice={property.propertyPrice}
         propertyTitle={property.propertyTitle}
         isBarter={property.propertyBarter}
@@ -149,13 +252,17 @@ export default function PropertyDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-5">
           <div className="lg:col-span-4">
             <PropertyStatistics
+              propertyLocation={property?.propertyLocation}
               propertyBedrooms={property?.propertyBeds}
-              propertyLikes={property.propertyLikes}
-              propertyRooms={property.propertyRooms}
-              propertySquare={property.propertySquare}
-              propertyType={property.propertyType}
-              propertyViews={property.propertyViews}
-              propertyYearBuilt={property.constructedAt}
+              propertyLikes={property?.propertyLikes}
+              propertyRooms={property?.propertyRooms}
+              propertySquare={property?.propertySquare}
+              propertyType={property?.propertyType}
+              propertyViews={property?.propertyViews}
+              propertyYearBuilt={property?.constructedAt}
+              likePropertyHandler={likePropertyHandler}
+              propertyLiked={property?.meLiked?.[0]?.myFavorite}
+              _id={property?._id}
             />
 
             <PropertyComments
@@ -171,12 +278,16 @@ export default function PropertyDetail() {
               commentInput={insertCommentData}
               createCommentHandler={createCommentHandler}
             />
+
+            <SameLocationProperties
+              properties={relatedProperties}
+              likePropertyHandler={likePropertyHandler}
+            />
           </div>
-          <div className="lg:col-span-2 border border-slate-300/80 p-4 rounded-2xl">
-            {" "}
-            part 2
+          <div className="lg:col-span-2">
+            <AgentInfo agent={property.memberData} />
+            <PropertyTrendingProperties properties={trendingProperties} />
           </div>
-          <div></div>
         </div>
       </div>
     </section>

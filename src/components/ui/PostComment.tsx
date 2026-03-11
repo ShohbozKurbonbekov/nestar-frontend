@@ -47,7 +47,6 @@ const PostComment: React.FC<PostCommentType> = React.memo(
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "12px",
-              backgroundColor: "#f8fafc",
             },
             ".MuiInputBase-root.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
               {

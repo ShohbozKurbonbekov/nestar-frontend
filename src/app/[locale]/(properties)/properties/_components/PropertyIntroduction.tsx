@@ -8,7 +8,7 @@ import { priceFormatter } from "@/libs/utils/priceFormatter";
 
 interface PropertyIntroductionType {
   propertyTitle: string;
-  propertyLocation: PropertyLocation;
+  propertyAddress: string;
   propertyPrice: number;
   propertyCreation: Date;
   isRent?: boolean;
@@ -19,7 +19,7 @@ interface PropertyIntroductionType {
 const PropertyIntroduction: React.FC<PropertyIntroductionType> = React.memo(
   ({
     propertyCreation,
-    propertyLocation,
+    propertyAddress,
     propertyPrice,
     propertyTitle,
     isBarter,
@@ -48,7 +48,7 @@ const PropertyIntroduction: React.FC<PropertyIntroductionType> = React.memo(
           <div className="flex flex-row items-center gap-2 text-slate-500 mt-2">
             <LocationOnOutlined fontSize="small" />
             <Typography className="text-sm md:text-base">
-              {propertyLocation}
+              {propertyAddress}
             </Typography>
           </div>
 

@@ -112,7 +112,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
               onClick={(e) => {
                 e.stopPropagation();
                 if (likePropertyHandler) {
-                  likePropertyHandler(user, property._id);
+                  likePropertyHandler(user, property._id).then();
                 }
               }}
               className="bg-white hover:bg-red-300 hover:text-white transition"
