@@ -19,6 +19,7 @@ export interface LoginInput {
 
 interface AISearch {
   text?: string;
+  location?: string;
 }
 
 export interface AgentsInquiry {

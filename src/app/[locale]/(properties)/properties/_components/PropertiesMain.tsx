@@ -45,7 +45,6 @@ export default function PropertiesMain({
     try {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-      console.log("DATA: ", id);
       await likeTargetAgent(id);
 
       await sweetTopSmallSuccessAlert("succes", 1000);

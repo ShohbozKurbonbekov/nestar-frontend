@@ -76,14 +76,15 @@ export default function PropertiesSearchCategory() {
   const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(
     Object.keys(PropertyLocation) as PropertyLocation[],
   );
+
   const [propertyType, setPropertyType] = useState<PropertyType[]>(
     Object.keys(PropertyType) as PropertyType[],
   );
   const [searchText, setSearchText] = useState<string>("");
   const t = useTranslations("Properties");
 
-  const price_options = useMemo(() => PRICE_OPTIONS, []);
-  const property_square = useMemo(() => PROPERTY_SQUARE, []);
+  const price_options = useMemo(() => PRICE_OPTIONS, [PRICE_OPTIONS]);
+  const property_square = useMemo(() => PROPERTY_SQUARE, [PROPERTY_SQUARE]);
   /** LIFECYCLES **/
   useEffect(() => {
     if (filters?.search?.locationList?.length === 0) {
