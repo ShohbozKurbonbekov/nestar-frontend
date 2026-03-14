@@ -48,7 +48,9 @@ const PublicAgentCard: React.FC<PublicAgentCardType> = React.memo(
             alt={agent?.memberFullName ?? "agent-picture"}
             variant="rounded"
             className="transition-transform duration-300 group-hover:scale-105 h-30 w-30 rounded-2xl cursor-pointer"
-            onClick={() => router.push(`/agents/${agent._id}`)}
+            onClick={() =>
+              router.push(`/agents/${agent._id}`, { scroll: true })
+            }
           />
 
           {/* Name */}
@@ -59,8 +61,10 @@ const PublicAgentCard: React.FC<PublicAgentCardType> = React.memo(
           {/* Nickname */}
           <Typography
             variant="body2"
-            className="text-slate-500 cursor-pointer hover:text-slate-300 duration-300 ease-linear"
-            onClick={() => router.push(`/agents/${agent._id}`)}
+            className="text-slate-500 cursor-pointer hover:text-slate-200 duration-300 ease-linear"
+            onClick={() =>
+              router.push(`/agents/${agent._id}`, { scroll: true })
+            }
           >
             @{agent.memberNick}
           </Typography>

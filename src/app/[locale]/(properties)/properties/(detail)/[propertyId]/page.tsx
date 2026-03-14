@@ -20,7 +20,6 @@ import {
   CommentsInquiry,
 } from "@/libs/types/comment/comment.input";
 import { Comment } from "@/libs/types/comment/comment";
-import PropertyComments from "../../_components/PropertyComments";
 import { CommentGroup } from "@/libs/enums/comment.enum";
 import PostComment from "../../../../../../components/ui/PostComment";
 import { userVar } from "@/apollo/store";
@@ -35,7 +34,7 @@ import SameLocationProperties from "../../_components/SameLocationProperties";
 import PropertyTrendingProperties from "../../_components/PropertyTrendingProperties";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetProperty } from "@/services/Property.service";
-import { PropertyLocation } from "@/libs/enums/property.enum";
+import Comments from "@/components/ui/Comments";
 
 // --------------------------------- Initial Comment ---------------------------
 const initialComment = {
@@ -265,7 +264,7 @@ export default function PropertyDetail() {
               _id={property?._id}
             />
 
-            <PropertyComments
+            <Comments
               comments={propertyComments}
               onPageChange={onPageChange}
               page={commentInquery.page}

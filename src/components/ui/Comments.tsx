@@ -5,7 +5,7 @@ import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { Comment } from "@/libs/types/comment/comment";
 import { serverApi } from "@/libs/config";
 
-interface PropertyCommentsType {
+interface CommentsType {
   comments: Comment[];
   totalComments: number;
   page: number;
@@ -13,13 +13,13 @@ interface PropertyCommentsType {
   onPageChange: (event: React.ChangeEvent<unknown>, value: number) => void;
 }
 
-export default function PropertyComments({
+export default function Comments({
   comments,
   totalComments,
   page,
   totalPages,
   onPageChange,
-}: PropertyCommentsType) {
+}: CommentsType) {
   return (
     <div className="border border-slate-300/80 rounded-2xl bg-white p-6 space-y-6 mt-8">
       {/* HEADER */}
@@ -45,7 +45,7 @@ export default function PropertyComments({
                 src={
                   comment.memberData?.memberImage
                     ? `${serverApi}/${comment.memberData?.memberImage}`
-                    : ""
+                    : "/images/default-user.png"
                 }
                 alt={comment.memberData?.memberNick}
               />
