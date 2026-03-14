@@ -36,6 +36,7 @@ import PublicTopAgents from "@/components/ui/PublicTopAgents";
 import { AgentsInquiry } from "@/libs/types/member/member.input";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetAgent } from "@/services/Agent.service";
+import { likeTargetProperty } from "@/services/Property.service";
 
 // ------------------------------- Component ----------------------
 export default function AgentDetail() {
@@ -222,6 +223,25 @@ export default function AgentDetail() {
     },
     [getAgentRefetch, agentId],
   );
+
+  const likePropertyHandler = useCallback(
+    async (user: CustomJwtPayload, id: string) => {
+      try {
+        if (!id) return;
+        if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+        await likeTargetProperty(id);
+        getPropertiesRefetch({ input: propertiesInquiry });
+
+        await sweetTopSmallSuccessAlert("succes", 1000);
+      } catch (err: any) {
+        console.log("ERROR, likePropertyHandler:", err.message);
+        await sweetMixinErrorAlert(err.message);
+      }
+    },
+    [getPropertiesRefetch, propertiesInquiry],
+  );
+
   // ------------------------------- Render ----------------------
   console.log("LIKED: ", agent?.meLiked);
   if (getAgentLoading || !agent)
@@ -250,6 +270,7 @@ export default function AgentDetail() {
             setCommentInput={setCommentInput}
           />
           <AgentProperties
+            likePropertyHandler={likePropertyHandler}
             propertiesInquiry={propertiesInquiry}
             propertyPaginationChangeHandler={propertyPaginationChangeHandler}
             properties={agentProperties}

@@ -3,14 +3,20 @@ import { PropertiesFilter } from "@/libs/hooks/PropertiesFilter";
 import PropertiesMain from "../_components/PropertiesMain";
 import PropertiesSort from "../_components/PropertiesSort";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
-import { Direction } from "@/libs/enums/common.enum";
-import { useEffect, useState } from "react";
+import { Direction, Message } from "@/libs/enums/common.enum";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@apollo/client";
 import { GET_PROPERTIES } from "@/apollo/user/query";
 import { T } from "@/libs/types/common";
 // @ts-ignore
 import { Property } from "@/libs/types/property/property";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetProperty } from "@/services/Property.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
 
 export const initialInput = {
   page: 1,
@@ -61,6 +67,23 @@ export default function Property() {
     }
   }, [queries]);
 
+  const likePropertyHandler = useCallback(
+    async (user: CustomJwtPayload, id: string) => {
+      try {
+        if (!id) return;
+        if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+        await likeTargetProperty(id);
+        getPropertiesRefetch({ input: initial });
+
+        await sweetTopSmallSuccessAlert("succes", 1000);
+      } catch (err: any) {
+        console.log("ERROR, likePropertyHandler:", err.message);
+        await sweetMixinErrorAlert(err.message);
+      }
+    },
+    [getPropertiesRefetch, initial],
+  );
   return (
     <section className="py-20">
       <PropertiesFilter.Provider
@@ -70,6 +93,7 @@ export default function Property() {
         <PropertiesMain
           properties={properties}
           loading={getPropertiesLoading}
+          likePropertyHandler={likePropertyHandler}
           total={total}
         />
       </PropertiesFilter.Provider>

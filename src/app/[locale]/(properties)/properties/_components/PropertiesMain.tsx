@@ -8,51 +8,38 @@ import Emty from "@/components/ui/Emty";
 import { usePropertiesFilter } from "@/libs/hooks/PropertiesFilter";
 import { useRouter } from "next/navigation";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
-import { likeTargetAgent } from "@/services/Agent.service";
-import { Message } from "@/libs/enums/common.enum";
-import {
-  sweetMixinErrorAlert,
-  sweetTopSmallSuccessAlert,
-} from "@/libs/sweetAlert";
-
+import { useCallback } from "react";
 const wrapperClasses = "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6";
 
 interface PropertiesMainType {
   properties: Property[];
   loading: boolean;
   total: number;
+  likePropertyHandler?: (user: CustomJwtPayload, id: string) => Promise<void>;
 }
 export default function PropertiesMain({
   properties,
   loading,
   total,
+  likePropertyHandler,
 }: PropertiesMainType) {
   const router = useRouter();
-  const { filters } = usePropertiesFilter();
+  const { filters, setFilters } = usePropertiesFilter();
   // ---------------------------------- Handlers -------------------
-  const handlePaginationChange = async (_: any, value: number) => {
-    filters.page = Number(value);
-    router.push(
-      `/properties?input=${JSON.stringify(filters)}`,
+  const handlePaginationChange = useCallback(
+    async (_: any, value: number) => {
+      const newFilter = { ...filters, page: Number(value) };
+      setFilters(newFilter);
+      router.push(
+        `/properties?input=${JSON.stringify(newFilter)}`,
 
-      {
-        scroll: false,
-      },
-    );
-  };
-
-  const likeAgentHandler = async (user: CustomJwtPayload, id: string) => {
-    try {
-      if (!id) return;
-      if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-      await likeTargetAgent(id);
-
-      await sweetTopSmallSuccessAlert("succes", 1000);
-    } catch (err: any) {
-      console.log("ERROR, likeAgentHandler:", err.message);
-      await sweetMixinErrorAlert(err.message);
-    }
-  };
+        {
+          scroll: false,
+        },
+      );
+    },
+    [filters, setFilters],
+  );
 
   return (
     <div className="px-4 mt-8">
@@ -75,7 +62,7 @@ export default function PropertiesMain({
             <div className={wrapperClasses}>
               {properties.map((property) => (
                 <PropertyCard
-                  likePropertyHandler={likeAgentHandler}
+                  likePropertyHandler={likePropertyHandler}
                   property={property}
                   cardFooter={
                     <ProperiesMainCardFooter
