@@ -26,7 +26,7 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
     return (
       <div className="w-full border border-slate-300/80 rounded-2xl p-5 lg:p-6 bg-white">
         {/* Title */}
-        <div className="mb-5">
+        <div className="my-5 text-center">
           <Typography variant="h4" className="text-slate-800">
             Top Agents
           </Typography>
@@ -37,13 +37,13 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
             {agents.map((agent) => (
               <Card
                 key={agent._id}
-                className="group overflow-hidden rounded-xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group overflow-hidden rounded-xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-none"
               >
                 <CardActionArea
                   onClick={() =>
                     router.push(`/agents/${agent._id}`, { scroll: true })
                   }
-                  className="flex items-stretch"
+                  className="flex items-stretch border border-slate-200"
                 >
                   {/* IMAGE */}
                   <div className="relative w-28 sm:w-32 shrink-0 overflow-hidden">
@@ -55,7 +55,7 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
                       }
                       alt={agent?.memberNick}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Gradient overlay */}
@@ -78,7 +78,7 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
                         variant="body2"
                         className="font-semibold text-slate-800 line-clamp-1 group-hover:text-indigo-600 transition-colors"
                       >
-                        {agent.memberNick}
+                        {agent?.memberNick}
                       </Typography>
 
                       {/* Phone */}
@@ -124,7 +124,7 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
             ))}
           </div>
         ) : (
-          <Emty title="No top agents found" />
+          <Emty title="No top agents" />
         )}
       </div>
     );

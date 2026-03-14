@@ -69,6 +69,11 @@ query GetMember($input: String!) {
         createdAt
         updatedAt
         accessToken
+          meLiked {
+          memberId
+          likeRefId
+          myFavorite
+        }
         meFollowed {
 					followingId
 					followerId

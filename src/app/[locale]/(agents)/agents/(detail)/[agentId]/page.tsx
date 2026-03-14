@@ -24,13 +24,20 @@ import PostComment from "@/components/ui/PostComment";
 import { CommentGroup } from "@/libs/enums/comment.enum";
 import { userVar } from "@/apollo/store";
 import { CREATE_COMMENT } from "@/apollo/user/mutation";
-import { sweetErrorHandling } from "@/libs/sweetAlert";
+import {
+  sweetErrorHandling,
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
 import AgentProperties from "../../_components/AgentProperties";
 import { PropertiesInquiry } from "@/libs/types/property/property.input";
 import { Property } from "@/libs/types/property/property";
 import PublicTopAgents from "@/components/ui/PublicTopAgents";
 import { AgentsInquiry } from "@/libs/types/member/member.input";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { likeTargetAgent } from "@/services/Agent.service";
 
+// ------------------------------- Component ----------------------
 export default function AgentDetail() {
   const user = useReactiveVar(userVar);
   const params = useParams();
@@ -82,6 +89,7 @@ export default function AgentDetail() {
   useEffect(() => {
     if (params.agentId) setAgentId(String(params.agentId));
   }, [params.agentId]);
+
   // ****************************************** Apollo Fetch *********************************
   const [createComment] = useMutation(CREATE_COMMENT);
   const {
@@ -106,6 +114,7 @@ export default function AgentDetail() {
         ...commentInput,
         commentRefId: data?.getMember?._id,
       });
+
       setPropertiesInquiry({
         ...propertiesInquiry,
         search: { memberId: data?.getMember?._id },
@@ -119,7 +128,7 @@ export default function AgentDetail() {
     error: getPropertiesError,
     refetch: getPropertiesRefetch,
   } = useQuery(GET_PROPERTIES, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     variables: { input: propertiesInquiry },
     skip: !propertiesInquiry?.search?.memberId,
     notifyOnNetworkStatusChange: true,
@@ -135,7 +144,7 @@ export default function AgentDetail() {
     error: getCommentsError,
     refetch: getCommentsRefetch,
   } = useQuery(GET_COMMENTS, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     variables: { input: commentInquiry },
     skip: !commentInquiry.search.commentRefId,
     notifyOnNetworkStatusChange: true,
@@ -162,7 +171,7 @@ export default function AgentDetail() {
   });
   // ****************************************** Apollo End *********************************
 
-  // ------------------------------- Handlers -----------------
+  // ------------------------------- Handlers ----------------------
   const createCommentHandler = useCallback(async () => {
     try {
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
@@ -197,6 +206,24 @@ export default function AgentDetail() {
     [setPropertiesInquiry, propertiesInquiry],
   );
 
+  const likeAgentHandler = useCallback(
+    async (user: CustomJwtPayload, id: string) => {
+      try {
+        if (!id) return;
+        if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+        await likeTargetAgent(id);
+        getAgentRefetch({ input: agentId });
+        await sweetTopSmallSuccessAlert("succes", 1000);
+      } catch (err: any) {
+        console.log("ERROR, likeAgentHandler:", err.message);
+        await sweetMixinErrorAlert(err.message);
+      }
+    },
+    [getAgentRefetch, agentId],
+  );
+  // ------------------------------- Render ----------------------
+  console.log("LIKED: ", agent?.meLiked);
   if (getAgentLoading || !agent)
     return <DetailPageLoading subtitle="Fetching agent detail" />;
 
@@ -205,7 +232,10 @@ export default function AgentDetail() {
       <AgentDetailInfo agent={agent} />
       <div className="mx-auto max-w-8xl px-4 my-10 grid grid-cols-1 lg:grid-cols-6 gap-5">
         <div className="lg:col-span-4">
-          <AgentDetailStatistics agent={agent} />
+          <AgentDetailStatistics
+            likeAgentHandler={likeAgentHandler}
+            agent={agent}
+          />
           <Comments
             comments={agentComments}
             onPageChange={onPageChange}
