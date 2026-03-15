@@ -17,10 +17,11 @@ import SortIcon from "@mui/icons-material/Sort";
 
 import { BOARD_ARTICLES_SORTING } from "@/libs/data/static-data";
 import { BoardArticleCategory } from "@/libs/enums/board-article.enum";
-import { useState } from "react";
+import React, { useState } from "react";
 import { BoardArticlesInquiry } from "@/libs/types/board-article/board-article.input";
 import { SetStateType } from "@/libs/types/common";
 import { Direction } from "@/libs/enums/common.enum";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // ------------------------------------ Feature Options ------------------------------------
 const categories = [
@@ -54,61 +55,39 @@ const sortOptions = [
 ];
 
 // ------------------------------------ Component ------------------------------------
+
 interface ArticlesCategoryType {
-  articlesInput: BoardArticlesInquiry;
-  setArticlesInput: SetStateType<BoardArticlesInquiry>;
+  search: string;
+  sort: string;
+  category: BoardArticleCategory;
 }
 export default function ArticlesCategory({
-  articlesInput,
-  setArticlesInput,
+  category,
+  search,
+  sort,
 }: ArticlesCategoryType) {
-  const [category, setCategory] = useState(BoardArticleCategory.FREE);
-  const [sort, setSort] = useState(BOARD_ARTICLES_SORTING[2]);
-  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [searchText, setSearchText] = useState<string>(search);
+
   // ------------------------------------ Handlers ------------------------------------
   const onSort = (value: string) => {
-    setSort(value);
-    switch (value) {
-      case "createdAt":
-        setArticlesInput({
-          ...articlesInput,
-          sort: "createdAt",
-          direction: Direction.DESC,
-        });
-        break;
-      case "articleLikes":
-        setArticlesInput({
-          ...articlesInput,
-          sort: "articleLikes",
-          direction: Direction.DESC,
-        });
-        break;
-
-      case "articleViews":
-        setArticlesInput({
-          ...articlesInput,
-          sort: "articleViews",
-          direction: Direction.DESC,
-        });
-        break;
-      case "updatedAt":
-        setArticlesInput({
-          ...articlesInput,
-          sort: "updatedAt",
-          direction: Direction.DESC,
-        });
-        break;
-    }
+    const params = new URLSearchParams(searchParams);
+    params.set("sort", value);
+    params.set("page", "1");
+    router.push(`/community?${params.toString()}`, {
+      scroll: false,
+    });
   };
 
   const onCategory = (value: BoardArticleCategory) => {
-    setCategory(value);
-    setArticlesInput({
-      ...articlesInput,
-      search: {
-        ...articlesInput.search,
-        articleCategory: value,
-      },
+    const params = new URLSearchParams(searchParams);
+
+    params.set("category", value);
+    params.set("page", "1");
+
+    router.push(`/community?${params.toString()}`, {
+      scroll: false,
     });
   };
 
@@ -124,7 +103,9 @@ export default function ArticlesCategory({
               icon={cat.icon}
               label={cat.label}
               clickable
-              onClick={() => onCategory(cat.value)}
+              onClick={() => {
+                onCategory(cat.value);
+              }}
               className={`p-3 text-sm font-medium rounded-xl transition
               ${
                 category === cat.value
@@ -142,13 +123,16 @@ export default function ArticlesCategory({
             fullWidth
             size="medium"
             placeholder="Search article titles..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setArticlesInput({
-                  ...articlesInput,
-                  search: { ...articlesInput.search, text: search.trim() },
+                const params = new URLSearchParams(searchParams);
+
+                params.set("search", searchText.trim());
+                params.set("page", "1");
+                router.push(`/community?${params.toString()}`, {
+                  scroll: false,
                 });
               }
             }}

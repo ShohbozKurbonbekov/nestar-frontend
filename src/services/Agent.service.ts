@@ -10,7 +10,7 @@ export const likeTargetAgent = async (id: string): Promise<void> => {
       variables: { input: id },
     });
   } catch (error) {
-    (console.error("Error in likeTargetAgent service: "), error);
+    console.error("Error in likeTargetAgent service: ", error);
     throw error;
   }
 };
