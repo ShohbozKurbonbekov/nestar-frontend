@@ -62,3 +62,11 @@ export const PRICE_OPTIONS = [
 ];
 
 export const PROPERTY_SQUARE = [0, 25, 50, 75, 100, 125, 150, 200, 300, 500];
+
+// ---------------------------  BOARD ARTICLES -----------------
+export const BOARD_ARTICLES_SORTING = [
+  "articleViews",
+  "articleLikes",
+  "createdAt",
+  "updatedAt",
+];
