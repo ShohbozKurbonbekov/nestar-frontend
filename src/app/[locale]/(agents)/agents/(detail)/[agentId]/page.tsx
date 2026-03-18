@@ -9,7 +9,7 @@ import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import { T } from "@/libs/types/common";
 import { Member } from "@/libs/types/member/member";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import AgentDetailInfo from "../../_components/AgentDetailInfo";
 import AgentDetailStatistics from "../../_components/AgentDetailStatistics";
@@ -41,6 +41,7 @@ import { likeTargetProperty } from "@/services/Property.service";
 // ------------------------------- Component ----------------------
 export default function AgentDetail() {
   const user = useReactiveVar(userVar);
+  const router = useRouter();
   const params = useParams();
   const [agentId, setAgentId] = useState<string | null>(null);
   const [agent, setAgent] = useState<Member | null>(null);
@@ -242,6 +243,19 @@ export default function AgentDetail() {
     [getPropertiesRefetch, propertiesInquiry],
   );
 
+  const goMemberPage = useCallback(
+    (id: string) => {
+      if (id === user?._id) router.push("/mypage");
+      else router.push(`/member?memberId=${id}`);
+    },
+    [user, router],
+  );
+
+  const handleRefetchComments = useCallback(
+    async () => await getCommentsRefetch({ input: commentInquiry }),
+    [getCommentsRefetch, commentInquiry],
+  );
+
   // ------------------------------- Render ----------------------
   console.log("LIKED: ", agent?.meLiked);
   if (getAgentLoading || !agent)
@@ -257,6 +271,8 @@ export default function AgentDetail() {
             agent={agent}
           />
           <Comments
+            goMemberPage={goMemberPage}
+            handleRefetchComments={handleRefetchComments}
             comments={agentComments}
             onPageChange={onPageChange}
             page={commentInquiry.page}

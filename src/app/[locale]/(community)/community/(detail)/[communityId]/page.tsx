@@ -1,6 +1,10 @@
 "use client";
 
-import { GET_BOARD_ARTICLE, GET_COMMENTS } from "@/apollo/user/query";
+import {
+  GET_BOARD_ARTICLE,
+  GET_BOARD_ARTICLES,
+  GET_COMMENTS,
+} from "@/apollo/user/query";
 import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import { Direction, Message } from "@/libs/enums/common.enum";
 import { BoardArticle } from "@/libs/types/board-article/board-article";
@@ -10,25 +14,31 @@ import {
   CommentsInquiry,
 } from "@/libs/types/comment/comment.input";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
-import { useParams } from "next/navigation";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import ArticleDetails from "../../_components/ArticleDetails";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetArticle } from "@/services/Article.service";
 import {
+  sweetConfirmAlert,
   sweetErrorHandling,
   sweetMixinErrorAlert,
+  sweetMixinSuccessAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/sweetAlert";
 import Comments from "@/components/ui/Comments";
 import PostComment from "@/components/ui/PostComment";
-import { CommentGroup } from "@/libs/enums/comment.enum";
-import { CREATE_COMMENT } from "@/apollo/user/mutation";
+import { CommentGroup, CommentStatus } from "@/libs/enums/comment.enum";
+import { CREATE_COMMENT, UPDATE_COMMENT } from "@/apollo/user/mutation";
 import { userVar } from "@/apollo/store";
 import { T } from "@/libs/types/common";
+import { BoardArticlesInquiry } from "@/libs/types/board-article/board-article.input";
+import { Messages } from "@/libs/config";
+import { CommentUpdate } from "@/libs/types/comment/comment.update";
 
 // ------------------------------- Component -----------------------
 export default function CommunityDetail() {
+  const router = useRouter();
   const user = useReactiveVar(userVar);
   const params = useParams();
   const [communityId, setCommunityId] = useState<string | null>(null);
@@ -42,16 +52,28 @@ export default function CommunityDetail() {
     search: { commentRefId: "" },
   });
   const [comments, setComments] = useState<Comment[]>([]);
-
   const [commentInput, setCommentInput] = useState<CommentInput>({
     commentGroup: CommentGroup.ARTICLE,
     commentContent: "",
     commentRefId: "",
   });
 
+  const featuredArticlesInput: BoardArticlesInquiry = useMemo(() => {
+    return {
+      limit: 4,
+      page: 1,
+      search: {
+        isFeatured: true,
+      },
+      direction: Direction.DESC,
+      sort: "featuredScore",
+    };
+  }, []);
+
+  const [featuredArticles, setfeaturedArticles] = useState<BoardArticle[]>([]);
+
   //************************************************* Apollo ************************************************* */
   const [createComment] = useMutation(CREATE_COMMENT);
-
   const {
     loading: articleLoading,
     data: articleData,
@@ -85,6 +107,23 @@ export default function CommunityDetail() {
       setTotalComments(data.getComments?.metaCounter?.[0]?.total || 0);
     },
     skip: !commentInquery.search.commentRefId,
+  });
+
+  const {
+    loading: featuredArticlesLoading,
+    data: featuredArticlesData,
+    error: featuredArticlesError,
+    refetch: featuredArticlesRefetch,
+  } = useQuery(GET_BOARD_ARTICLES, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: featuredArticlesInput,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setfeaturedArticles(data?.getBoardArticles?.list);
+    },
+    skip: !communityId,
   });
 
   //*************************************************Apollo End //************************************************* */
@@ -151,6 +190,19 @@ export default function CommunityDetail() {
     commentInquery,
     getCommentsRefetch,
   ]);
+
+  const goMemberPage = useCallback(
+    (id: string) => {
+      if (id === user?._id) router.push("/mypage");
+      else router.push(`/member?memberId=${id}`);
+    },
+    [user, router],
+  );
+
+  const handleRefetchComments = useCallback(
+    async () => await getCommentsRefetch({ input: commentInquery }),
+    [getCommentsRefetch, commentInquery],
+  );
   // ------------------------------- Render -----------------------
   if (!article || articleLoading)
     return <DetailPageLoading subtitle="Fetching article detail" />;
@@ -158,6 +210,7 @@ export default function CommunityDetail() {
     <section className="py-20  px-4">
       <div className="max-w-8xl mx-auto mt-10">
         <ArticleDetails
+          goMemberPage={goMemberPage}
           article={article}
           likeArticleHandler={likeArticleHandler}
         />
@@ -165,6 +218,8 @@ export default function CommunityDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-5">
           <div className="lg:col-span-4">
             <Comments
+              handleRefetchComments={handleRefetchComments}
+              goMemberPage={goMemberPage}
               comments={comments}
               onPageChange={onPageChange}
               page={commentInquery.page}

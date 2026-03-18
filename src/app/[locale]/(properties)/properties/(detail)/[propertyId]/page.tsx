@@ -8,7 +8,7 @@ import {
 import { T } from "@/libs/types/common";
 import { Property } from "@/libs/types/property/property";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import PropertyGallery from "../../_components/PropertyGallery";
@@ -61,7 +61,7 @@ export default function PropertyDetail() {
     useState<CommentsInquiry>(initialComment);
   const [propertyComments, setPropertyComments] = useState<Comment[]>([]);
   const [totalComments, setTotalComments] = useState<number>(0);
-
+  const router = useRouter();
   const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
     commentGroup: CommentGroup.PROPERTY,
     commentContent: "",
@@ -230,9 +230,22 @@ export default function PropertyDetail() {
     },
     [],
   );
+
+  const goMemberPage = useCallback(
+    (id: string) => {
+      if (id === user?._id) router.push("/mypage");
+      else router.push(`/member?memberId=${id}`);
+    },
+    [user, router],
+  );
+
+  const handleRefetchComments = useCallback(
+    async () => await getCommentsRefetch({ input: commentInquery }),
+    [getCommentsRefetch, commentInquery],
+  );
+
   if (getPropertyLoading || !property || !propertyId)
     return <DetailPageLoading subtitle="Fetching property detail..." />;
-
   // ------------------------------- Render -----------------
   return (
     <section className="py-20 bg-white">
@@ -265,6 +278,8 @@ export default function PropertyDetail() {
             />
 
             <Comments
+              goMemberPage={goMemberPage}
+              handleRefetchComments={handleRefetchComments}
               comments={propertyComments}
               onPageChange={onPageChange}
               page={commentInquery.page}

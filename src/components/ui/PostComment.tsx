@@ -20,6 +20,8 @@ const PostComment: React.FC<PostCommentType> = React.memo(
     setCommentInput,
   }: PostCommentType) => {
     const user = useReactiveVar(userVar);
+    const [contentCount, setContentCount] = useState<number>(0);
+
     return (
       <div className="mt-8 bg-white border border-slate-300/80 rounded-2xl p-6">
         {/* Title */}
@@ -37,12 +39,14 @@ const PostComment: React.FC<PostCommentType> = React.memo(
           minRows={3}
           placeholder="Share your thoughts about this property..."
           value={commentInput.commentContent}
-          onChange={(e) =>
+          onChange={(e) => {
+            if (e.target.value.length > 100) return;
+            setContentCount(e.target.value.length);
             setCommentInput({
               ...commentInput,
               commentContent: e.target.value,
-            })
-          }
+            });
+          }}
           variant="outlined"
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -56,7 +60,10 @@ const PostComment: React.FC<PostCommentType> = React.memo(
         />
 
         {/* Submit Button */}
-        <div className="flex justify-end mt-4">
+        <div className="flex flex-row items-center justify-between gap-x-5 gap-y-2 flex-wrap mt-4">
+          <Typography variant="caption" className="text-sm text-slate-400">
+            {contentCount} / 100
+          </Typography>
           <Button
             variant="contained"
             endIcon={<SendIcon />}

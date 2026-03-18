@@ -428,6 +428,7 @@ export const GET_BOARD_ARTICLES = gql`
         articleLikes
         articleComments
         memberId
+        featuredScore
         createdAt
         updatedAt
         meLiked {

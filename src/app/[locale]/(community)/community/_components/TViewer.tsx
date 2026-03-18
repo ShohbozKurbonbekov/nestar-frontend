@@ -1,0 +1,93 @@
+import React, { useEffect, useState } from "react";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import { Viewer } from "@toast-ui/react-editor";
+import { Box, Stack, CircularProgress } from "@mui/material";
+
+const TViewer = (props: any) => {
+  const [editorLoaded, setEditorLoaded] = useState(false);
+
+  /** LIFECYCLES **/
+  useEffect(() => {
+    if (props.markdown) {
+      setEditorLoaded(true);
+    } else {
+      setEditorLoaded(false);
+    }
+  }, [props.markdown]);
+
+  return (
+    <Stack
+      sx={{
+        width: "100%",
+
+        "& div": {
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px",
+        },
+        "& img": {
+          width: "100%",
+          borderRadius: "12px",
+        },
+        "& br": {
+          display: "none",
+        },
+
+        "& p": {
+          fontSize: "1rem",
+          fontFamily: "var(--font-inter)",
+          lineHeight: 1.8,
+        },
+      }}
+    >
+      {editorLoaded ? (
+        <Viewer
+          initialValue={props.markdown}
+          customHTMLRenderer={{
+            htmlBlock: {
+              iframe(node: any) {
+                return [
+                  {
+                    type: "openTag",
+                    tagName: "iframe",
+                    outerNewLine: true,
+                    attributes: node.attrs,
+                  },
+                  { type: "html", content: node.childrenHTML ?? "" },
+                  { type: "closeTag", tagName: "iframe", outerNewLine: true },
+                ];
+              },
+              div(node: any) {
+                return [
+                  {
+                    type: "openTag",
+                    tagName: "div",
+                    outerNewLine: true,
+                    attributes: node.attrs,
+                  },
+                  { type: "html", content: node.childrenHTML ?? "" },
+                  { type: "closeTag", tagName: "div", outerNewLine: true },
+                ];
+              },
+            },
+            htmlInline: {
+              big(node: any, { entering }: any) {
+                return entering
+                  ? {
+                      type: "openTag",
+                      tagName: "big",
+                      attributes: node.attrs,
+                    }
+                  : { type: "closeTag", tagName: "big" };
+              },
+            },
+          }}
+        />
+      ) : (
+        <CircularProgress />
+      )}
+    </Stack>
+  );
+};
+
+export default TViewer;

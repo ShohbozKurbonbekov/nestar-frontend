@@ -15,6 +15,7 @@ export interface BoardArticleInput {
 interface BAISearch {
   articleCategory?: BoardArticleCategory;
   text?: string;
+  isFeatured?: boolean;
 }
 
 export interface BoardArticlesInquiry {
