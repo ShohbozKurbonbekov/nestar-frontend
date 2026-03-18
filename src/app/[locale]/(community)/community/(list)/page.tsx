@@ -8,7 +8,7 @@ import { T } from "@/libs/types/common";
 import { useQuery } from "@apollo/client";
 import { useCallback, useEffect, useState } from "react";
 import ArticlesCategory from "../_components/ArticlesCategory";
-import PublicArticleSkeleton from "@/components/ui/PublicArticlesSkeleton";
+import PublicArticleSkeleton from "@/components/skeletons/PublicArticlesSkeleton";
 import Emty from "@/components/ui/Emty";
 import PublicArticleCard from "@/components/ui/PublicArticleCard";
 import { Pagination } from "@mui/material";

@@ -20,7 +20,6 @@ import ArticleDetails from "../../_components/ArticleDetails";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetArticle } from "@/services/Article.service";
 import {
-  sweetConfirmAlert,
   sweetErrorHandling,
   sweetMixinErrorAlert,
   sweetMixinSuccessAlert,
@@ -28,13 +27,12 @@ import {
 } from "@/libs/sweetAlert";
 import Comments from "@/components/ui/Comments";
 import PostComment from "@/components/ui/PostComment";
-import { CommentGroup, CommentStatus } from "@/libs/enums/comment.enum";
-import { CREATE_COMMENT, UPDATE_COMMENT } from "@/apollo/user/mutation";
+import { CommentGroup } from "@/libs/enums/comment.enum";
+import { CREATE_COMMENT } from "@/apollo/user/mutation";
 import { userVar } from "@/apollo/store";
 import { T } from "@/libs/types/common";
 import { BoardArticlesInquiry } from "@/libs/types/board-article/board-article.input";
-import { Messages } from "@/libs/config";
-import { CommentUpdate } from "@/libs/types/comment/comment.update";
+import FeaturedArticles from "@/components/ui/FeaturedArticles";
 
 // ------------------------------- Component -----------------------
 export default function CommunityDetail() {
@@ -233,8 +231,8 @@ export default function CommunityDetail() {
               setCommentInput={setCommentInput}
             />
           </div>
-          <div className="lg:col-span-2 border mt-8 rounded-2xl p-6">
-            Trending Articles
+          <div className="lg:col-span-2">
+            <FeaturedArticles featuredArticles={featuredArticles} />
           </div>
         </div>
       </div>
