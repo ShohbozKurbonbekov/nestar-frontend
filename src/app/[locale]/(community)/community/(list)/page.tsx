@@ -107,6 +107,7 @@ export default function Community() {
           <div className={wrapperClasses}>
             {articles.map((article) => (
               <PublicArticleCard
+                key={article._id}
                 article={article}
                 likeArticleHandler={likeArticleHandler}
               />

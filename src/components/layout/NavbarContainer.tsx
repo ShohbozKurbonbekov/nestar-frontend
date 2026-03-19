@@ -13,7 +13,6 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import { LANGUAGE_OPTIONS, NAVBAR_LINKS } from "@/libs/data/static-data";
@@ -23,6 +22,12 @@ import Drawer from "@mui/material/Drawer";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { useTranslations } from "next-intl";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
+import { serverApi } from "@/libs/config";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+import { logOut } from "@/libs/auth";
+import { sweetMixinSuccessAlert } from "@/libs/sweetAlert";
 
 const mobileLinkClasses =
   "w-full rounded-lg px-4 py-3 bg-slate-700 text-white transition-all duration-200 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] capitalize";
@@ -30,10 +35,8 @@ const mobileLinkClasses =
 // -------------------------- Component -----------------
 export function NavbarContainer() {
   const router = useRouter();
-  const path = usePathname();
   const t = useTranslations("Navbar");
-
-  const authmember = false;
+  const user = useReactiveVar(userVar);
   const pathname = usePathname();
   const [language, setLanguage] = useState(useLocale());
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -104,10 +107,17 @@ export function NavbarContainer() {
           </ul>
 
           {/* Avatar Menu */}
-          {authmember && (
+          {user?._id && (
             <div>
               <IconButton onClick={handleMenuOpen}>
-                <Avatar className="w-9 h-9" />
+                <Avatar
+                  className="w-9 h-9"
+                  src={
+                    user.memberImage
+                      ? `${serverApi}/${user.memberImage}`
+                      : "/images/default-user.png"
+                  }
+                />
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
@@ -119,17 +129,24 @@ export function NavbarContainer() {
                 <MenuItem
                   onClick={handleMenuClose}
                   component={Link}
-                  href="/dashboard"
+                  href={`/profile/${user._id}`}
                 >
                   <ListItemIcon>
-                    <DashboardIcon fontSize="small" />
+                    <ManageAccountsRoundedIcon fontSize="small" />
                   </ListItemIcon>
-                  Dashboard
+                  My Profile
                 </MenuItem>
 
                 <Divider />
 
-                <MenuItem onClick={handleMenuClose}>
+                <MenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMenuClose();
+                    logOut();
+                    sweetMixinSuccessAlert("Logged out successfully");
+                  }}
+                >
                   <ListItemIcon>
                     <LogoutIcon fontSize="small" />
                   </ListItemIcon>
@@ -138,10 +155,10 @@ export function NavbarContainer() {
               </Menu>
             </div>
           )}
-          {!authmember && (
+          {!user?._id && (
             <Button
               onClick={() => setSinginOpen(true)}
-              className="text-white! capitalize mt-1 rounded-2xl px-3 py-2 bg-green-700 shadow-none"
+              className="text-white capitalize mt-1 rounded-2xl px-3 py-2 bg-green-700 shadow-none"
               size="small"
               color="primary"
               variant="contained"
@@ -168,7 +185,7 @@ export function NavbarContainer() {
             aria-expanded={mobileMenuOpen ? "true" : undefined}
             aria-haspopup="true"
             onClick={handleMobileMenu}
-            className="p-0!"
+            className="p-0"
           >
             <MenuIcon className="text-white" />
           </IconButton>
@@ -220,7 +237,7 @@ export function NavbarContainer() {
           ))}
 
           <Divider className="bg-slate-800 mt-3" />
-          {!authmember && (
+          {!user?._id && (
             <ListItem disablePadding>
               <ListItemButton
                 component={Button}
@@ -235,29 +252,33 @@ export function NavbarContainer() {
               </ListItemButton>
             </ListItem>
           )}
-          {authmember && (
+          {user?._id && (
             <>
               <ListItem disablePadding>
                 <ListItemButton
                   component={Link}
-                  href={"/dashboard"}
+                  href={`/profile/${user._id}`}
                   className={`${mobileLinkClasses} relative`}
                 >
                   <ListItemIcon className="text-white absolute z-10">
-                    <DashboardIcon fontSize="small" />
+                    <ManageAccountsRoundedIcon fontSize="small" />
                   </ListItemIcon>
                   <Typography
                     variant="body1"
                     className="font-medium tracking-wide pl-7"
                   >
-                    Dashboard
+                    My Profile
                   </Typography>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
                 <ListItemButton
-                  component={Link}
-                  href={"/logout"}
+                  component={Button}
+                  onClick={() => {
+                    logOut();
+
+                    sweetMixinSuccessAlert("Logged out successfully");
+                  }}
                   className={`${mobileLinkClasses} relative`}
                 >
                   <ListItemIcon className="text-white absolute z-10">

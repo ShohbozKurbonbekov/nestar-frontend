@@ -1,0 +1,203 @@
+"use client";
+
+import {
+  Avatar,
+  Box,
+  Typography,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Button,
+  Divider,
+} from "@mui/material";
+import {
+  Home,
+  Favorite,
+  History,
+  Article,
+  Person,
+  Group,
+} from "@mui/icons-material";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Member } from "@/libs/types/member/member";
+import { JwtPayload } from "jwt-decode";
+import { MemberType } from "@/libs/enums/member.enum";
+import { serverApi } from "@/libs/config";
+
+interface ProfileSidebarType {
+  member: Member;
+  authUser: JwtPayload;
+  variant: "OWNER" | "VISITOR";
+  onFollow: () => Promise<void>;
+  onUnfollow: () => Promise<void>;
+}
+export default function ProfileSidebar({
+  authUser,
+  member,
+  onFollow,
+  onUnfollow,
+  variant,
+}: ProfileSidebarType) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") || "myProfile";
+
+  const onTab = (value: string) => {
+    router.push(`?tab=${value}`);
+  };
+
+  const isFollowing = member?.meFollowed?.[0]?.myFollowing;
+
+  // Menu Config
+  const menu = {
+    OWNER: [
+      {
+        title: "Manage",
+        items: [
+          member.memberType === MemberType.AGENT && {
+            label: "Add Property",
+            value: "addProperty",
+            icon: <Home />,
+          },
+          member.memberType === MemberType.AGENT && {
+            label: "My Properties",
+            value: "myProperties",
+            icon: <Home />,
+          },
+          { label: "Favorites", value: "myFavorites", icon: <Favorite /> },
+          {
+            label: "Recently Visited",
+            value: "recentlyVisited",
+            icon: <History />,
+          },
+        ].filter(Boolean),
+      },
+      {
+        title: "Community",
+        items: [
+          { label: "My Articles", value: "myArticles", icon: <Article /> },
+          { label: "Write Article", value: "writeArticle", icon: <Article /> },
+        ],
+      },
+      {
+        title: "Account",
+        items: [{ label: "My Profile", value: "myProfile", icon: <Person /> }],
+      },
+    ],
+
+    VISITOR: [
+      {
+        title: "Details",
+        items: [
+          member.memberType === "AGENT" && {
+            label: "Properties",
+            value: "properties",
+            icon: <Home />,
+          },
+          { label: "Followers", value: "followers", icon: <Group /> },
+          { label: "Followings", value: "followings", icon: <Group /> },
+        ].filter(Boolean),
+      },
+      {
+        title: "Community",
+        items: [{ label: "Articles", value: "articles", icon: <Article /> }],
+      },
+    ],
+  };
+
+  return (
+    <Box className="bg-white  p-4 md:border-r-slate-300 md:border-r ">
+      {/* Profile */}
+      <Box className="flex flex-col items-center mb-4">
+        <Avatar
+          src={
+            member.memberImage
+              ? `${serverApi}/${member?.memberImage}`
+              : "/images/default-user.png"
+          }
+          sx={{ width: 80, height: 80 }}
+        />
+        <Typography variant="h6" className="mt-2">
+          {member.memberNick}
+        </Typography>
+        <Typography className="text-sm text-gray-500">
+          {member.memberType}
+        </Typography>
+      </Box>
+
+      {/* Action */}
+      {variant === "OWNER" ? (
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          className="capitalize"
+        >
+          Edit Profile
+        </Button>
+      ) : (
+        <Button
+          fullWidth
+          variant={isFollowing ? "outlined" : "contained"}
+          color={isFollowing ? "inherit" : "success"}
+          onClick={() => (isFollowing ? onUnfollow?.() : onFollow?.())}
+          className="mt-2"
+        >
+          {isFollowing ? "Unfollow" : "Follow"}
+        </Button>
+      )}
+
+      <Divider className="my-4" />
+
+      {/* Menu */}
+      {menu[variant].map((section, i) => (
+        <Box key={i} className="mb-4">
+          <Typography className="text-xs text-gray-400 px-2 mb-1">
+            {section.title.toUpperCase()}
+          </Typography>
+
+          <List>
+            {section.items.map((item: any) => (
+              <ListItemButton
+                key={item.value}
+                selected={tab === item.value}
+                onClick={() => onTab(item.value)}
+                className="rounded-lg mb-1 truncate"
+                sx={{
+                  "& .MuiTypography-root": {
+                    fontSize: {
+                      xs: "0.8rem",
+                      md: "1rem",
+                    },
+                  },
+                  "& .MuiListItemIcon-root": {
+                    minWidth: 0,
+                    marginRight: "8px",
+                  },
+                  "& .MuiListItemIcon-root svg": {
+                    fontSize: {
+                      xs: 16,
+                      md: 18,
+                      lg: 22,
+                    },
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#10b981",
+                    color: "white",
+                    "& .MuiListItemIcon-root": {
+                      color: "white",
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            ))}
+          </List>
+        </Box>
+      ))}
+    </Box>
+  );
+}
