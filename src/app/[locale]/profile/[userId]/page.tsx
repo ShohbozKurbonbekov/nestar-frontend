@@ -96,7 +96,7 @@ export default function Profile() {
     );
   return (
     <section className="pt-25 pb-10 px-4">
-      <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 gap-5 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5">
+      <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5">
         {/* Sidebar */}
         <div className="md:col-span-3">
           <ProfileSidebar
@@ -112,6 +112,7 @@ export default function Profile() {
         <div className="md:col-span-9">
           <AnimatePresence mode="wait" key={tab}>
             <motion.div
+              className="w-full h-full"
               initial={{
                 opacity: 0,
                 y: 10,
