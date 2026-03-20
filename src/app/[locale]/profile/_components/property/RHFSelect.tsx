@@ -15,13 +15,31 @@ export const RHFSelect = ({ name, label, options }: any) => {
   } = useFormContext();
 
   return (
-    <FormControl fullWidth size="small" error={!!errors[name]}>
+    <FormControl
+      fullWidth
+      size="small"
+      error={!!errors[name]}
+      sx={{
+        "& .MuiInputLabel-root.Mui-focused": {
+          color: "rgba(148, 163, 184, 1)",
+        },
+      }}
+    >
       <InputLabel>{label}</InputLabel>
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
-          <Select {...field} label={label}>
+          <Select
+            {...field}
+            label={label}
+            sx={{
+              "&.MuiInputBase-root.MuiOutlinedInput-root.MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "rgba(148, 163, 184, 1)",
+                },
+            }}
+          >
             {options.map((opt: any) => (
               <MenuItem key={opt} value={opt}>
                 {opt}

@@ -10,12 +10,20 @@ export const RHFInput = ({ name, label, ...props }: any) => {
   return (
     <TextField
       fullWidth
-      label={label}
+      placeholder={label}
       {...register(name)}
       error={!!errors[name]}
       helperText={errors[name]?.message as string}
       size="small"
       {...props}
+      sx={{
+        "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "rgba(148, 163, 184, 1)",
+        },
+        "& .MuiTextField-root .Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "rgba(148, 163, 184, 1)",
+        },
+      }}
     />
   );
 };

@@ -29,7 +29,17 @@ export const RHFRadio = ({
   } = useFormContext();
 
   return (
-    <FormControl error={!!errors[name]}>
+    <FormControl
+      error={!!errors[name]}
+      sx={{
+        "& .MuiRadio-root.Mui-checked": {
+          color: "rgba(71, 85, 105, 1)",
+        },
+        "& .MuiFormLabel-root.Mui-focused": {
+          color: "rgba(51, 65, 85, 1)",
+        },
+      }}
+    >
       <FormLabel>{label}</FormLabel>
 
       <Controller

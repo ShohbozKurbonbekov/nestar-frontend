@@ -12,11 +12,13 @@ import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import Emty from "@/components/ui/Emty";
 import { sweetErrorHandling } from "@/libs/sweetAlert";
 import { userVar } from "@/apollo/store";
+import MyProfile from "../_components/features/MyProfile";
 
 // lazy loading
 const AddProperty = dynamic(
   () => import("../_components/features/AddProperty"),
 );
+
 const MyProperties = dynamic(
   () => import("../_components/features/MyProperties"),
 );
@@ -27,6 +29,7 @@ const RecentlyVisited = dynamic(
   () => import("../_components/features/RecentlyVisited"),
 );
 const MyArticles = dynamic(() => import("../_components/features/MyArticles"));
+
 const WriteArticle = dynamic(
   () => import("../_components/features/WriteArticle"),
 );
@@ -37,7 +40,7 @@ export default function Profile() {
   const [member, setMember] = useState<Member | null>(null);
   const [userId, setUserId] = useState<null | string>(null);
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab") ?? "myProperties";
+  const tab = searchParams.get("tab") ?? "myProfile";
   const isOwner = user?._id === member?._id;
   const variant: "OWNER" | "VISITOR" = isOwner ? "OWNER" : "VISITOR";
 
@@ -68,6 +71,9 @@ export default function Profile() {
     myProperties: <MyProperties />,
     myFavorites: <MyFavorites />,
     writeArticle: <WriteArticle />,
+    myArticles: <MyArticles />,
+    recentlyVisited: <RecentlyVisited />,
+    myProfile: <MyProfile />,
   };
 
   /** HANDLERS **/
@@ -95,12 +101,11 @@ export default function Profile() {
       </section>
     );
   return (
-    <section className="pt-25 pb-10 px-4">
-      <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5">
+    <section className="pt-25 pb-10 px-4 bg-sky-50">
+      <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5 bg-white shadow-sm">
         {/* Sidebar */}
         <div className="md:col-span-3">
           <ProfileSidebar
-            authUser={user}
             member={member}
             onFollow={onFollow}
             onUnfollow={onUnfollow}
@@ -115,7 +120,7 @@ export default function Profile() {
               className="w-full h-full"
               initial={{
                 opacity: 0,
-                y: 10,
+                y: 20,
               }}
               animate={{
                 opacity: 1,
@@ -125,9 +130,9 @@ export default function Profile() {
                 opacity: 0,
                 y: -10,
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
             >
-              {componentMap[tab] ?? <MyProperties />}
+              {componentMap[tab] ?? <MyProfile />}
             </motion.div>
           </AnimatePresence>
         </div>

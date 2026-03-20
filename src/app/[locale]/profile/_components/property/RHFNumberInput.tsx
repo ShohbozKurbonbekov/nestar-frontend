@@ -10,6 +10,14 @@ export const RHFNumberInput = ({ name, label }: any) => {
 
   return (
     <TextField
+      sx={{
+        "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "rgba(148, 163, 184, 1)",
+        },
+        "& .MuiInputLabel-root.Mui-focused": {
+          color: "rgba(148, 163, 184, 1)",
+        },
+      }}
       type="number"
       fullWidth
       label={label}

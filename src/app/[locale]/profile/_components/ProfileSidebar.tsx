@@ -18,22 +18,23 @@ import {
   Article,
   Person,
   Group,
+  AddCircle,
+  GridView,
+  EditNote,
 } from "@mui/icons-material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Member } from "@/libs/types/member/member";
-import { JwtPayload } from "jwt-decode";
 import { MemberType } from "@/libs/enums/member.enum";
 import { serverApi } from "@/libs/config";
+import { firstLetterCapitalizer } from "@/libs/utils/firstLetterCapitalizer";
 
 interface ProfileSidebarType {
   member: Member;
-  authUser: JwtPayload;
   variant: "OWNER" | "VISITOR";
   onFollow: () => Promise<void>;
   onUnfollow: () => Promise<void>;
 }
 export default function ProfileSidebar({
-  authUser,
   member,
   onFollow,
   onUnfollow,
@@ -48,7 +49,6 @@ export default function ProfileSidebar({
   };
 
   const isFollowing = member?.meFollowed?.[0]?.myFollowing;
-
   // Menu Config
   const menu = {
     OWNER: [
@@ -58,12 +58,12 @@ export default function ProfileSidebar({
           member.memberType === MemberType.AGENT && {
             label: "Add Property",
             value: "addProperty",
-            icon: <Home />,
+            icon: <AddCircle />,
           },
           member.memberType === MemberType.AGENT && {
             label: "My Properties",
             value: "myProperties",
-            icon: <Home />,
+            icon: <GridView />,
           },
           { label: "Favorites", value: "myFavorites", icon: <Favorite /> },
           {
@@ -77,7 +77,7 @@ export default function ProfileSidebar({
         title: "Community",
         items: [
           { label: "My Articles", value: "myArticles", icon: <Article /> },
-          { label: "Write Article", value: "writeArticle", icon: <Article /> },
+          { label: "Write Article", value: "writeArticle", icon: <EditNote /> },
         ],
       },
       {
@@ -107,7 +107,7 @@ export default function ProfileSidebar({
   };
 
   return (
-    <Box className="bg-white  p-4 md:border-r-slate-300 md:border-r ">
+    <Box className="w-full bg-white  p-4 md:border-r-slate-300/80 md:border-r ">
       {/* Profile */}
       <Box className="flex flex-col items-center mb-4">
         <Avatar
@@ -116,13 +116,24 @@ export default function ProfileSidebar({
               ? `${serverApi}/${member?.memberImage}`
               : "/images/default-user.png"
           }
-          sx={{ width: 80, height: 80 }}
+          sx={{
+            width: {
+              xs: 80,
+              md: 100,
+              lg: 120,
+            },
+            height: {
+              xs: 80,
+              md: 100,
+              lg: 120,
+            },
+          }}
         />
-        <Typography variant="h6" className="mt-2">
+        <Typography variant="h6" className="mt-2 capitalize">
           {member.memberNick}
         </Typography>
-        <Typography className="text-sm text-gray-500">
-          {member.memberType}
+        <Typography className="text-xs md:text-sm  py-1 px-2 bg-green-600 rounded-lg text-white">
+          {firstLetterCapitalizer(member.memberType)}
         </Typography>
       </Box>
 
@@ -132,7 +143,7 @@ export default function ProfileSidebar({
           fullWidth
           variant="contained"
           color="primary"
-          className="capitalize"
+          className="capitalize rounded-lg"
         >
           Edit Profile
         </Button>
@@ -140,7 +151,7 @@ export default function ProfileSidebar({
         <Button
           fullWidth
           variant={isFollowing ? "outlined" : "contained"}
-          color={isFollowing ? "inherit" : "success"}
+          color={isFollowing ? "inherit" : "primary"}
           onClick={() => (isFollowing ? onUnfollow?.() : onFollow?.())}
           className="mt-2"
         >
@@ -153,7 +164,7 @@ export default function ProfileSidebar({
       {/* Menu */}
       {menu[variant].map((section, i) => (
         <Box key={i} className="mb-4">
-          <Typography className="text-xs text-gray-400 px-2 mb-1">
+          <Typography className="text-xs lg:text-sm text-gray-400 px-2 mb-1">
             {section.title.toUpperCase()}
           </Typography>
 
@@ -174,12 +185,13 @@ export default function ProfileSidebar({
                   "& .MuiListItemIcon-root": {
                     minWidth: 0,
                     marginRight: "8px",
-                  },
-                  "& .MuiListItemIcon-root svg": {
-                    fontSize: {
-                      xs: 16,
-                      md: 18,
-                      lg: 22,
+
+                    "& svg": {
+                      fontSize: {
+                        xs: 16,
+                        md: 18,
+                        lg: 22,
+                      },
                     },
                   },
                   "&.Mui-selected": {
