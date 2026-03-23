@@ -8,6 +8,7 @@ import { sweetErrorHandling, sweetMixinSuccessAlert } from "@/libs/sweetAlert";
 import { CREATE_PROPERTY } from "@/apollo/user/mutation";
 import { useMutation } from "@apollo/client";
 import { getJwtToken } from "@/libs/auth";
+import ProfileContentHeader from "../ProfileContentHeader";
 
 /// ------------------------------- Component ------------------------
 export default function AddProperty() {
@@ -53,12 +54,11 @@ export default function AddProperty() {
   /// ------------------------------- Render ------------------------
   return (
     <div className="h-full flex flex-col">
-      <div className="text-slate-600 border-b text-center border-b-slate-300/80 p-4">
-        <Typography variant="h6" className="">
-          Fill in the details to create a new property listing.
-        </Typography>
-        <Typography className="body2">We are glad to see you again!</Typography>
-      </div>
+      <ProfileContentHeader
+        subtitle="Fill in the details to create a new property listing.
+"
+        title="We are glad to see you again!"
+      />
 
       <PropertyForm defaultValues={propertyInput} onSubmit={onSubmit} />
     </div>

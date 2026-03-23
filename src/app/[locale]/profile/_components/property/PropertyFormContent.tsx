@@ -51,7 +51,7 @@ export default function PropertyFormContent({ onSubmit }: any) {
   };
 
   return (
-    <Box className="w-full md:max-w-4xl md:mx-auto md:mt-10 p-4">
+    <Box className="w-full md:max-w-4xl md:mx-auto  p-4">
       {/* Stepper */}
       <Stepper
         sx={{

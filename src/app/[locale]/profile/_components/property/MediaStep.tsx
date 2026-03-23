@@ -1,4 +1,4 @@
-import { ImageUploader } from "./ImageUploader";
+import { ImageUploader } from "@/components/ui/ImageUploader";
 
 export const MediaStep = () => {
   return <ImageUploader />;
