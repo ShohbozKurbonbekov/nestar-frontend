@@ -22,7 +22,7 @@ import {
   GridView,
   EditNote,
 } from "@mui/icons-material";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Member } from "@/libs/types/member/member";
 import { MemberType } from "@/libs/enums/member.enum";
 import { serverApi } from "@/libs/config";
@@ -40,15 +40,14 @@ export default function ProfileSidebar({
   onUnfollow,
   variant,
 }: ProfileSidebarType) {
-  const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "myProfile";
 
   const onTab = (value: string) => {
-    const setterParams = new URLSearchParams(searchParams);
+    const setterParams = new URLSearchParams();
     setterParams.set("tab", value);
-    router.push(`/profile/${params.userId}/?${setterParams.toString()}`);
+    router.replace(`${window.location.pathname}?${setterParams.toString()}`);
   };
 
   const isFollowing = member?.meFollowed?.[0]?.myFollowing;
@@ -110,7 +109,7 @@ export default function ProfileSidebar({
   };
 
   return (
-    <Box className="w-full bg-white  p-4 md:border-r-slate-300/80 md:border-r ">
+    <Box className="w-full bg-white  p-4 ">
       {/* Profile */}
       <Box className="flex flex-col items-center mb-4">
         <Avatar

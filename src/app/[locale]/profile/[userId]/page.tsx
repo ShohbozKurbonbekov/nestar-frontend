@@ -104,7 +104,7 @@ export default function Profile() {
     <section className="pt-25 pb-10 px-4 bg-sky-50">
       <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5 bg-white shadow-sm">
         {/* Sidebar */}
-        <div className="md:col-span-3">
+        <div className="md:col-span-3 md:border-r-slate-300/80 md:border-r">
           <ProfileSidebar
             member={member}
             onFollow={onFollow}

@@ -5,7 +5,7 @@ import { priceFormatter } from "@/libs/utils/priceFormatter";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import ModeIcon from "@mui/icons-material/Mode";
@@ -21,6 +21,7 @@ interface ProfilePropertyCardType {
 
 const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
   ({ property, onUpdate, onDelete, member }) => {
+    const searchParams = useSearchParams();
     const router = useRouter();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -36,6 +37,14 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
 
     const handleClose = () => {
       setAnchorEl(null);
+    };
+
+    const pushAddProperty = (propertyId: string) => {
+      if (!propertyId) return;
+      const setterParams = new URLSearchParams();
+      setterParams.set("tab", "addProperty");
+      setterParams.set("propertyId", propertyId);
+      router.replace(`${window.location.pathname}?${setterParams.toString()}`);
     };
     return (
       <div className="w-full overflow-x-auto">
@@ -126,7 +135,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
               direction="row"
               className="flex-1 shrink-0  justify-end gap-1"
             >
-              <IconButton onClick={() => onPropertyDetail(property._id)}>
+              <IconButton onClick={() => pushAddProperty(property._id)}>
                 <ModeIcon fontSize="small" />
               </IconButton>
               <IconButton onClick={() => onDelete(property._id)}>

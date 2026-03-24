@@ -12,22 +12,23 @@ import { AgentPropertiesInquiry } from "@/libs/types/property/property.input";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Stack, Typography, Pagination, Chip, Divider } from "@mui/material";
+import { Stack, Pagination, Chip, Divider } from "@mui/material";
 import { Property } from "@/libs/types/property/property";
 import { PropertyStatus } from "@/libs/enums/property.enum";
 import ProfileContentHeader from "../ProfileContentHeader";
 import Emty from "@/components/ui/Emty";
 import ProfilePropertyCard from "../property/ProfilePropertyCard";
+import ProfilePropertyCardsSkeleton from "@/components/skeletons/ProfilePropertyCardsSkeleton";
 
 export default function MyProperties() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [agentProperties, setAgentProperties] = useState<Property[]>([]);
-  const [totalProperties, setTotalPorperties] = useState<number>(0);
+  const [totalProperties, setTotalProperties] = useState<number>(0);
   const user = useReactiveVar(userVar);
   const agentPropertiesInput: AgentPropertiesInquiry = useMemo(() => {
     return {
-      limit: 2,
+      limit: 4,
       page: Number(searchParams.get("page")) || 1,
       search: {
         propertyStatus:
@@ -35,7 +36,7 @@ export default function MyProperties() {
           PropertyStatus.ACTIVE,
       },
       direction: Direction.DESC,
-      sort: searchParams.get("sort") || PropertySort.CREATED_AT,
+      sort: PropertySort.CREATED_AT,
     };
   }, [searchParams]);
 
@@ -44,17 +45,16 @@ export default function MyProperties() {
 
   const {
     loading: getAgentPropertiesLoading,
-    error: getAgentPropertiesError,
     refetch: getAgentPropertiesRefetch,
   } = useQuery(GET_AGENT_PROPERTIES, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     variables: {
       input: agentPropertiesInput,
     },
     notifyOnNetworkStatusChange: true,
     onCompleted: (data: T) => {
       setAgentProperties(data?.getAgentProperties?.list);
-      setTotalPorperties(data?.getAgentProperties?.metaCounter[0]?.total ?? 0);
+      setTotalProperties(data?.getAgentProperties?.metaCounter[0]?.total ?? 0);
     },
     skip: user.memberType !== MemberType.AGENT,
   });
@@ -72,7 +72,7 @@ export default function MyProperties() {
     const params = new URLSearchParams(searchParams);
     params.set("page", String(value));
 
-    router.push(`?${params.toString()}`);
+    router.replace(`?${params.toString()}`);
   };
 
   const onStatusChange = useCallback(
@@ -81,7 +81,7 @@ export default function MyProperties() {
       params.set("status", value);
       params.set("page", "1");
 
-      router.push(`?${params.toString()}`);
+      router.replace(`?${params.toString()}`);
     },
     [router, searchParams],
   );
@@ -130,18 +130,9 @@ export default function MyProperties() {
     [updateProperty, getAgentPropertiesRefetch, agentPropertiesInput],
   );
 
-  // const onSortChange = useCallback(
-  //   (sort: PropertySort) => {
-  //     const params = new URLSearchParams(searchParams);
-  //     params.set("sort", sort);
-  //     params.set("page", "1");
-  //     router.push(`?${params.toString()}`);
-  //   },
-  //   [router, searchParams],
-  // );
-
   const isActive =
     agentPropertiesInput.search.propertyStatus === PropertyStatus.ACTIVE;
+
   // ------------------------------------ Render -----------------------------
   return (
     <div className="w-full flex flex-col h-full">
@@ -183,12 +174,15 @@ export default function MyProperties() {
         <Divider />
 
         {/* LIST */}
-        <Stack className="mt-6 gap-3 ">
-          {!agentProperties ? (
+        <Stack className="mt-6 mb-4 gap-3 ">
+          {getAgentPropertiesLoading ? (
+            <ProfilePropertyCardsSkeleton />
+          ) : !agentProperties ? (
             <Emty title="No agent properties" />
           ) : (
             agentProperties.map((property) => (
               <ProfilePropertyCard
+                key={property._id}
                 onDelete={onDelete}
                 onUpdate={onUpdate}
                 property={property}
@@ -212,10 +206,9 @@ export default function MyProperties() {
                     alignItems: "center",
                     justifyContent: "center",
                   },
-                  "& .mui-69t2hf-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected":
-                    {
-                      backgroundColor: "#CBD5E1CC",
-                    },
+                  "& .MuiButtonBase-root.MuiPaginationItem-root.Mui-selected": {
+                    backgroundColor: "#CBD5E1CC",
+                  },
                 }}
                 onChange={(e, value) => onPage(e, value)}
               />

@@ -6,6 +6,7 @@ import {
 } from "@/libs/enums/property.enum";
 
 export interface PropertyInput {
+  _id?: string;
   propertyType: PropertyType;
   propertyLocation: PropertyLocation;
   propertyAddress: string;

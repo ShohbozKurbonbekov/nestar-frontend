@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { BasicInfoStep } from "./BasicInfoStep";
 import { DetailsStep } from "./DetailsStep";
 import { MediaStep } from "./MediaStep";
+import { useSearchParams } from "next/navigation";
 
 const steps = ["Basic Info", "Details", "Media"];
 
@@ -17,8 +18,14 @@ const stepFields = [
 
 interface PropertyFormContentType {
   onSubmit: (values: any) => Promise<any>;
+  onUpdate: (value: any) => Promise<any>;
 }
-export default function PropertyFormContent({ onSubmit }: any) {
+export default function PropertyFormContent({
+  onSubmit,
+  onUpdate,
+}: PropertyFormContentType) {
+  const searchParams = useSearchParams();
+  const propertyId = searchParams.get("propertyId");
   const [activeStep, setActiveStep] = useState(0);
   const {
     trigger,
@@ -86,10 +93,10 @@ export default function PropertyFormContent({ onSubmit }: any) {
           <Button
             variant="contained"
             color="success"
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(propertyId ? onUpdate : onSubmit)}
             disabled={isSubmitting}
           >
-            Submit
+            {propertyId ? "Save" : "Submit"}
           </Button>
         ) : (
           <Button
