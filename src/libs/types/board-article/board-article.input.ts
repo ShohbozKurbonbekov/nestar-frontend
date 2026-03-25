@@ -16,6 +16,7 @@ interface BAISearch {
   articleCategory?: BoardArticleCategory;
   text?: string;
   isFeatured?: boolean;
+  memberId?: string;
 }
 
 export interface BoardArticlesInquiry {
