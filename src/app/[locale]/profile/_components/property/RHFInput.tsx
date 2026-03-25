@@ -14,14 +14,19 @@ export const RHFInput = ({ name, label, ...props }: any) => {
       {...register(name)}
       error={!!errors[name]}
       helperText={errors[name]?.message as string}
-      size="small"
+      size="medium"
       {...props}
       sx={{
-        "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "rgba(148, 163, 184, 1)",
-        },
-        "& .MuiTextField-root .Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "rgba(148, 163, 184, 1)",
+        "& .MuiOutlinedInput-root": {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(148, 163, 184, 1)",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(148, 163, 184, 1)",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(148, 163, 184, 1)",
+          },
         },
       }}
     />

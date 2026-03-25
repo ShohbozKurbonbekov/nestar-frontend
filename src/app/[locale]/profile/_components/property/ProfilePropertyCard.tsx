@@ -51,7 +51,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
         <Stack
           direction="row"
           alignItems="center"
-          className="min-w-250 bg-white rounded-xl shadow-sm px-4 py-3 gap-4 border border-gray-200 hover:shadow-md transition"
+          className="min-w-250 bg-white rounded-xl shadow-sm px-4 py-3 gap-6 border border-gray-200 hover:shadow-md transition"
         >
           {/* IMAGE */}
           <Stack
@@ -69,7 +69,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
 
           {/* INFO */}
           <Stack
-            className={`min-w-40 ${member ? "cursor-pointer" : ""} overflow-hidden`}
+            className={`min-w-40 ${member ? "cursor-pointer" : ""} overflow-hidden `}
             onClick={() => onPropertyDetail(property?._id)}
           >
             <Typography className="text-sm font-semibold line-clamp-1">

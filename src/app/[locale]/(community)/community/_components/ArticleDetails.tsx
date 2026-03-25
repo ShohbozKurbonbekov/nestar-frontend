@@ -26,7 +26,6 @@ import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { FavoriteBorder } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
 import TViewer from "./TViewer";
 
 interface ArticleDetailsType {

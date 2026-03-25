@@ -29,6 +29,7 @@ export default function AddProperty() {
 
   const onUpdate = useCallback(
     async (value: any) => {
+      console.log("RUNNNING");
       if (!getPropertyData) return;
       const params = new URLSearchParams();
       params.set("tab", "myProperties");

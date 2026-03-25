@@ -17,7 +17,7 @@ export const RHFSelect = ({ name, label, options }: any) => {
   return (
     <FormControl
       fullWidth
-      size="small"
+      size="medium"
       error={!!errors[name]}
       sx={{
         "& .MuiInputLabel-root.Mui-focused": {
