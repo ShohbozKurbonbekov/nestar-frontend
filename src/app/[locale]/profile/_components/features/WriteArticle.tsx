@@ -33,14 +33,15 @@ export default function WriteArticle() {
   // ------------------------------- Handlers ------------------------
   const onUpdate = useCallback(
     async (value: any) => {
-      if (!data) return;
+      if (!data.getBoardArticle) return;
       const params = new URLSearchParams();
       params.set("tab", "myArticles");
+      value._id = data.getBoardArticle._id;
 
       try {
         await updateArticle({
           variables: {
-            input: { _id: data._id, ...value },
+            input: value,
           },
         });
 

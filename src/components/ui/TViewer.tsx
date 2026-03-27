@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
-import { Box, Stack, CircularProgress } from "@mui/material";
+import { Stack, CircularProgress } from "@mui/material";
 
 const TViewer = (props: any) => {
   const [editorLoaded, setEditorLoaded] = useState(false);

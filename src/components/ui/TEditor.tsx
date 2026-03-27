@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Button, Stack } from "@mui/material";
 import { BoardArticleCategory } from "@/libs/enums/board-article.enum";
 import { Editor } from "@toast-ui/react-editor";
@@ -10,13 +10,20 @@ import { RHFInput } from "@/app/[locale]/profile/_components/property/RHFInput";
 import { useFormContext } from "react-hook-form";
 import { sweetMixinErrorAlert } from "@/libs/sweetAlert";
 import { serverApi } from "@/libs/config";
+import { BoardArticle } from "@/libs/types/board-article/board-article";
 
 interface TEditorType {
   articleId: string | null;
   onSubmit: (values: any) => Promise<void>;
   onUpdate: (value: any) => Promise<void>;
+  articleData: BoardArticle | undefined;
 }
-const TuiEditor = ({ articleId, onSubmit, onUpdate }: TEditorType) => {
+const TuiEditor = ({
+  articleId,
+  onSubmit,
+  onUpdate,
+  articleData,
+}: TEditorType) => {
   const editorRef = useRef<Editor | null>(null),
     token = getJwtToken();
   const {
@@ -70,6 +77,17 @@ const TuiEditor = ({ articleId, onSubmit, onUpdate }: TEditorType) => {
       await sweetMixinErrorAlert(error.message);
     }
   };
+  console.log(
+    "DATA: ",
+    articleData,
+    editorRef.current?.getInstance().getHTML(),
+  );
+
+  useEffect(() => {
+    if (articleData?.articleContent) {
+      editorRef.current?.getInstance().setHTML(articleData.articleContent);
+    }
+  }, [articleData]);
 
   return (
     <Stack gap={"12px"} paddingY={"1.7rem"}>
@@ -83,10 +101,10 @@ const TuiEditor = ({ articleId, onSubmit, onUpdate }: TEditorType) => {
       </div>
 
       <Editor
-        initialValue={"Type here"}
+        initialValue={articleData ? "" : "Type here"}
         placeholder={"Type here"}
         previewStyle={"vertical"}
-        height={"640px"}
+        height={"40rem"}
         // @ts-ignore
         initialEditType={"WYSIWYG"}
         toolbarItems={[

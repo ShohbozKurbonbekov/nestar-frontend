@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { BoardArticle } from "@/libs/types/board-article/board-article";
 import { serverApi } from "@/libs/config";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
+import { useRouter } from "next/navigation";
 
 interface ProfileArticleCardType {
   article: BoardArticle;
@@ -15,12 +16,21 @@ interface ProfileArticleCardType {
 }
 const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
   ({ article, onDelete }) => {
+    const router = useRouter();
     const imageUrl = article?.articleImage
       ? `${serverApi}/${article.articleImage}`
       : "/images/default-blog.png";
     const preview = article.articleContent
       .replace(/<[^>]*>?/gm, "")
       .slice(0, 120);
+
+    const pushWriteArticle = (articleId: string) => {
+      if (!articleId) return;
+      const setterParams = new URLSearchParams();
+      setterParams.set("tab", "writeArticle");
+      setterParams.set("articleId", articleId);
+      router.replace(`${window.location.pathname}?${setterParams.toString()}`);
+    };
 
     return (
       <div className="w-full overflow-x-auto">
@@ -96,7 +106,7 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
               direction="row"
               className="min-w-30 shrink-0  justify-end gap-1"
             >
-              <IconButton onClick={() => {}}>
+              <IconButton onClick={() => pushWriteArticle(article._id)}>
                 <ModeIcon fontSize="small" />
               </IconButton>
               <IconButton onClick={() => onDelete(article._id)}>

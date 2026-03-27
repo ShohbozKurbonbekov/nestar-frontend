@@ -26,6 +26,7 @@ export default function ArticleForm({
           articleId={articleId}
           onSubmit={onSubmit}
           onUpdate={onUpdate}
+          articleData={articleData}
         />
       </div>
     </ArticleFormProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import { userVar } from "@/apollo/store";
-import { UPDATE_PROPERTY } from "@/apollo/user/mutation";
+import { UPDATE_BOARD_ARTICLE, UPDATE_PROPERTY } from "@/apollo/user/mutation";
 import { GET_BOARD_ARTICLES } from "@/apollo/user/query";
 import { Direction } from "@/libs/enums/common.enum";
 import { PropertySort } from "@/libs/enums/property.enum";
@@ -39,7 +39,7 @@ export default function MyArticles() {
   }, [searchParams]);
 
   // ******************************* Apollo  *******************************
-  const [updateProperty] = useMutation(UPDATE_PROPERTY);
+  const [updateArticle] = useMutation(UPDATE_BOARD_ARTICLE);
 
   const {
     loading: boardArticlesLoading,
@@ -79,7 +79,7 @@ export default function MyArticles() {
     async (id: string) => {
       try {
         if (await sweetConfirmAlert("Are you sure to delete this article?")) {
-          await updateProperty({
+          await updateArticle({
             variables: {
               input: {
                 _id: id,
@@ -93,7 +93,7 @@ export default function MyArticles() {
         await sweetErrorHandling(error);
       }
     },
-    [updateProperty, boardArticlesRefetch],
+    [updateArticle, boardArticlesRefetch],
   );
 
   // ------------------------------------ Render -----------------------------
@@ -110,7 +110,7 @@ export default function MyArticles() {
         {/* TABLE HEADER (hidden on mobile) */}
         <Stack
           direction="row"
-          className="hidden md:flex py-2 text-sm font-semibold text-gray-500"
+          className="hidden md:flex py-2 text-sm font-semibold text-gray-500 overflow-auto"
         >
           <div className="min-w-70 max-w-80 text-center">Listing</div>
           <div className="min-w-35 shrink-0">Published</div>

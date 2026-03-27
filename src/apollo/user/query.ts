@@ -466,6 +466,51 @@ export const GET_BOARD_ARTICLES = gql`
   }
 `;
 
+export const UPDATE_BOARD_ARTICLE = gql`
+  mutation UpdateBoardArticle($input: BoardArticleUpdate!) {
+    updateBoardArticle(input: $input) {
+      _id
+      articleCategory
+      articleStatus
+      articleTitle
+      articleContent
+      articleImage
+      articleViews
+      articleLikes
+      articleComments
+      createdAt
+      updatedAt
+      memberData {
+        _id
+        memberType
+        memberStatus
+        memberAuthType
+        memberPhone
+        memberNick
+        memberFullName
+        memberImage
+        memberAddress
+        memberDesc
+        memberProperties
+        memberArticles
+        memberFollowers
+        memberFollowings
+        memberPoints
+        memberLikes
+        memberViews
+        memberComments
+        memberRank
+        memberWarnings
+        memberBlocks
+        deletedAt
+        updatedAt
+        createdAt
+        accessToken
+      }
+    }
+  }
+`;
+
 /**************************
  *         COMMENT        *
  *************************/
