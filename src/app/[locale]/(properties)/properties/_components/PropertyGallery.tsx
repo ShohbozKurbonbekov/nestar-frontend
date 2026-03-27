@@ -122,7 +122,7 @@ export default function PropertyGallery({ images }: PropertyGalleryType) {
       >
         <div className="flex">
           {images?.map((img, i) => (
-            <div className="flex-[0_0_100%] relative h-65">
+            <div className="flex-[0_0_100%] relative h-65" key={i}>
               <Image
                 fill
                 alt={`image-${i + 1}`}

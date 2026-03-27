@@ -293,6 +293,11 @@ export const GET_FAVORITES = gql`
           updatedAt
           accessToken
         }
+        meLiked {
+          memberId
+          likeRefId
+          myFavorite
+        }
       }
       metaCounter {
         total
