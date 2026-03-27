@@ -361,6 +361,11 @@ export const GET_VISITED = gql`
           updatedAt
           accessToken
         }
+        meLiked {
+          memberId
+          likeRefId
+          myFavorite
+        }
       }
       metaCounter {
         total
