@@ -40,18 +40,14 @@ export default function Profile() {
   const [member, setMember] = useState<Member | null>(null);
   const [userId, setUserId] = useState<null | string>(null);
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab") ?? "myProfile";
   const isOwner = user?._id === member?._id;
   const variant: "OWNER" | "VISITOR" = isOwner ? "OWNER" : "VISITOR";
+  const tab =
+    searchParams.get("tab") ?? (isOwner ? "myProfile" : "myProperties");
 
   /************************ Apollo  /**************************/
 
-  const {
-    loading: getMemberLoading,
-    data: getMemberData,
-    error: getMemberError,
-    refetch: getMemberRefetch,
-  } = useQuery(GET_MEMBER, {
+  const { loading: getMemberLoading } = useQuery(GET_MEMBER, {
     fetchPolicy: "cache-and-network",
     variables: { input: userId },
     skip: !userId,
@@ -71,7 +67,7 @@ export default function Profile() {
     myProperties: <MyProperties />,
     myFavorites: <MyFavorites />,
     writeArticle: <WriteArticle />,
-    myArticles: <MyArticles />,
+    myArticles: <MyArticles member={member} isOwner={isOwner} />,
     recentlyVisited: <RecentlyVisited />,
     myProfile: <MyProfile />,
   };

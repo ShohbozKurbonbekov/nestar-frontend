@@ -94,7 +94,7 @@ export default function ProfileSidebar({
         items: [
           member.memberType === "AGENT" && {
             label: "Properties",
-            value: "properties",
+            value: "myProperties",
             icon: <Home />,
           },
           { label: "Followers", value: "followers", icon: <Group /> },
@@ -103,7 +103,7 @@ export default function ProfileSidebar({
       },
       {
         title: "Community",
-        items: [{ label: "Articles", value: "articles", icon: <Article /> }],
+        items: [{ label: "Articles", value: "myArticles", icon: <Article /> }],
       },
     ],
   };

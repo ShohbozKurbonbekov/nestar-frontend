@@ -36,6 +36,7 @@ export default function AgentProperties({
             <div className="w-full grid grid-cols-1 sm:grid-cols-2  gap-4 px-4">
               {properties.map((property) => (
                 <PropertyCard
+                  key={property._id}
                   property={property}
                   likePropertyHandler={likePropertyHandler}
                   cardFooter={

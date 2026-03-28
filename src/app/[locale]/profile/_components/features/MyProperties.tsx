@@ -2,7 +2,7 @@
 
 import { userVar } from "@/apollo/store";
 import { UPDATE_PROPERTY } from "@/apollo/user/mutation";
-import { GET_AGENT_PROPERTIES } from "@/apollo/user/query";
+import { GET_AGENT_PROPERTIES, GET_PROPERTIES } from "@/apollo/user/query";
 import { Direction } from "@/libs/enums/common.enum";
 import { MemberType } from "@/libs/enums/member.enum";
 import { PropertySort } from "@/libs/enums/property.enum";
@@ -10,7 +10,7 @@ import { sweetConfirmAlert, sweetErrorHandling } from "@/libs/sweetAlert";
 import { T } from "@/libs/types/common";
 import { AgentPropertiesInquiry } from "@/libs/types/property/property.input";
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Stack, Pagination, Chip, Divider } from "@mui/material";
 import { Property } from "@/libs/types/property/property";
@@ -26,46 +26,52 @@ export default function MyProperties() {
   const [agentProperties, setAgentProperties] = useState<Property[]>([]);
   const [totalProperties, setTotalProperties] = useState<number>(0);
   const user = useReactiveVar(userVar);
-  const agentPropertiesInput: AgentPropertiesInquiry = useMemo(() => {
+  const memberId = String(useParams().userId);
+  const isOwner = user._id === memberId;
+  const agentPropertiesInput = useMemo(() => {
     return {
       limit: 4,
       page: Number(searchParams.get("page")) || 1,
       search: {
-        propertyStatus:
-          (searchParams.get("status") as PropertyStatus) ||
-          PropertyStatus.ACTIVE,
+        ...(isOwner
+          ? {
+              propertyStatus:
+                (searchParams.get("status") as PropertyStatus) ||
+                PropertyStatus.ACTIVE,
+            }
+          : {}),
+        ...(!isOwner ? { memberId: memberId } : {}),
       },
       direction: Direction.DESC,
       sort: PropertySort.CREATED_AT,
     };
-  }, [searchParams]);
-
+  }, [searchParams, isOwner, memberId]);
   // ******************************* Apollo  *******************************
   const [updateProperty] = useMutation(UPDATE_PROPERTY);
-
   const {
     loading: getAgentPropertiesLoading,
     refetch: getAgentPropertiesRefetch,
-  } = useQuery(GET_AGENT_PROPERTIES, {
+  } = useQuery(isOwner ? GET_AGENT_PROPERTIES : GET_PROPERTIES, {
     fetchPolicy: "cache-and-network",
     variables: {
       input: agentPropertiesInput,
     },
     notifyOnNetworkStatusChange: true,
     onCompleted: (data: T) => {
-      setAgentProperties(data?.getAgentProperties?.list);
-      setTotalProperties(data?.getAgentProperties?.metaCounter[0]?.total ?? 0);
+      if (isOwner) {
+        setAgentProperties(data?.getAgentProperties?.list);
+        setTotalProperties(
+          data?.getAgentProperties?.metaCounter[0]?.total ?? 0,
+        );
+      } else {
+        setAgentProperties(data?.getProperties?.list);
+        setTotalProperties(data?.getProperties?.metaCounter[0]?.total);
+      }
     },
-    skip: user.memberType !== MemberType.AGENT,
   });
 
   // ******************************* Apollo  End *******************************
 
-  useEffect(() => {
-    if (!user?._id || user.memberType !== MemberType.AGENT) {
-      return router.replace("/");
-    }
-  }, [user, router]);
   // ------------------------------------ Handlers -----------------------------
 
   const onPage = (e: T, value: number) => {
@@ -137,51 +143,60 @@ export default function MyProperties() {
   return (
     <div className="w-full flex flex-col h-full">
       <ProfileContentHeader
-        subtitle="Welcome back — manage your listings efficiently
-"
-        title="My Properties
-"
+        subtitle={
+          isOwner
+            ? "Welcome back — manage your listings efficiently"
+            : undefined
+        }
+        title={isOwner ? "My Properties" : "Properties"}
       />
 
       <div className="p-4 flex-1 flex flex-col h-full">
-        <Stack direction="row" spacing={2} className="mb-4 overflow-x-auto ">
-          <Chip
-            label="On Sale"
-            clickable
-            color={isActive ? "primary" : "default"}
-            onClick={() => onStatusChange(PropertyStatus.ACTIVE)}
-          />
-          <Chip
-            label="Sold"
-            clickable
-            color={!isActive ? "primary" : "default"}
-            onClick={() => onStatusChange(PropertyStatus.SOLD)}
-          />
-        </Stack>
+        {isOwner && (
+          <Stack direction="row" spacing={2} className="mb-4 overflow-x-auto ">
+            <Chip
+              label="On Sale"
+              clickable
+              color={isActive ? "primary" : "default"}
+              onClick={() => onStatusChange(PropertyStatus.ACTIVE)}
+            />
+            <Chip
+              label="Sold"
+              clickable
+              color={!isActive ? "primary" : "default"}
+              onClick={() => onStatusChange(PropertyStatus.SOLD)}
+            />
+          </Stack>
+        )}
 
         {/* TABLE HEADER (hidden on mobile) */}
-        <Stack
-          direction="row"
-          className="hidden md:flex py-2 text-sm font-semibold text-gray-500"
-        >
-          <div className="w-[35%]">Listing</div>
-          <div className="w-[20%]">Published</div>
-          <div className="w-[15%]">Status</div>
-          <div className="w-[15%]">Views</div>
-          {isActive && <div className="w-[15%] text-right">Actions</div>}
-        </Stack>
+        <div className="w-full overflow-x-auto">
+          <Stack
+            direction="row"
+            className="md:flex py-3 px-4 min-w-250 gap-6 text-sm font-semibold text-gray-500 "
+          >
+            <div className="min-w-70 text-center">Listing</div>
+            <div className="min-w-35 text-center">Published</div>
+            <div className="min-w-35 text-center">Status</div>
+            <div className="min-w-25 text-center">Views</div>
+            {isActive && (
+              <div className="flex-1 flex justify-end ">Actions</div>
+            )}
+          </Stack>
+        </div>
 
-        <Divider />
+        <Divider className="mt-2" />
 
         {/* LIST */}
         <Stack className="mt-6 mb-4 gap-3 ">
           {getAgentPropertiesLoading ? (
             <ProfilePropertyCardsSkeleton />
-          ) : !agentProperties ? (
+          ) : !agentProperties.length ? (
             <Emty title="No agent properties" />
           ) : (
             agentProperties.map((property) => (
               <ProfilePropertyCard
+                isOwner={isOwner}
                 key={property._id}
                 onDelete={onDelete}
                 onUpdate={onUpdate}

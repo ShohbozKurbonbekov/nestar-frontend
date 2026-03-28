@@ -5,29 +5,30 @@ import { priceFormatter } from "@/libs/utils/priceFormatter";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import ModeIcon from "@mui/icons-material/Mode";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Member } from "@/libs/types/member/member";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "@/apollo/store";
 
 interface ProfilePropertyCardType {
+  isOwner: boolean;
   property: Property;
-  member?: Member;
   onDelete: (proeprtyId: string) => Promise<void>;
   onUpdate: (status: PropertyStatus, propertyId: string) => Promise<void>;
 }
 
 const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
-  ({ property, onUpdate, onDelete, member }) => {
-    const searchParams = useSearchParams();
+  ({ property, onUpdate, onDelete, isOwner }) => {
+    const user = useReactiveVar(userVar);
     const router = useRouter();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     // ---------------------------- Handlers ---------------------
     const onPropertyDetail = async (id: string) => {
-      if (member) router.push(`/properties/${id}`);
+      if (!isOwner) router.push(`/properties/${id}`);
       else return;
     };
 
@@ -55,7 +56,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
         >
           {/* IMAGE */}
           <Stack
-            className={`w-30 h-20 shrink-0 rounded-lg overflow-hidden ${member ? "cursor-pointer" : ""} relative`}
+            className={`w-30 h-20 shrink-0 rounded-lg overflow-hidden ${!isOwner ? "cursor-pointer" : ""} relative`}
             onClick={() => onPropertyDetail(property?._id)}
           >
             <Image
@@ -69,7 +70,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
 
           {/* INFO */}
           <Stack
-            className={`min-w-40 ${member ? "cursor-pointer" : ""} overflow-hidden `}
+            className={`min-w-40 ${!isOwner ? "cursor-pointer" : ""} overflow-hidden `}
             onClick={() => onPropertyDetail(property?._id)}
           >
             <Typography className="text-sm font-semibold line-clamp-1">
@@ -94,7 +95,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
           <Stack className="min-w-35 overflow-hidden shrink-0">
             <Stack
               onClick={onStatusChange}
-              className="px-3 py-1 rounded-full text-center cursor-pointer w-full h-full"
+              className={`px-3 py-1 rounded-full text-center ${isOwner ? "cursor-pointer" : ""} w-full h-full`}
               sx={{
                 backgroundColor: "#E5F0FD",
               }}
@@ -106,7 +107,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
           </Stack>
 
           {/* MENU */}
-          {!member && property.propertyStatus !== "SOLD" && (
+          {isOwner && property.propertyStatus !== "SOLD" && (
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               {property.propertyStatus === PropertyStatus.ACTIVE && (
                 <MenuItem
@@ -130,7 +131,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
           </Stack>
 
           {/* ACTIONS */}
-          {!member && property.propertyStatus === PropertyStatus.ACTIVE && (
+          {isOwner && property.propertyStatus === PropertyStatus.ACTIVE && (
             <Stack
               direction="row"
               className="flex-1 shrink-0  justify-end gap-1"
