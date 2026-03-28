@@ -191,10 +191,9 @@ export default function CommunityDetail() {
 
   const goMemberPage = useCallback(
     (id: string) => {
-      if (id === user?._id) router.push("/mypage");
-      else router.push(`/member?memberId=${id}`);
+      router.push(`/profile/${id}`);
     },
-    [user, router],
+    [router],
   );
 
   const handleRefetchComments = useCallback(

@@ -20,9 +20,10 @@ function Stat({ icon, value, label }: T) {
 // ------------------------------------- Component  -------------------------------------
 interface AgentDetailInfoType {
   agent: Member;
+  goMemberPage: (id: string) => void;
 }
 const AgentDetailInfo: React.FC<AgentDetailInfoType> = React.memo(
-  ({ agent }) => {
+  ({ agent, goMemberPage }) => {
     const imageUrl = agent?.memberImage
       ? `${serverApi}/${agent.memberImage}`
       : "/images/default-user.png";
@@ -46,7 +47,11 @@ const AgentDetailInfo: React.FC<AgentDetailInfoType> = React.memo(
               {agent?.memberFullName}
             </Typography>
             {/* Agent Nick */}
-            <Typography variant="h5" className="text-slate-900">
+            <Typography
+              variant="h5"
+              className="text-slate-900 hover:text-blue-600 duration-200 ease-in-out transition-colors cursor-pointer"
+              onClick={() => goMemberPage(agent._id)}
+            >
               @{agent?.memberNick}
             </Typography>
 

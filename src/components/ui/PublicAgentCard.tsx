@@ -54,14 +54,17 @@ const PublicAgentCard: React.FC<PublicAgentCardType> = React.memo(
           />
 
           {/* Name */}
-          <Typography variant="h6" className="mt-4 text-slate-800 text-center">
+          <Typography
+            variant="h6"
+            className="mt-4 text-slate-800 text-center line-clamp-1"
+          >
             {agent?.memberFullName}
           </Typography>
 
           {/* Nickname */}
           <Typography
             variant="body2"
-            className="text-slate-500 cursor-pointer hover:text-slate-200 duration-300 ease-linear"
+            className="text-slate-500 cursor-pointer hover:text-slate-200 duration-300 ease-linear line-clamp-1"
             onClick={() =>
               router.push(`/agents/${agent._id}`, { scroll: true })
             }
@@ -71,7 +74,7 @@ const PublicAgentCard: React.FC<PublicAgentCardType> = React.memo(
 
           {/* Location */}
           {agent.memberAddress && (
-            <div className="flex flex-row gap-1  items-center text-slate-400 mt-1">
+            <div className="flex flex-row gap-1  items-center text-slate-400 mt-1 line-clamp-1">
               <LocationOnOutlinedIcon sx={{ fontSize: 16 }} />
               <Typography variant="caption">{agent?.memberAddress}</Typography>
             </div>

@@ -1,5 +1,5 @@
 "use client";
-
+import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 import { getJwtToken } from "@/libs/auth";
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { serverApi } from "@/libs/config";
@@ -100,7 +99,7 @@ export default function ProfileFormContent({
           Only PNG / JPG
         </Typography>
 
-        <Tooltip title="Choose another image">
+        <Tooltip title="Choose image">
           <Button
             variant="outlined"
             onClick={() => inputRef.current?.click()}
@@ -119,10 +118,17 @@ export default function ProfileFormContent({
 
         {/* Preview */}
         <Box className="w-full mt-4">
-          <img
-            src={`${serverApi}/${image}`}
-            className="w-full h-60 lg:h-74 object-cover rounded-lg object-center"
-          />
+          {image ? (
+            <img
+              src={`${serverApi}/${image}`}
+              className="w-full h-60 lg:h-74 object-cover rounded-lg object-center"
+            />
+          ) : (
+            <div className="h-40 lg:h-50 p-5 border border-slate-300 rounded-2xl mt-6 flex items-center justify-center gap-2">
+              <ImageSearchIcon fontSize="medium" className="text-slate-500" />
+              <span className="text-sm text-gray-400 capitalize">No image</span>
+            </div>
+          )}
         </Box>
       </Box>
       <Box className="my-5 text-end">

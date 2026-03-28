@@ -245,10 +245,9 @@ export default function AgentDetail() {
 
   const goMemberPage = useCallback(
     (id: string) => {
-      if (id === user?._id) router.push("/mypage");
-      else router.push(`/member?memberId=${id}`);
+      router.push(`/profile/${id}`);
     },
-    [user, router],
+    [router],
   );
 
   const handleRefetchComments = useCallback(
@@ -257,13 +256,12 @@ export default function AgentDetail() {
   );
 
   // ------------------------------- Render ----------------------
-  console.log("LIKED: ", agent?.meLiked);
   if (getAgentLoading || !agent)
     return <DetailPageLoading subtitle="Fetching agent detail" />;
 
   return (
     <section className="py-20 mt-10">
-      <AgentDetailInfo agent={agent} />
+      <AgentDetailInfo agent={agent} goMemberPage={goMemberPage} />
       <div className="mx-auto max-w-8xl px-4 my-10 grid grid-cols-1 lg:grid-cols-6 gap-5">
         <div className="lg:col-span-4">
           <AgentDetailStatistics

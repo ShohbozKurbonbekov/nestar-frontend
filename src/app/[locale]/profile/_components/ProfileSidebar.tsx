@@ -146,6 +146,7 @@ export default function ProfileSidebar({
           variant="contained"
           color="primary"
           className="capitalize rounded-lg"
+          onClick={() => onTab("myProfile")}
         >
           Edit Profile
         </Button>
