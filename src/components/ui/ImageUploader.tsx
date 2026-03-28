@@ -7,7 +7,7 @@ import axios from "axios";
 import { getJwtToken } from "@/libs/auth";
 import { serverApi } from "@/libs/config";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import { sweetErrorAlert, sweetMixinErrorAlert } from "@/libs/sweetAlert";
+import { sweetMixinErrorAlert } from "@/libs/sweetAlert";
 
 export const ImageUploader = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);

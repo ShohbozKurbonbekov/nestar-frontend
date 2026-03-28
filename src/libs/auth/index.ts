@@ -134,7 +134,7 @@ const requestSignUpJwtToken = async ({
   }
 };
 
-export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {
+export const updateStorage = ({ jwtToken }: { jwtToken: string }) => {
   setJwtToken(jwtToken);
   window.localStorage.setItem("login", Date.now().toString());
 };
@@ -153,18 +153,18 @@ export const updateUserInfo = (jwtToken: any) => {
     memberFullName: claims.memberFullName ?? "",
     memberImage:
       claims.memberImage === null || claims.memberImage === undefined
-        ? "/img/profile/defaultUser.svg"
+        ? "/images/default-user.png"
         : `${claims.memberImage}`,
     memberAddress: claims.memberAddress ?? "",
     memberDesc: claims.memberDesc ?? "",
-    memberProperties: claims.memberProperties,
-    memberRank: claims.memberRank,
-    memberArticles: claims.memberArticles,
-    memberPoints: claims.memberPoints,
-    memberLikes: claims.memberLikes,
-    memberViews: claims.memberViews,
-    memberWarnings: claims.memberWarnings,
-    memberBlocks: claims.memberBlocks,
+    memberProperties: claims.memberProperties ?? 0,
+    memberRank: claims.memberRank ?? 0,
+    memberArticles: claims.memberArticles ?? 0,
+    memberPoints: claims.memberPoints ?? 0,
+    memberLikes: claims.memberLikes ?? 0,
+    memberViews: claims.memberViews ?? 0,
+    memberWarnings: claims.memberWarnings ?? 0,
+    memberBlocks: claims.memberBlocks ?? 0,
   });
 };
 

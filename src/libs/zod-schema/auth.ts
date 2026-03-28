@@ -9,7 +9,7 @@ export const loginSchema = z.object({
     .max(12, "Nickname must be under 12 characters"),
   memberPassword: z
     .string()
-    .min(3, "Password must be at least 3 characters")
+    .min(5, "Password must be at least 3 characters")
     .max(12, "Password must be under 12 characters"),
 });
 
@@ -21,11 +21,11 @@ export const signupSchema = z.object({
     .max(12, "Nickname must be under 12 characters"),
   memberPassword: z
     .string()
-    .min(3, "Password must be at least 3 characters")
+    .min(5, "Password must be at least 3 characters")
     .max(12, "Password must be under 12 characters"),
   memberPhone: z
     .string()
-    .min(9, "Phone number must be valid")
+    .min(9, "at least 9 characters")
     .regex(/^[0-9+\-() ]+$/, "Invalid phone format"),
   role: z
     .string()

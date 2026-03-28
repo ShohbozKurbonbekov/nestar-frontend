@@ -3,7 +3,6 @@
 import { RHFInput } from "./RHFInput";
 import { RHFNumberInput } from "./RHFNumberInput";
 import { RHFRadio } from "./RHFRadio";
-import { RHFSelect } from "./RHFSelect";
 
 export const DetailsStep = () => {
   return (

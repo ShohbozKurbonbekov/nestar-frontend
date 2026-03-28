@@ -77,11 +77,6 @@ const TuiEditor = ({
       await sweetMixinErrorAlert(error.message);
     }
   };
-  console.log(
-    "DATA: ",
-    articleData,
-    editorRef.current?.getInstance().getHTML(),
-  );
 
   useEffect(() => {
     if (articleData?.articleContent) {
