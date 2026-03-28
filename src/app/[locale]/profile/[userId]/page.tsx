@@ -13,6 +13,7 @@ import Emty from "@/components/ui/Emty";
 import { sweetErrorHandling } from "@/libs/sweetAlert";
 import { userVar } from "@/apollo/store";
 import MyProfile from "../_components/features/MyProfile";
+import { MemberType } from "@/libs/enums/member.enum";
 
 // lazy loading
 const AddProperty = dynamic(
@@ -33,32 +34,48 @@ const MyArticles = dynamic(() => import("../_components/features/MyArticles"));
 const WriteArticle = dynamic(
   () => import("../_components/features/WriteArticle"),
 );
+const Followers = dynamic(() => import("../_components/features/Followers"));
 
 export default function Profile() {
   const user = useReactiveVar(userVar);
   const params = useParams();
+  const router = useRouter();
   const [member, setMember] = useState<Member | null>(null);
-  const [userId, setUserId] = useState<null | string>(null);
+  const [memberId, setMemberId] = useState<null | string>(null);
   const searchParams = useSearchParams();
   const isOwner = user?._id === member?._id;
   const variant: "OWNER" | "VISITOR" = isOwner ? "OWNER" : "VISITOR";
-  const tab =
-    searchParams.get("tab") ?? (isOwner ? "myProfile" : "myProperties");
+  const tab = searchParams.get("tab") ?? "myProfile";
 
   /************************ Apollo  /**************************/
 
   const { loading: getMemberLoading } = useQuery(GET_MEMBER, {
     fetchPolicy: "cache-and-network",
-    variables: { input: userId },
-    skip: !userId,
+    variables: { input: memberId },
+    skip: !memberId,
     onCompleted: (data: T) => {
-      setMember(data.getMember);
+      const fetchedMember = data.getMember;
+      const isOwnerNow = user?._id === fetchedMember?._id;
+      setMember(fetchedMember);
+      let nextTab = "myProfile";
+
+      if (!isOwnerNow) {
+        nextTab =
+          fetchedMember?.memberType === MemberType.USER
+            ? "followers"
+            : "myProperties";
+      }
+
+      const params = new URLSearchParams(searchParams);
+      params.set("tab", nextTab);
+
+      router.replace(`?${params.toString()}`);
     },
   });
 
   useEffect(() => {
     if (params.userId) {
-      setUserId(String(params.userId));
+      setMemberId(String(params.userId));
     }
   }, [params.userId]);
 
@@ -70,6 +87,7 @@ export default function Profile() {
     myArticles: <MyArticles member={member} isOwner={isOwner} />,
     recentlyVisited: <RecentlyVisited />,
     myProfile: <MyProfile />,
+    followers: <Followers />,
   };
 
   /** HANDLERS **/
@@ -87,7 +105,7 @@ export default function Profile() {
     }
   }, []);
 
-  if (!userId || getMemberLoading)
+  if (!memberId || getMemberLoading)
     return <DetailPageLoading subtitle="Fetching user detail" />;
 
   if (!member)

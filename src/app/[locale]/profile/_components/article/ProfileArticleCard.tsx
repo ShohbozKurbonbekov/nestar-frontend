@@ -11,25 +11,28 @@ import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { useRouter } from "next/navigation";
 
 interface ProfileArticleCardType {
+  isOwner: boolean;
   article: BoardArticle;
   onDelete: (id: string) => Promise<void>;
 }
 const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
-  ({ article, onDelete }) => {
+  ({ article, onDelete, isOwner }) => {
     const router = useRouter();
     const imageUrl = article?.articleImage
       ? `${serverApi}/${article.articleImage}`
       : "/images/default-blog.png";
-    const preview = article.articleContent
-      .replace(/<[^>]*>?/gm, "")
-      .slice(0, 120);
+    const preview = article.articleContent.replace(/<[^>]*>?/gm, "");
 
     const pushWriteArticle = (articleId: string) => {
       if (!articleId) return;
       const setterParams = new URLSearchParams();
       setterParams.set("tab", "writeArticle");
       setterParams.set("articleId", articleId);
-      router.replace(`${window.location.pathname}?${setterParams.toString()}`);
+      router.replace(`?${setterParams.toString()}`);
+    };
+
+    const pushArticleDetail = (id: string) => {
+      if (!isOwner) router.push(`/community/${id}`);
     };
 
     return (
@@ -47,12 +50,15 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
                 fill
                 src={imageUrl}
                 alt={article.articleTitle}
-                className="object-cover"
+                className="object-cover object-top"
               />
             </Stack>
 
             {/* INFO */}
-            <Stack className="min-w-40 max-w-50 overflow-hidden flex flex-col items-start">
+            <Stack
+              onClick={() => pushArticleDetail(article._id)}
+              className={`w-40  overflow-hidden flex flex-col items-start ${isOwner ? "" : "cursor-pointer hover:opacity-60 duration-200 transition-opacity ease-in-out"}`}
+            >
               <Typography className="text-sm font-semibold line-clamp-1">
                 {article.articleTitle}
               </Typography>
@@ -65,14 +71,14 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
             </Stack>
 
             {/* DATE */}
-            <Stack className="min-w-35 shrink-0">
+            <Stack className="w-35 shrink-0">
               <Typography className="text-xs text-gray-500">
                 {timeFormatter(article.createdAt)}
               </Typography>
             </Stack>
 
             {/* VIEWS */}
-            <Stack className="min-w-25 shrink-0 text-center">
+            <Stack className="w-25 shrink-0 text-center">
               <Typography className="text-sm">
                 {article.articleViews}
               </Typography>
@@ -82,7 +88,7 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
             </Stack>
 
             {/* LIKES */}
-            <Stack className="min-w-25 shrink-0 text-center">
+            <Stack className="w-25 shrink-0 text-center">
               <Typography className="text-sm">
                 {article.articleLikes}
               </Typography>
@@ -92,7 +98,7 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
             </Stack>
 
             {/* COMMENTS */}
-            <Stack className="min-w-25 shrink-0 text-center">
+            <Stack className="w-25 shrink-0 text-center">
               <Typography className="text-sm">
                 {article.articleComments}
               </Typography>
@@ -106,12 +112,16 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
               direction="row"
               className="min-w-30 shrink-0  justify-end gap-1"
             >
-              <IconButton onClick={() => pushWriteArticle(article._id)}>
-                <ModeIcon fontSize="small" />
-              </IconButton>
-              <IconButton onClick={() => onDelete(article._id)}>
-                <DeleteIcon fontSize="small" />
-              </IconButton>
+              {isOwner && (
+                <>
+                  <IconButton onClick={() => pushWriteArticle(article._id)}>
+                    <ModeIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton onClick={() => onDelete(article._id)}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </>
+              )}
             </Stack>
           </Stack>
         </Stack>

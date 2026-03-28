@@ -42,7 +42,13 @@ export default function ProfileSidebar({
 }: ProfileSidebarType) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab") || "myProfile";
+  const tab =
+    searchParams.get("tab") ??
+    (variant === "OWNER"
+      ? "myProfile"
+      : member.memberType === MemberType.USER
+        ? "followers"
+        : "myProperties");
 
   const onTab = (value: string) => {
     const setterParams = new URLSearchParams();

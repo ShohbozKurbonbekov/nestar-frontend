@@ -9,7 +9,7 @@ interface ProfileContentHeaderType {
 const ProfileContentHeader: React.FC<ProfileContentHeaderType> = React.memo(
   ({ subtitle, title }) => {
     return (
-      <Stack className="mb-6 border-b border-slate-300/80 p-4">
+      <Stack className="border-b border-slate-300/80 p-4">
         {title && (
           <Typography className="text-2xl md:text-3xl font-semibold">
             {title}
