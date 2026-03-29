@@ -5,7 +5,7 @@ import { priceFormatter } from "@/libs/utils/priceFormatter";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import ModeIcon from "@mui/icons-material/Mode";

@@ -35,6 +35,7 @@ const WriteArticle = dynamic(
   () => import("../_components/features/WriteArticle"),
 );
 const Followers = dynamic(() => import("../_components/features/Followers"));
+const Followings = dynamic(() => import("../_components/features/Followings"));
 
 export default function Profile() {
   const user = useReactiveVar(userVar);
@@ -43,11 +44,11 @@ export default function Profile() {
   const [member, setMember] = useState<Member | null>(null);
   const [memberId, setMemberId] = useState<null | string>(null);
   const searchParams = useSearchParams();
-  const isOwner = user?._id === member?._id;
+  const isOwner = user?._id === memberId;
   const variant: "OWNER" | "VISITOR" = isOwner ? "OWNER" : "VISITOR";
   const tab = searchParams.get("tab") ?? "myProfile";
 
-  /************************ Apollo  /**************************/
+  /************************ Apollo  **************************/
 
   const { loading: getMemberLoading } = useQuery(GET_MEMBER, {
     fetchPolicy: "cache-and-network",
@@ -87,7 +88,8 @@ export default function Profile() {
     myArticles: <MyArticles member={member} isOwner={isOwner} />,
     recentlyVisited: <RecentlyVisited />,
     myProfile: <MyProfile />,
-    followers: <Followers />,
+    followers: <Followers isOwner={isOwner} />,
+    followings: <Followings />,
   };
 
   /** HANDLERS **/

@@ -27,6 +27,7 @@ import { Member } from "@/libs/types/member/member";
 import { MemberType } from "@/libs/enums/member.enum";
 import { serverApi } from "@/libs/config";
 import { firstLetterCapitalizer } from "@/libs/utils/firstLetterCapitalizer";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 interface ProfileSidebarType {
   member: Member;
@@ -53,13 +54,28 @@ export default function ProfileSidebar({
   const onTab = (value: string) => {
     const setterParams = new URLSearchParams();
     setterParams.set("tab", value);
-    router.replace(`${window.location.pathname}?${setterParams.toString()}`);
+    router.replace(`?${setterParams.toString()}`);
   };
+  console.log("MEMBER FOLLOWING: ", member);
 
   const isFollowing = member?.meFollowed?.[0]?.myFollowing;
-  // Menu Config
   const menu = {
     OWNER: [
+      {
+        title: "Interactions",
+        items: [
+          {
+            label: "Followers",
+            value: "followers",
+            icon: <Group />,
+          },
+          {
+            label: "Followings",
+            value: "followings",
+            icon: <PersonAddAlt1Icon />,
+          },
+        ],
+      },
       {
         title: "Manage",
         items: [
@@ -74,6 +90,7 @@ export default function ProfileSidebar({
             icon: <GridView />,
           },
           { label: "Favorites", value: "myFavorites", icon: <Favorite /> },
+
           {
             label: "Recently Visited",
             value: "recentlyVisited",
@@ -104,7 +121,11 @@ export default function ProfileSidebar({
             icon: <Home />,
           },
           { label: "Followers", value: "followers", icon: <Group /> },
-          { label: "Followings", value: "followings", icon: <Group /> },
+          {
+            label: "Followings",
+            value: "followings",
+            icon: <PersonAddAlt1Icon />,
+          },
         ].filter(Boolean),
       },
       {
