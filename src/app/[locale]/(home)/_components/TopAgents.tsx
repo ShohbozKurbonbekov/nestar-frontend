@@ -17,7 +17,7 @@ import { T } from "@/libs/types/common";
 import AgentSkeleton from "@/components/skeletons/AgentSkeleton";
 import Emty from "@/components/ui/Emty";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
-import { likeTargetAgent } from "@/services/Agent.service";
+import { likeTargetMember } from "@/services/Agent.service";
 import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
@@ -90,7 +90,7 @@ export default function TopAgents() {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-      await likeTargetAgent(id);
+      await likeTargetMember(id);
 
       await sweetTopSmallSuccessAlert("succes", 1000);
     } catch (err: any) {

@@ -6,33 +6,33 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import ProfileSidebar from "../_components/ProfileSidebar";
 import { AnimatePresence, motion } from "framer-motion";
 import { GET_MEMBER } from "@/apollo/user/query";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Member } from "@/libs/types/member/member";
 import DetailPageLoading from "@/components/skeletons/DetailPageLoading";
 import Emty from "@/components/ui/Emty";
-import { sweetErrorHandling } from "@/libs/sweetAlert";
 import { userVar } from "@/apollo/store";
 import MyProfile from "../_components/features/MyProfile";
 import { MemberType } from "@/libs/enums/member.enum";
+import FollowersProvider from "../_components/FollowersProvider";
 
 // lazy loading
 const AddProperty = dynamic(
-  () => import("../_components/features/AddProperty"),
+  () => import("../_components/features/AddProperty")
 );
 
 const MyProperties = dynamic(
-  () => import("../_components/features/MyProperties"),
+  () => import("../_components/features/MyProperties")
 );
 const MyFavorites = dynamic(
-  () => import("../_components/features/MyFavorites"),
+  () => import("../_components/features/MyFavorites")
 );
 const RecentlyVisited = dynamic(
-  () => import("../_components/features/RecentlyVisited"),
+  () => import("../_components/features/RecentlyVisited")
 );
 const MyArticles = dynamic(() => import("../_components/features/MyArticles"));
 
 const WriteArticle = dynamic(
-  () => import("../_components/features/WriteArticle"),
+  () => import("../_components/features/WriteArticle")
 );
 const Followers = dynamic(() => import("../_components/features/Followers"));
 const Followings = dynamic(() => import("../_components/features/Followings"));
@@ -49,7 +49,6 @@ export default function Profile() {
   const tab = searchParams.get("tab") ?? "myProfile";
 
   /************************ Apollo  **************************/
-
   const { loading: getMemberLoading } = useQuery(GET_MEMBER, {
     fetchPolicy: "cache-and-network",
     variables: { input: memberId },
@@ -74,6 +73,8 @@ export default function Profile() {
     },
   });
 
+  /************************ Apollo End  **************************/
+
   useEffect(() => {
     if (params.userId) {
       setMemberId(String(params.userId));
@@ -88,24 +89,13 @@ export default function Profile() {
     myArticles: <MyArticles member={member} isOwner={isOwner} />,
     recentlyVisited: <RecentlyVisited />,
     myProfile: <MyProfile />,
-    followers: <Followers isOwner={isOwner} />,
+    followers: (
+      <FollowersProvider searchParams={searchParams} memberId={member?._id}>
+        <Followers isOwner={isOwner} />
+      </FollowersProvider>
+    ),
     followings: <Followings />,
   };
-
-  /** HANDLERS **/
-  const onFollow = useCallback(async () => {
-    try {
-    } catch (err: any) {
-      await sweetErrorHandling(err);
-    }
-  }, []);
-
-  const onUnfollow = useCallback(async () => {
-    try {
-    } catch (err: any) {
-      await sweetErrorHandling(err);
-    }
-  }, []);
 
   if (!memberId || getMemberLoading)
     return <DetailPageLoading subtitle="Fetching user detail" />;
@@ -121,12 +111,9 @@ export default function Profile() {
       <div className="w-full max-w-8xl mx-auto grid grid-col-1 md:grid-cols-12 border border-slate-300 rounded-2xl overflow-hidden items-stretch mt-5 bg-white shadow-sm">
         {/* Sidebar */}
         <div className="md:col-span-3 md:border-r-slate-300/80 md:border-r">
-          <ProfileSidebar
-            member={member}
-            onFollow={onFollow}
-            onUnfollow={onUnfollow}
-            variant={variant}
-          />
+          <FollowersProvider searchParams={searchParams} memberId={member?._id}>
+            <ProfileSidebar member={member} variant={variant} />
+          </FollowersProvider>
         </div>
 
         {/* Main */}

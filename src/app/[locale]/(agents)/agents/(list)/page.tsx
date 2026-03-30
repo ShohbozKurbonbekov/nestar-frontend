@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import AgentSearchFilter from "../_components/AgentSearchFilter";
 import PublicAgentCard from "@/components/ui/PublicAgentCard";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
-import { likeTargetAgent } from "@/services/Agent.service";
+import { likeTargetMember } from "@/services/Agent.service";
 import {
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
@@ -73,7 +73,7 @@ export default function Agents() {
       if (!id) return;
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-      await likeTargetAgent(id);
+      await likeTargetMember(id);
       getAgentsRefetch({ input: initial });
 
       await sweetTopSmallSuccessAlert("succes", 1000);

@@ -35,7 +35,7 @@ import { Property } from "@/libs/types/property/property";
 import PublicTopAgents from "@/components/ui/PublicTopAgents";
 import { AgentsInquiry } from "@/libs/types/member/member.input";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
-import { likeTargetAgent } from "@/services/Agent.service";
+import { likeTargetMember } from "@/services/Agent.service";
 import { likeTargetProperty } from "@/services/Property.service";
 
 // ------------------------------- Component ----------------------
@@ -214,7 +214,7 @@ export default function AgentDetail() {
         if (!id) return;
         if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-        await likeTargetAgent(id);
+        await likeTargetMember(id);
         getAgentRefetch({ input: agentId });
         await sweetTopSmallSuccessAlert("succes", 1000);
       } catch (err: any) {

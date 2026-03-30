@@ -8,7 +8,7 @@ interface ProfilePropertyCardsSkeletonType {
 const ProfilePropertyCardsSkeleton = ({
   columns = 4,
 }: ProfilePropertyCardsSkeletonType) => {
-  return Array.from({ length: 4 }, (_, i) => (
+  return Array.from({ length: columns }, (_, i) => (
     <div className="w-full overflow-x-auto" key={i}>
       <Stack
         direction="row"

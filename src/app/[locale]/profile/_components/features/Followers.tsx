@@ -1,17 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback } from "react";
 import { Divider, Pagination, Stack } from "@mui/material";
 import ProfileContentHeader from "../ProfileContentHeader";
-import { useQuery } from "@apollo/client";
-import { GET_MEMBER_FOLLOWERS } from "@/apollo/user/query";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { skip } from "node:test";
-import ProfilePropertyCardsSkeleton from "@/components/skeletons/ProfilePropertyCardsSkeleton";
 import Emty from "@/components/ui/Emty";
 import ProfileFollowerCard from "../ProfileFollowerCard";
 import { Follower } from "@/libs/types/follow/follow";
 import { T } from "@/libs/types/common";
+import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { Message } from "@/libs/enums/common.enum";
+import { likeTargetMember } from "@/services/Agent.service";
+import {
+  sweetMixinErrorAlert,
+  sweetTopSmallSuccessAlert,
+} from "@/libs/sweetAlert";
+import ProfileFollowerCardSkeleton from "@/components/skeletons/ProfileFollowCardSkeleton";
+import { useFollowersContext } from "@/libs/context/FollowersContext";
 
 // ---------------------------------- Component ---------------------------------
 interface FollowersType {
@@ -20,32 +25,8 @@ interface FollowersType {
 export default function Followers({ isOwner }: FollowersType) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const params = useParams();
-  const memberId = params.userId;
-  const followersInput = useMemo(() => {
-    return {
-      page: Number(searchParams.get("page")) || 1,
-      limit: 5,
-      search: {
-        followingId: memberId,
-      },
-    };
-  }, []);
-  /************************ Apollo  **************************/
-  const {
-    data: followers,
-    loading: getFollowersLoading,
-    refetch: getFollowersRefetch,
-  } = useQuery(GET_MEMBER_FOLLOWERS, {
-    fetchPolicy: "cache-and-network",
-    skip: !memberId,
-    variables: {
-      input: followersInput,
-    },
-    notifyOnNetworkStatusChange: true,
-  });
-  /************************ Apollo End  **************************/
-
+  const { followers, loading, refetch, query, totalFollowers } =
+    useFollowersContext();
   // -------------------------------- Handlers ---------------------------------
 
   const onPage = (e: T, value: number) => {
@@ -54,6 +35,23 @@ export default function Followers({ isOwner }: FollowersType) {
 
     router.replace(`?${params.toString()}`);
   };
+
+  const onLike = useCallback(
+    async (user: CustomJwtPayload, id: string) => {
+      try {
+        if (!id) return;
+        if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+        await likeTargetMember(id);
+        await refetch();
+        await sweetTopSmallSuccessAlert("succes", 1000);
+      } catch (err: any) {
+        console.log("ERROR, onLike:", err.message);
+        await sweetMixinErrorAlert(err.message);
+      }
+    },
+    [refetch]
+  );
 
   // --------------------------------- Render ---------------------------------
   return (
@@ -68,7 +66,6 @@ export default function Followers({ isOwner }: FollowersType) {
       />
 
       <div className="p-4 flex-1 flex flex-col h-full">
-        {/* TABLE HEADER (hidden on mobile) */}
         <div className="w-full overflow-x-auto">
           <Stack
             direction="row"
@@ -78,7 +75,7 @@ export default function Followers({ isOwner }: FollowersType) {
             <div className="w-25 text-center">Followers</div>
             <div className="w-25 text-center">Followings</div>
             <div className="w-25 text-center">Likes</div>
-            <div className="flex-1 flex justify-end gap-2">Actions</div>
+            <div className="flex-1 flex justify-end">Actions</div>
           </Stack>
         </div>
 
@@ -86,26 +83,27 @@ export default function Followers({ isOwner }: FollowersType) {
 
         {/* LIST */}
         <Stack className="mt-6 mb-4 gap-3 ">
-          {getFollowersLoading ? (
-            <ProfilePropertyCardsSkeleton columns={4} />
-          ) : !followers?.getMemberFollowers?.list.length ? (
+          {loading ? (
+            <ProfileFollowerCardSkeleton columns={4} />
+          ) : !followers.length ? (
             <Emty title="No followers" />
           ) : (
-            followers?.getMemberFollowers?.list.map((follower: Follower) => (
-              <ProfileFollowerCard key={follower._id} follower={follower} />
+            followers.map((follower: Follower) => (
+              <ProfileFollowerCard
+                key={follower._id}
+                follower={follower}
+                likeTargetMember={onLike}
+              />
             ))
           )}
         </Stack>
         <Stack className="flex-1 flex flex-col justify-end  w-full">
           <div className="flex justify-center border-t border-slate-300/80 pt-5">
-            {!!followers?.getMemberFollowers?.list.length && (
+            {!!followers.length && (
               <Pagination
-                count={Math.ceil(
-                  (followers.getMemberFollowers.metaCounter?.[0]?.total ?? 0) /
-                    followersInput.limit,
-                )}
+                count={Math.ceil(totalFollowers / query.limit)}
                 variant="outlined"
-                page={followersInput?.page ?? 1}
+                page={query.page ?? 1}
                 size="large"
                 sx={{
                   ".MuiPagination-ul": {

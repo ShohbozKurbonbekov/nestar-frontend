@@ -9,6 +9,7 @@ import { userVar } from "@/apollo/store";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import { Favorite } from "@mui/icons-material";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { useFollowersContext } from "@/libs/context/FollowersContext";
 
 interface ProfileFollowerCardType {
   follower: Follower;
@@ -19,6 +20,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
   ({ follower, likeTargetMember }) => {
     const user = useReactiveVar(userVar);
     const router = useRouter();
+    const { onFollow, onUnFollow } = useFollowersContext();
     const imageUrl = follower?.followerData?.memberImage
       ? `${serverApi}/${follower?.followerData?.memberImage}`
       : "/images/default-user.png";
@@ -116,10 +118,8 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
                     </Typography>
                     <Button
                       variant="outlined"
-                      sx={{
-                        background: "#ed5858",
-                        ":hover": { background: "#ee7171" },
-                      }}
+                      className="bg-[#ed5858] hover:bg-[#ee7171] capitalize text-white border-transparent"
+                      onClick={() => onUnFollow?.(follower?.followerData?._id)}
                     >
                       Unfollow
                     </Button>
@@ -127,10 +127,8 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
                 ) : (
                   <Button
                     variant="contained"
-                    sx={{
-                      background: "#60eb60d4",
-                      ":hover": { background: "#60eb60d4" },
-                    }}
+                    className="bg-[#60eb60d4] capitalize hover:bg-[#60eb60d4]"
+                    onClick={() => onFollow?.(follower?.followerData?._id)}
                   >
                     Follow
                   </Button>
@@ -141,7 +139,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
         </Stack>
       </div>
     );
-  },
+  }
 );
 
 export default ProfileFollowerCard;

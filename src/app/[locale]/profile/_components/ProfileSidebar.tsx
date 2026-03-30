@@ -28,19 +28,17 @@ import { MemberType } from "@/libs/enums/member.enum";
 import { serverApi } from "@/libs/config";
 import { firstLetterCapitalizer } from "@/libs/utils/firstLetterCapitalizer";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import { useFollowersContext } from "@/libs/context/FollowersContext";
 
 interface ProfileSidebarType {
   member: Member;
   variant: "OWNER" | "VISITOR";
-  onFollow: () => Promise<void>;
-  onUnfollow: () => Promise<void>;
 }
 export default function ProfileSidebar({
   member,
-  onFollow,
-  onUnfollow,
   variant,
 }: ProfileSidebarType) {
+  const { onUnFollow, onFollow } = useFollowersContext();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab =
@@ -48,15 +46,14 @@ export default function ProfileSidebar({
     (variant === "OWNER"
       ? "myProfile"
       : member.memberType === MemberType.USER
-        ? "followers"
-        : "myProperties");
+      ? "followers"
+      : "myProperties");
 
   const onTab = (value: string) => {
     const setterParams = new URLSearchParams();
     setterParams.set("tab", value);
     router.replace(`?${setterParams.toString()}`);
   };
-  console.log("MEMBER FOLLOWING: ", member);
 
   const isFollowing = member?.meFollowed?.[0]?.myFollowing;
   const menu = {
@@ -182,7 +179,9 @@ export default function ProfileSidebar({
           fullWidth
           variant={isFollowing ? "outlined" : "contained"}
           color={isFollowing ? "inherit" : "primary"}
-          onClick={() => (isFollowing ? onUnfollow?.() : onFollow?.())}
+          onClick={() =>
+            isFollowing ? onUnFollow?.(member._id) : onFollow?.(member._id)
+          }
           className="mt-2"
         >
           {isFollowing ? "Unfollow" : "Follow"}
