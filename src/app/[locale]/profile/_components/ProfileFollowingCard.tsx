@@ -1,4 +1,4 @@
-import { Follower } from "@/libs/types/follow/follow";
+import { Follower, Following } from "@/libs/types/follow/follow";
 import React from "react";
 import { serverApi } from "@/libs/config";
 import { Button, IconButton, Stack, Typography } from "@mui/material";
@@ -10,19 +10,19 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import { Favorite } from "@mui/icons-material";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 
-interface ProfileFollowerCardType {
+interface ProfileFollowingCardType {
   handleFollow: (id?: string) => Promise<void>;
   handleUnFollow: (id?: string) => Promise<void>;
-  follower: Follower;
+  following: Following;
   likeTargetMember?: (user: CustomJwtPayload, id: string) => Promise<void>;
 }
 
-const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
-  ({ follower, likeTargetMember, handleFollow, handleUnFollow }) => {
+const ProfileFollowingCard: React.FC<ProfileFollowingCardType> = React.memo(
+  ({ following, likeTargetMember, handleFollow, handleUnFollow }) => {
     const user = useReactiveVar(userVar);
     const router = useRouter();
-    const imageUrl = follower?.followerData?.memberImage
-      ? `${serverApi}/${follower?.followerData?.memberImage}`
+    const imageUrl = following?.followingData?.memberImage
+      ? `${serverApi}/${following?.followingData?.memberImage}`
       : "/images/default-user.png";
 
     const onPushMemberDetail = (id: string | undefined) => {
@@ -39,12 +39,12 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
           {/* IMAGE */}
           <Stack
             className={`w-30 h-20 shrink-0 rounded-lg overflow-hidden cursor-pointer relative`}
-            onClick={() => onPushMemberDetail(follower?.followerData?._id)}
+            onClick={() => onPushMemberDetail(following?.followingData?._id)}
           >
             <Image
               fill
               src={imageUrl}
-              alt={follower?.followerData?.memberNick ?? "Unknown"}
+              alt={following?.followingData?.memberNick || "Unknown"}
               className="w-full h-full object-cover object-top"
             />
             <div className="overlay absolute inset-0  bg-linear-to-r from-black/50 to-black/20"></div>
@@ -53,16 +53,16 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
           {/* INFO */}
           <Stack
             className={`w-40 cursor-pointer shrink-0 overflow-hidden hover:opacity-60 duration-200 ease-in-out transition-opacity`}
-            onClick={() => onPushMemberDetail(follower.followerData?._id)}
+            onClick={() => onPushMemberDetail(following?.followingData?._id)}
           >
             <Typography className="text-sm font-semibold line-clamp-1">
-              {follower?.followerData?.memberFullName ?? "Unknown"}
+              {following?.followingData?.memberFullName ?? "Unknown"}
             </Typography>
             <Typography className="text-xs text-gray-500 line-clamp-1">
-              @{follower.followerData?.memberNick ?? "No Nickname"}
+              @{following?.followingData?.memberNick ?? "No Nickname"}
             </Typography>
             <Typography className="text-[10px]  text-gray-400 mt-1 line-clamp-1">
-              {follower?.followerData?.memberAddress ?? "No Address"}
+              {following?.followingData?.memberAddress ?? "No Address"}
             </Typography>
           </Stack>
 
@@ -72,7 +72,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
               Followers
             </Typography>
             <Typography className="text-[10px] text-gray-400">
-              {follower?.followerData?.memberFollowers ?? 0}
+              {following?.followingData?.memberFollowers ?? 0}
             </Typography>
           </Stack>
 
@@ -81,7 +81,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
               Followings
             </Typography>
             <Typography className="text-[10px] text-gray-400">
-              {follower?.followerData?.memberFollowings ?? 0}
+              {following?.followingData?.memberFollowings ?? 0}
             </Typography>
           </Stack>
 
@@ -90,12 +90,12 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
               onClick={(e) => {
                 e.stopPropagation();
                 if (likeTargetMember) {
-                  likeTargetMember(user, follower?.followerData?._id!);
+                  likeTargetMember(user, following?.followingData?._id!);
                 }
               }}
               className="bg-white hover:bg-red-300 hover:text-white transition"
             >
-              {follower?.meLiked?.[0]?.myFavorite ? (
+              {following?.meLiked?.[0]?.myFavorite ? (
                 <Favorite className="text-red-500" />
               ) : (
                 <FavoriteBorder />
@@ -103,15 +103,16 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
             </IconButton>
 
             <Typography className="text-sm font-medium">
-              {follower?.followerData?.memberLikes}
+              {following?.followingData?.memberLikes}
             </Typography>
           </Stack>
 
           {/* ACTIONS */}
           <Stack className="flex-1 flex flex-row justify-end">
-            {user?._id !== follower?.followerId && (
+            {user?._id !== following?.followingId && (
               <Stack className="flex flex-row gap-3 items-center">
-                {follower.meFollowed && follower.meFollowed[0]?.myFollowing ? (
+                {following.meFollowed &&
+                following.meFollowed[0]?.myFollowing ? (
                   <>
                     <Typography className="flex items-center gap-1 px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full border border-blue-200">
                       ✓ Following
@@ -120,7 +121,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
                       variant="outlined"
                       className="bg-[#ed5858] hover:bg-[#ee7171] capitalize text-white border-transparent"
                       onClick={() =>
-                        handleUnFollow(follower?.followerData?._id)
+                        handleUnFollow(following?.followingData?._id)
                       }
                     >
                       Unfollow
@@ -130,7 +131,7 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
                   <Button
                     variant="contained"
                     className="bg-[#60eb60d4] capitalize hover:bg-[#60eb60d4]"
-                    onClick={() => handleFollow(follower?.followerData?._id)}
+                    onClick={() => handleFollow(following?.followingData?._id)}
                   >
                     Follow
                   </Button>
@@ -144,4 +145,4 @@ const ProfileFollowerCard: React.FC<ProfileFollowerCardType> = React.memo(
   }
 );
 
-export default ProfileFollowerCard;
+export default ProfileFollowingCard;

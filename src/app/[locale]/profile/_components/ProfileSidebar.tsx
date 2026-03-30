@@ -28,17 +28,20 @@ import { MemberType } from "@/libs/enums/member.enum";
 import { serverApi } from "@/libs/config";
 import { firstLetterCapitalizer } from "@/libs/utils/firstLetterCapitalizer";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import { useFollowersContext } from "@/libs/context/FollowersContext";
+import { useFollowContext } from "@/libs/context/FollowContext";
+import { useFollow } from "@/libs/hooks/useFollow";
+import { sweetErrorHandling, sweetTopSuccessAlert } from "@/libs/sweetAlert";
 
 interface ProfileSidebarType {
   member: Member;
   variant: "OWNER" | "VISITOR";
+  refetchMember: () => Promise<void>;
 }
 export default function ProfileSidebar({
   member,
   variant,
+  refetchMember,
 }: ProfileSidebarType) {
-  const { onUnFollow, onFollow } = useFollowersContext();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab =
@@ -48,7 +51,35 @@ export default function ProfileSidebar({
       : member.memberType === MemberType.USER
       ? "followers"
       : "myProperties");
+  const { onUnFollow, onFollow } = useFollowContext();
 
+  const handleFollow = async (targetId?: string) => {
+    try {
+      await onFollow(targetId);
+      await sweetTopSuccessAlert("Success", 1000);
+      await refetchMember();
+    } catch (error: any) {
+      console.log(
+        "Error in handleFollow and onFollow functions: ",
+        error.message
+      );
+      await sweetErrorHandling(error);
+    }
+  };
+
+  const handleUnFollow = async (targetId?: string) => {
+    try {
+      await onUnFollow(targetId);
+      await sweetTopSuccessAlert("Success", 1000);
+      await refetchMember();
+    } catch (error: any) {
+      console.log(
+        "Error in handleUnFollow and onUnFollow functions: ",
+        error.message
+      );
+      await sweetErrorHandling(error);
+    }
+  };
   const onTab = (value: string) => {
     const setterParams = new URLSearchParams();
     setterParams.set("tab", value);
@@ -180,7 +211,7 @@ export default function ProfileSidebar({
           variant={isFollowing ? "outlined" : "contained"}
           color={isFollowing ? "inherit" : "primary"}
           onClick={() =>
-            isFollowing ? onUnFollow?.(member._id) : onFollow?.(member._id)
+            isFollowing ? handleUnFollow(member._id) : handleFollow(member._id)
           }
           className="mt-2"
         >

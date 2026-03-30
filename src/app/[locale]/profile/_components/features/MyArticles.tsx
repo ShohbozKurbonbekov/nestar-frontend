@@ -21,7 +21,7 @@ import React from "react";
 import ProfileArticleCardSkeleton from "@/components/skeletons/ProfileArticleCardSkeleton";
 
 interface MyArticlesType {
-  member: Member | null;
+  member?: Member;
   isOwner: boolean;
 }
 const MyArticles: React.FC<MyArticlesType> = React.memo(
@@ -89,7 +89,7 @@ const MyArticles: React.FC<MyArticlesType> = React.memo(
           await sweetErrorHandling(error);
         }
       },
-      [updateArticle, boardArticlesRefetch, myArticlesInquiry],
+      [updateArticle, boardArticlesRefetch, myArticlesInquiry]
     );
 
     // ------------------------------------ Render -----------------------------
@@ -170,7 +170,7 @@ const MyArticles: React.FC<MyArticlesType> = React.memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default MyArticles;

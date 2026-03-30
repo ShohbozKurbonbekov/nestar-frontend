@@ -3,30 +3,38 @@
 import { useCallback } from "react";
 import { Divider, Pagination, Stack } from "@mui/material";
 import ProfileContentHeader from "../ProfileContentHeader";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Emty from "@/components/ui/Emty";
-import ProfileFollowerCard from "../ProfileFollowerCard";
+import ProfileFollowCard from "../ProfileFollowerCard";
 import { Follower } from "@/libs/types/follow/follow";
 import { T } from "@/libs/types/common";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { Message } from "@/libs/enums/common.enum";
 import { likeTargetMember } from "@/services/Agent.service";
 import {
+  sweetErrorHandling,
   sweetMixinErrorAlert,
   sweetTopSmallSuccessAlert,
+  sweetTopSuccessAlert,
 } from "@/libs/sweetAlert";
-import ProfileFollowerCardSkeleton from "@/components/skeletons/ProfileFollowCardSkeleton";
-import { useFollowersContext } from "@/libs/context/FollowersContext";
+import ProfileFollowCardSkeleton from "@/components/skeletons/ProfileFollowCardSkeleton";
+import { useFollow } from "@/libs/hooks/useFollow";
+import { Member } from "@/libs/types/member/member";
+import { useFollowContext } from "@/libs/context/FollowContext";
 
 // ---------------------------------- Component ---------------------------------
 interface FollowersType {
   isOwner: boolean;
+  member?: Member;
 }
-export default function Followers({ isOwner }: FollowersType) {
+export default function Followers({ isOwner, member }: FollowersType) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { followers, loading, refetch, query, totalFollowers } =
-    useFollowersContext();
+  const { onFollow, onUnFollow } = useFollowContext();
+  const { follows, loading, query, totalFollows, refetchFollows } = useFollow({
+    searchParams,
+    memberId: member?._id,
+  });
   // -------------------------------- Handlers ---------------------------------
 
   const onPage = (e: T, value: number) => {
@@ -36,6 +44,33 @@ export default function Followers({ isOwner }: FollowersType) {
     router.replace(`?${params.toString()}`);
   };
 
+  const handleFollow = async (targetId?: string) => {
+    try {
+      await onFollow(targetId);
+      await sweetTopSuccessAlert("Success", 1000);
+      await refetchFollows();
+    } catch (error: any) {
+      console.log(
+        "Error in handleFollow and onFollow functions: ",
+        error.message
+      );
+      await sweetErrorHandling(error);
+    }
+  };
+
+  const handleUnFollow = async (targetId?: string) => {
+    try {
+      await onUnFollow(targetId);
+      await sweetTopSuccessAlert("Success", 1000);
+      await refetchFollows();
+    } catch (error: any) {
+      console.log(
+        "Error in handleUnFollow and onUnFollow functions: ",
+        error.message
+      );
+      await sweetErrorHandling(error);
+    }
+  };
   const onLike = useCallback(
     async (user: CustomJwtPayload, id: string) => {
       try {
@@ -43,14 +78,14 @@ export default function Followers({ isOwner }: FollowersType) {
         if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
         await likeTargetMember(id);
-        await refetch();
+        await refetchFollows();
         await sweetTopSmallSuccessAlert("succes", 1000);
       } catch (err: any) {
         console.log("ERROR, onLike:", err.message);
         await sweetMixinErrorAlert(err.message);
       }
     },
-    [refetch]
+    [refetchFollows, likeTargetMember]
   );
 
   // --------------------------------- Render ---------------------------------
@@ -84,12 +119,14 @@ export default function Followers({ isOwner }: FollowersType) {
         {/* LIST */}
         <Stack className="mt-6 mb-4 gap-3 ">
           {loading ? (
-            <ProfileFollowerCardSkeleton columns={4} />
-          ) : !followers.length ? (
+            <ProfileFollowCardSkeleton columns={4} />
+          ) : !follows?.length ? (
             <Emty title="No followers" />
           ) : (
-            followers.map((follower: Follower) => (
-              <ProfileFollowerCard
+            follows.map((follower: Follower) => (
+              <ProfileFollowCard
+                handleFollow={handleFollow}
+                handleUnFollow={handleUnFollow}
                 key={follower._id}
                 follower={follower}
                 likeTargetMember={onLike}
@@ -99,9 +136,9 @@ export default function Followers({ isOwner }: FollowersType) {
         </Stack>
         <Stack className="flex-1 flex flex-col justify-end  w-full">
           <div className="flex justify-center border-t border-slate-300/80 pt-5">
-            {!!followers.length && (
+            {!!follows?.length && (
               <Pagination
-                count={Math.ceil(totalFollowers / query.limit)}
+                count={Math.ceil(totalFollows / query.limit)}
                 variant="outlined"
                 page={query.page ?? 1}
                 size="large"

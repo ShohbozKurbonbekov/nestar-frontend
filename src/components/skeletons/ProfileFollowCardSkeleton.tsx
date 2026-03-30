@@ -2,12 +2,12 @@
 
 import { Skeleton, Stack } from "@mui/material";
 
-interface ProfileFollowerCardSkeletonType {
+interface ProfileFollowCardSkeletonType {
   columns?: number;
 }
-const ProfileFollowerCardSkeleton = ({
+const ProfileFollowCardSkeleton = ({
   columns = 4,
-}: ProfileFollowerCardSkeletonType) => {
+}: ProfileFollowCardSkeletonType) => {
   return Array.from({ length: columns }, (_, i) => (
     <div className="w-full overflow-x-auto" key={i}>
       <Stack
@@ -60,4 +60,4 @@ const ProfileFollowerCardSkeleton = ({
   ));
 };
 
-export default ProfileFollowerCardSkeleton;
+export default ProfileFollowCardSkeleton;
