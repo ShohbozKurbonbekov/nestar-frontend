@@ -1,4 +1,4 @@
-import PropertyHeaderIntro from "@/app/[locale]/(properties)/properties/_components/PropertyHeaderIntro";
+import PropertyHeaderIntro from "@/app/(main)/[locale]/(properties)/properties/_components/PropertyHeaderIntro";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 

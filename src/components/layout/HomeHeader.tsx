@@ -1,4 +1,4 @@
-import HomepageSearchCategory from "@/app/[locale]/(home)/_components/HomepageSearchCategory";
+import HomepageSearchCategory from "@/app/(main)/[locale]/(home)/_components/HomepageSearchCategory";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 

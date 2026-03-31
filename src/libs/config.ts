@@ -10,6 +10,8 @@ for (let i = 1970; i <= thisYear; i++) {
   propertyYears.push(String(i));
 }
 
+export const adminDrawerWidth = 270;
+
 export const Messages = {
   error1: "Something went wrong!",
   error2: "Please login first!",
