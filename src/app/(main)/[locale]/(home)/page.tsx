@@ -5,14 +5,11 @@ import PopularProperties from "./_components/PopularProperties";
 import Advertisement from "./_components/Advertisement";
 import TopProperties from "./_components/TopProperties";
 import TopAgents from "./_components/TopAgents";
-import { Suspense } from "react";
-import PropertySkeleton from "@/components/skeletons/PropertySkeleton";
 import { useTranslations } from "next-intl";
 import HomepageArticles from "./_components/HomepageArticles";
 
 export default function Home() {
   const t = useTranslations("HomePage");
-
   return (
     <>
       {/*--------------Trend Properties-----------*/}

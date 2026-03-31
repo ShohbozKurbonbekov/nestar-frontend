@@ -39,12 +39,12 @@ export const items = [
     icon: <PeopleIcon fontSize="small" />,
   },
 ];
-export default function SidebarNav({ activeItem, setActiveItem }: any) {
+export default function SidebarNav() {
   const pathname = usePathname();
   return (
     <List className="flex-1 px-3 py-4">
       {items.map((item) => {
-        const active = pathname === item.href;
+        const active = pathname.includes(item.href);
         const router = useRouter();
 
         return (

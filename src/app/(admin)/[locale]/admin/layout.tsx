@@ -1,3 +1,4 @@
+import AdminGuard from "@/libs/auth/AdminGuard";
 import AdminDashboardFrame from "./_components/layout/AdminDashboardFrame";
 
 export default function AdminLayout({
@@ -5,5 +6,9 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminDashboardFrame>{children}</AdminDashboardFrame>;
+  return (
+    <AdminGuard>
+      <AdminDashboardFrame>{children}</AdminDashboardFrame>
+    </AdminGuard>
+  );
 }

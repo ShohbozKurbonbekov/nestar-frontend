@@ -12,7 +12,6 @@ export default function AdminDashboardFrame({
   children,
 }: AdminDashboardFrameType) {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
