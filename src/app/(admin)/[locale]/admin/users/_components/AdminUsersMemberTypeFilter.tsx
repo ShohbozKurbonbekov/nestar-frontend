@@ -12,9 +12,15 @@ export default function AdminUsersMemberTypeFilter() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const memberType = searchParams.get("memberType") ?? "ALL";
+
   const onMemberType = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set("memberType", value);
+    if (value === "ALL") {
+      params.delete("memberType");
+    } else {
+      params.set("memberType", value);
+      params.set("page", "1");
+    }
     router.replace(`?${params.toString()}`);
   };
   return (

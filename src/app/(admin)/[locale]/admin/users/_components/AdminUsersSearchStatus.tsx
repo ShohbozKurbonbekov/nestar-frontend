@@ -22,7 +22,13 @@ export default function AdminUsersSearchStatus() {
 
   const onQuery = (name: "text" | "memberStatus", value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set(name, value.trim());
+
+    if (name === "memberStatus" && value === "ALL") {
+      params.delete("memberStatus");
+    } else {
+      params.set(name, value.trim());
+      params.set("page", "1");
+    }
     router.replace(`?${params.toString()}`);
   };
 

@@ -14,11 +14,20 @@ interface UseAdminUsersType {
 
 export function useAdminUsers({ searchParams }: UseAdminUsersType) {
   const user = useReactiveVar(userVar);
-  const memberInquery: MembersInquiry = useMemo(() => {
+  const memberInquery = useMemo(() => {
     return {
       limit: Number(searchParams.get("limit")) || 10,
       page: Number(searchParams.get("page")) || 1,
-      search: {},
+      search: {
+        ...(searchParams.get("memberType")
+          ? { memberType: searchParams.get("memberType") }
+          : {}),
+        ...(searchParams.get("memberStatus")
+          ? { memberStatus: searchParams.get("memberStatus") }
+          : {}),
+        ...(searchParams.get("text") ? { text: searchParams.get("text") } : {}),
+      },
+
       direction: Direction.DESC,
       sort: "createdAt",
     };
@@ -41,7 +50,7 @@ export function useAdminUsers({ searchParams }: UseAdminUsersType) {
 
   return {
     adminUsers: data?.getAllMembersByAdmin?.list ?? [],
-    totalAmdinUsers: data?.getAllMembersByAdmin?.metaCounter?.[0]?.total ?? 0,
+    totalAdminUsers: data?.getAllMembersByAdmin?.metaCounter?.[0]?.total ?? 0,
     loading,
     refetchAdminUsers,
     query: memberInquery,

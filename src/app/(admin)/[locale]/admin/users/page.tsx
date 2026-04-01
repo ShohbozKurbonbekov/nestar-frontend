@@ -14,8 +14,15 @@ export default function AdminUsers() {
   const router = useRouter();
   const memberType = searchParams.get("memberType") ?? "ALL";
   const status = searchParams.get("memberStatus") ?? "ALL";
-  const { query, totalAmdinUsers } = useAdminUsers({ searchParams });
+  const { query, totalAdminUsers } = useAdminUsers({
+    searchParams,
+  });
 
+  const onQueryDelete = (name: "memberStatus" | "memberType") => {
+    const params = new URLSearchParams(searchParams);
+    params.delete(name);
+    router.replace(`?${params.toString()}`);
+  };
   const onQuery = (
     name: "limit" | "page" | "memberType" | "memberStatus",
     value: string,
@@ -38,37 +45,36 @@ export default function AdminUsers() {
 
           <AdminUsersSearchStatus />
 
-          {/* ACTIVE FILTERS */}
           <Stack direction="row" spacing={1}>
             {memberType !== "ALL" && (
               <Chip
                 label={`Type: ${memberType}`}
-                onDelete={() => onQuery("memberType", "ALL")}
+                onDelete={() => onQueryDelete("memberType")}
               />
             )}
             {status !== "ALL" && (
               <Chip
                 label={`Status: ${status}`}
-                onDelete={() => onQuery("memberStatus", "ALL")}
+                onDelete={() => onQueryDelete("memberStatus")}
               />
             )}
           </Stack>
 
           {/* USER LIST */}
-          <Box className="w-full overflow-auto">
+          <Box className="w-full overflow-x-auto">
             <AdminUsersList />
           </Box>
 
           <TablePagination
             component="div"
-            count={totalAmdinUsers}
+            count={totalAdminUsers}
             page={query.page - 1}
             onPageChange={(_, newPage) => onQuery("page", String(newPage + 1))}
             rowsPerPage={query.limit}
             onRowsPerPageChange={(e) => {
               onQuery("limit", String(e.target.value));
             }}
-            rowsPerPageOptions={[10, 20, 40, 60]}
+            rowsPerPageOptions={[5, 10, 20, 40, 60]}
           />
         </Box>
       </Paper>
