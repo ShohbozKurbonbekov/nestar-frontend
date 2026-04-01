@@ -65,17 +65,21 @@ export default function AdminUsers() {
             <AdminUsersList />
           </Box>
 
-          <TablePagination
-            component="div"
-            count={totalAdminUsers}
-            page={query.page - 1}
-            onPageChange={(_, newPage) => onQuery("page", String(newPage + 1))}
-            rowsPerPage={query.limit}
-            onRowsPerPageChange={(e) => {
-              onQuery("limit", String(e.target.value));
-            }}
-            rowsPerPageOptions={[5, 10, 20, 40, 60]}
-          />
+          {!!totalAdminUsers && (
+            <TablePagination
+              component="div"
+              count={totalAdminUsers}
+              page={query.page - 1}
+              onPageChange={(_, newPage) =>
+                onQuery("page", String(newPage + 1))
+              }
+              rowsPerPage={query.limit}
+              onRowsPerPageChange={(e) => {
+                onQuery("limit", String(e.target.value));
+              }}
+              rowsPerPageOptions={[5, 10, 20, 40, 60]}
+            />
+          )}
         </Box>
       </Paper>
     </Box>

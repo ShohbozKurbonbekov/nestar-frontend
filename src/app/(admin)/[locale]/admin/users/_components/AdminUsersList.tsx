@@ -28,6 +28,7 @@ import { useMutation, useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { UPDATE_MEMBER_BY_ADMIN } from "@/apollo/admin/mutation";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import Emty from "@/components/ui/Emty";
 
 export default function AdminUsersList() {
   const router = useRouter();
@@ -115,83 +116,94 @@ export default function AdminUsersList() {
           </TableHead>
 
           <TableBody>
-            {adminUsers.map((user: Member) => (
-              <TableRow hover key={user._id}>
-                <TableCell>
-                  <Stack direction={"row"} spacing={2} alignItems={"center"}>
-                    <Avatar
-                      src={
-                        user.memberImage
-                          ? `${serverApi}/${user.memberImage}`
-                          : "/images/user-default.png"
-                      }
-                    />
-                    <Box>
-                      <Typography className="font-medium text-slate-800 line-clamp-1">
-                        {user.memberFullName || "Uknown"}
-                      </Typography>
-                      <Typography variant="body2" className="text-slate-500">
-                        @{user.memberNick || "Uknown"}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </TableCell>
-
-                <TableCell>
-                  <TypeChipFinder type={user.memberType} />
-                </TableCell>
-                <TableCell>
-                  <Typography className="text-slate-700">
-                    {user.memberPhone}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography className="text-slate-700">
-                    {user.memberAddress}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <StatusChipFinder
-                    status={user.memberStatus}
-                    onClick={(e: any) => {
-                      openMenu(e);
-                      setUpdatedMember(user);
-                    }}
-                  />
-                </TableCell>
-
-                {/* ACTIONS */}
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1} justifyContent="center">
-                    <IconButton
-                      onClick={() => pushMemberDetail(user._id)}
-                      sx={{
-                        backgroundColor: "#e0f2fe",
-                        "&:hover": { backgroundColor: "#bae6fd" },
-                      }}
-                    >
-                      <VisibilityOutlinedIcon
-                        fontSize="small"
-                        sx={{ color: "#0284c7" }}
-                      />
-                    </IconButton>
-
-                    <IconButton
-                      onClick={() => onDelete(user._id)}
-                      sx={{
-                        backgroundColor: "#fee2e2",
-                        "&:hover": { backgroundColor: "#fecaca" },
-                      }}
-                    >
-                      <DeleteOutlineOutlinedIcon
-                        fontSize="small"
-                        sx={{ color: "#dc2626" }}
-                      />
-                    </IconButton>
-                  </Stack>
+            {!adminUsers.length ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  <Emty title="No Users" />
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              adminUsers.map((user: Member) => (
+                <TableRow hover key={user._id}>
+                  <TableCell>
+                    <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                      <Avatar
+                        src={
+                          user.memberImage
+                            ? `${serverApi}/${user.memberImage}`
+                            : "/images/user-default.png"
+                        }
+                      />
+                      <Box>
+                        <Typography className="font-medium text-slate-800 line-clamp-1">
+                          {user.memberFullName || "Uknown"}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          className="text-slate-500 line-clamp-1"
+                        >
+                          @{user.memberNick || "Uknown"}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </TableCell>
+
+                  <TableCell>
+                    <TypeChipFinder type={user.memberType} />
+                  </TableCell>
+                  <TableCell>
+                    <Typography className="text-slate-700 line-clamp-1">
+                      {user.memberPhone}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className="text-slate-700 line-clamp-1">
+                      {user.memberAddress}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <StatusChipFinder
+                      status={user.memberStatus}
+                      onClick={(e: any) => {
+                        openMenu(e);
+                        setUpdatedMember(user);
+                      }}
+                    />
+                  </TableCell>
+
+                  {/* ACTIONS */}
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1} justifyContent="center">
+                      <IconButton
+                        onClick={() => pushMemberDetail(user._id)}
+                        sx={{
+                          backgroundColor: "#e0f2fe",
+                          "&:hover": { backgroundColor: "#bae6fd" },
+                        }}
+                      >
+                        <VisibilityOutlinedIcon
+                          fontSize="small"
+                          sx={{ color: "#0284c7" }}
+                        />
+                      </IconButton>
+
+                      <IconButton
+                        onClick={() => onDelete(user._id)}
+                        sx={{
+                          backgroundColor: "#fee2e2",
+                          "&:hover": { backgroundColor: "#fecaca" },
+                        }}
+                      >
+                        <DeleteOutlineOutlinedIcon
+                          fontSize="small"
+                          sx={{ color: "#dc2626" }}
+                        />
+                      </IconButton>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
