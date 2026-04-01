@@ -104,10 +104,7 @@ export default function TopNavbar({ handleDrawerToggle }: TopNavbarType) {
               </MenuItem>
             ))}
           </Menu>
-          <IconButton
-            onClick={(e) => setAvatarEl(e.currentTarget)}
-            className="ml-1"
-          >
+          <IconButton onClick={(e) => setAvatarEl(e.currentTarget)}>
             <Avatar
               className="w-9 h-9"
               src={

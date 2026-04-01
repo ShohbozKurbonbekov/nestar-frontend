@@ -1,0 +1,9 @@
+import AdminDashboardFrame from "../[locale]/admin/_components/layout/AdminDashboardFrame";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <AdminDashboardFrame>{children}</AdminDashboardFrame>;
+}

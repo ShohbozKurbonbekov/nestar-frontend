@@ -17,7 +17,7 @@ export default function AdminDashboardFrame({
   };
 
   return (
-    <Box sx={{ display: "flex", overflowX: "hidden" }}>
+    <Box sx={{ display: "flex" }}>
       <TopNavbar handleDrawerToggle={handleDrawerToggle} />
 
       <Box component="nav" sx={{ width: { md: adminDrawerWidth } }}>
@@ -53,7 +53,6 @@ export default function AdminDashboardFrame({
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { md: `calc(100% - ${adminDrawerWidth}px)` },
           background: "#f1f5f9",
           minHeight: "100vh",
         }}
