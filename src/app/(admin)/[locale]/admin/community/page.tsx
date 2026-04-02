@@ -9,19 +9,8 @@ import AdminCommunityList from "./AdminCommunityList ";
 
 export default function AdminCommunity() {
   const searchParams = useSearchParams();
-  const {
-    query,
-    adminCommunityList,
-    refetchAdminCommunity,
-    totalAdminCommunity,
-  } = useAdminCommunity({ searchParams });
+  const { query, totalAdminCommunity } = useAdminCommunity({ searchParams });
   const router = useRouter();
-
-  const onQueryDelete = (name: "articleStatus" | "articleCategory") => {
-    const params = new URLSearchParams(searchParams);
-    params.delete(name);
-    router.replace(`?${params.toString()}`);
-  };
 
   const onQuery = (
     name: "limit" | "page" | "articleStatus" | "articleCategory",
@@ -46,7 +35,7 @@ export default function AdminCommunity() {
           <Box className="w-full overflow-x-auto">
             <AdminCommunityList />
           </Box>
-          {!!totalAdminCommunity && (
+          {!!totalAdminCommunity.length && (
             <TablePagination
               component="div"
               count={totalAdminCommunity}

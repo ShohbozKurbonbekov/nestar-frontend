@@ -300,17 +300,34 @@ export default function AdminPropertiesList() {
                           minWidth: 90,
                         }}
                       >
+                        {/* View */}
                         <IconButton
                           size="small"
-                          onClick={() => onPushDetail(property._id)}
+                          disabled={
+                            property.propertyStatus === PropertyStatus.DELETE ||
+                            property.propertyStatus === PropertyStatus.SOLD
+                          }
                           sx={{
-                            backgroundColor: "#f0fdf4",
-                            border: "1px solid #bbf7d0",
-                            marginRight: "10px",
-                            "&:hover": {
-                              backgroundColor: "#dcfce7",
-                            },
+                            backgroundColor:
+                              property.propertyStatus ===
+                                PropertyStatus.DELETE ||
+                              property.propertyStatus === PropertyStatus.SOLD
+                                ? "#f9fafb"
+                                : "#f0fdf4",
+                            border:
+                              property.propertyStatus ===
+                                PropertyStatus.DELETE ||
+                              property.propertyStatus === PropertyStatus.SOLD
+                                ? "1px solid #e5e7eb"
+                                : "1px solid #bbf7d0",
+                            color:
+                              property.propertyStatus ===
+                                PropertyStatus.DELETE ||
+                              property.propertyStatus === PropertyStatus.SOLD
+                                ? "#9ca3af"
+                                : "#16a34a",
                           }}
+                          onClick={() => onPushDetail(property._id)}
                         >
                           <VisibilityIcon fontSize="small" />
                         </IconButton>
