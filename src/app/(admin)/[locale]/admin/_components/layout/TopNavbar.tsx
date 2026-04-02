@@ -126,7 +126,7 @@ export default function TopNavbar({ handleDrawerToggle }: TopNavbarType) {
             <MenuItem
               onClick={() => {
                 setAvatarEl(null);
-                router.push("/admin/profile");
+                router.push(`/profile/${user._id}?tab=myProfile`);
               }}
               className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-slate-100 transition-all"
             >

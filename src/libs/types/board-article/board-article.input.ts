@@ -30,6 +30,7 @@ export interface BoardArticlesInquiry {
 interface ABAISearch {
   articleStatus?: BoardArticleStatus;
   articleCategory?: BoardArticleCategory;
+  articleTitle?: string;
 }
 
 export interface AllBoardArticlesInquiry {
