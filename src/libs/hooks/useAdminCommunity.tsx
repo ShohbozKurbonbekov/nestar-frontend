@@ -23,7 +23,9 @@ export function useAdminCommunity({ searchParams }: UseAdminCommunityType) {
       limit: Number(searchParams.get("limit")) || 10,
       page: Number(searchParams.get("page")) || 1,
       direction: Direction.DESC,
-      sort: "createdAt",
+      ...(!!searchParams.get("sort")
+        ? { sort: searchParams.get("sort") as string }
+        : { sort: "createdAt" }),
       search: {
         ...(!!searchParams.get("articleStatus")
           ? {
