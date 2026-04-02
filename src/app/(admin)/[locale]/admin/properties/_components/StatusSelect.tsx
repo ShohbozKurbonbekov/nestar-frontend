@@ -1,14 +1,33 @@
+"use client";
 import { inputSx } from "@/libs/data/admin/AdminPropertiesSharedStyles";
+import { PROPERTY_STATUS_OPTIONS } from "@/libs/data/admin/common";
 import { PropertyStatus } from "@/libs/enums/property.enum";
 import { FormControl, MenuItem, Select } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function StatusSelect({ value, onChange }: any) {
+export default function StatusSelect() {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("propertyStatus") || "ALL";
+  const router = useRouter();
+
+  const onStatus = (status: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (status === "ALL") {
+      params.delete("propertyStatus");
+    } else {
+      params.set("propertyStatus", status);
+      params.set("page", "1");
+    }
+    router.replace(`?${params.toString()}`);
+  };
+
   return (
     <FormControl fullWidth>
       <Select
         displayEmpty
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={status}
+        onChange={(e) => onStatus(e.target.value)}
         sx={inputSx}
         renderValue={(selected) => {
           if (!selected) {
@@ -17,9 +36,9 @@ export default function StatusSelect({ value, onChange }: any) {
           return selected;
         }}
       >
-        {Object.keys(PropertyStatus).map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
+        {PROPERTY_STATUS_OPTIONS.map(({ label, value }) => (
+          <MenuItem key={value} value={value}>
+            {label}
           </MenuItem>
         ))}
       </Select>

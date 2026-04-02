@@ -29,8 +29,10 @@ export function useAdminProperties({ searchParams }: UseAdminPropertiesType) {
               ) as PropertyStatus,
             }
           : {}),
-        ...((searchParams.get("properyLocationList")
-          ? { propertyLocationList: searchParams.get("propertyLocationList") }
+        ...((searchParams.get("propertyLocationList")
+          ? {
+              propertyLocationList: searchParams.getAll("propertyLocationList"),
+            }
           : {}) as PropertyLocation[]),
         ...(searchParams.get("propertyTitle")
           ? { propertyTitle: searchParams.get("propertyTitle") as string }

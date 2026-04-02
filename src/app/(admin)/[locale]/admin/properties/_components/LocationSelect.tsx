@@ -1,3 +1,4 @@
+"use client";
 import { inputSx } from "@/libs/data/admin/AdminPropertiesSharedStyles";
 import { PropertyLocation } from "@/libs/enums/property.enum";
 import {
@@ -7,15 +8,33 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LocationSelect({ value, onChange }: any) {
+export default function LocationSelect() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const locations = searchParams.get("propertyLocationList")
+    ? searchParams.getAll("propertyLocationList")
+    : [];
+
+  const onLocation = (locations: string[]) => {
+    const params = new URLSearchParams(searchParams);
+    params.delete("propertyLocationList");
+
+    locations.forEach((location: string) => {
+      params.append("propertyLocationList", location);
+    });
+    params.set("page", "1");
+    router.replace(`?${params.toString()}`);
+  };
+
   return (
     <FormControl fullWidth>
       <Select
         multiple
         displayEmpty
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={locations}
+        onChange={(e) => onLocation(e.target.value as string[])}
         sx={inputSx}
         renderValue={(selected) => {
           if (selected.length === 0) {
@@ -27,7 +46,7 @@ export default function LocationSelect({ value, onChange }: any) {
       >
         {Object.keys(PropertyLocation).map((location) => (
           <MenuItem key={location} value={location}>
-            <Checkbox checked={value.indexOf(location) > -1} />
+            <Checkbox checked={locations?.includes(location)} />
             <ListItemText primary={location} />
           </MenuItem>
         ))}
