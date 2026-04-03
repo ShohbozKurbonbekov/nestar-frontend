@@ -1,14 +1,14 @@
 "use client";
 
 import { Box, Stack, Typography } from "@mui/material";
-import HomeWorkRoundedIcon from "@mui/icons-material/HomeWorkRounded";
+import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
 
 export default function AdminPropertiesHeader() {
   return (
     <Stack direction="row" spacing={2} alignItems="center" className="mb-10">
       {/* ICON */}
       <Box className="p-4 rounded-2xl bg-linear-to-br from-sky-100 to-sky-200 shadow-sm transition-all duration-200 hover:shadow-md">
-        <HomeWorkRoundedIcon className="text-sky-600 text-[28px]" />
+        <CampaignRoundedIcon className="text-slate-700" />
       </Box>
 
       {/* TEXT */}

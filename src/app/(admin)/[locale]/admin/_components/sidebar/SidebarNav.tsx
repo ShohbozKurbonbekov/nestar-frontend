@@ -12,6 +12,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import PeopleIcon from "@mui/icons-material/People";
 import { usePathname, useRouter } from "next/navigation";
+import CampaignRoundedIcon from "@mui/icons-material/CampaignRounded";
 
 export const items = [
   {
@@ -20,11 +21,12 @@ export const items = [
     href: "/admin/community",
     icon: <GroupsIcon fontSize="small" />,
   },
+
   {
-    label: "CS",
-    value: "cs",
-    href: "/admin/CS",
-    icon: <SupportAgentIcon fontSize="small" />,
+    label: "Notice",
+    value: "notice",
+    href: "/admin/notice",
+    icon: <CampaignRoundedIcon fontSize="small" />,
   },
   {
     label: "Properties",
