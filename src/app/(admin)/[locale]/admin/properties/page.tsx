@@ -8,13 +8,7 @@ import AdminPropertiesList from "./_components/AdminPropertiesList";
 
 export default function AdminProperties() {
   const searchParams = useSearchParams();
-  const {
-    adminProperties,
-    loading,
-    query,
-    refetchAdminProperties,
-    totalAdminProperties,
-  } = useAdminProperties({ searchParams });
+  const { query, totalAdminProperties } = useAdminProperties({ searchParams });
   const router = useRouter();
 
   const onQueryDelete = (name: "memberStatus" | "memberType") => {

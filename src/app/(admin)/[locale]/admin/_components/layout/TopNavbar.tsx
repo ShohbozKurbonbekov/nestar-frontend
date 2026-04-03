@@ -21,7 +21,7 @@ import AppsIcon from "@mui/icons-material/Apps";
 import { useState } from "react";
 import { adminDrawerWidth, serverApi } from "@/libs/config";
 import { NAVBAR_LINKS } from "@/libs/data/static-data";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import PersonIcon from "@mui/icons-material/Person";
@@ -36,9 +36,22 @@ export default function TopNavbar({ handleDrawerToggle }: TopNavbarType) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
+
   const user = useReactiveVar(userVar);
   const [avatarEl, setAvatarEl] = useState<null | HTMLElement>(null);
   const avatarOpen = Boolean(avatarEl);
+  const [search, setSearch] = useState<string>("");
+  const searchParams = useSearchParams();
+
+  const onEnter = () => {
+    const params = new URLSearchParams(searchParams);
+    if (!search.trim()) {
+      params.delete("propertyTitle");
+      router.replace(`?${params.toString()}`);
+    } else {
+      router.push(`/admin/properties?propertyTitle=${search}`);
+    }
+  };
   return (
     <AppBar
       position="fixed"
@@ -63,7 +76,10 @@ export default function TopNavbar({ handleDrawerToggle }: TopNavbarType) {
           <div className="flex items-center bg-slate-100 px-4 py-3 rounded-xl w-full max-w-xl">
             <SearchIcon />
             <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               autoFocus
+              onKeyDown={(e) => e.key === "Enter" && onEnter()}
               placeholder="Search properties..."
               className="ml-2 w-full bg-transparent focus-visible:ring-0 outline-0 text-lg placeholder:text-base "
             />
