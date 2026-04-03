@@ -5,11 +5,11 @@ import { IconButton, Typography } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useRouter, useSearchParams } from "next/navigation";
-import NoticesSearchInput from "./NoticesSearchInput";
+import NoticesSearchInput from "../../../../../../components/ui/NoticesSearchInput";
 import NoticesStatusSelect from "./NoticesStatusSelect";
-import NoticesCategorySelect from "./NoticesCategorySelect";
+import NoticesCategorySelect from "../../../../../../components/ui/NoticesCategorySelect";
 import NoticesVisibilitySelect from "./NoticesVisibilitySelect";
-import NoticesSort from "./NoticesSort";
+import NoticesSort from "../../../../../../components/ui/NoticesSort";
 
 export default function NoticesSearchFilter() {
   const searchParams = useSearchParams();

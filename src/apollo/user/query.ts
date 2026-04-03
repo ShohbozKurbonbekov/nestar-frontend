@@ -698,3 +698,23 @@ export const GET_NOTICE = gql`
     }
   }
 `;
+
+export const GET_NOTICES = gql`
+  query GetNotices($input: NoticesInquiry!) {
+    getNotices(input: $input) {
+      list {
+        _id
+        noticeCategory
+        noticeTitle
+        noticeContent
+        noticeVisibility
+        noticePriority
+        createdAt
+      }
+
+      metaCounter {
+        total
+      }
+    }
+  }
+`;

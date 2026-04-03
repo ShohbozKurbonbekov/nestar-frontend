@@ -27,7 +27,7 @@ export default function NoticesSort() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const sort = searchParams.get("sort") || "NEWEST";
+  const sort = searchParams.get("sort") ?? "NEWEST";
 
   const onSort = (_: any, value: string) => {
     if (!value) return;
@@ -44,14 +44,14 @@ export default function NoticesSort() {
       value={sort}
       exclusive
       onChange={onSort}
-      className="flex gap-2"
+      className="flex gap-2 flex-wrap items-start"
     >
       {OPTIONS.map((opt) => (
         <ToggleButton
           key={opt.value}
           value={opt.value}
-          classes={{ selected: "bg-indigo-500 text-white shadow-md" }}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-slate-200 capitalize"
+          classes={{ selected: "bg-indigo-500 text-white  shadow-md" }}
+          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-slate-200 capitalize "
         >
           {opt.icon}
           {opt.label}

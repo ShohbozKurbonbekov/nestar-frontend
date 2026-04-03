@@ -27,3 +27,8 @@ export enum NoticeSort {
   OLDEST = "OLDEST",
   UPDATED = "UPDATED",
 }
+
+export enum PageTabs {
+  NOTICES = "NOTICES",
+  FAQ = "FAQ",
+}
