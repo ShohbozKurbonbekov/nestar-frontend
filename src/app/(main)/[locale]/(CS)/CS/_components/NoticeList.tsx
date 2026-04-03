@@ -38,7 +38,7 @@ export default function NoticeList() {
     router.replace(`?${params.toString()}`, { scroll: false });
   };
   return (
-    <Stack gap={5}>
+    <Stack gap={5} className="max-w-4xl mx-auto w-full">
       <div className="w-full  space-y-3">
         {loading ? (
           <PublicNoticeSkeletons columns={3} />

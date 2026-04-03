@@ -11,7 +11,7 @@ export default function NoticeFilter() {
   const noticeTitle = searchParams.get("noticeTitle") ?? "";
   const [search, setSearch] = useState<string>(noticeTitle);
   return (
-    <Paper className="max-w-6xl mx-auto w-full bg-slate-50 border border-slate-300 rounded-3xl p-7 shadow-none">
+    <Paper className="max-w-4xl mx-auto w-full bg-slate-50 border border-slate-300 rounded-3xl p-7 shadow-none">
       <div className="grid grid-cols-1  md:grid-cols-10 gap-3">
         <div className="md:col-span-7 bg-white">
           <NoticesSearchInput search={search} setSearch={setSearch} />
