@@ -35,6 +35,7 @@ import PropertyTrendingProperties from "../../_components/PropertyTrendingProper
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetProperty } from "@/services/Property.service";
 import Comments from "@/components/ui/Comments";
+import ChatTest from "./chat";
 
 // --------------------------------- Initial Comment ---------------------------
 const initialComment = {
@@ -303,6 +304,9 @@ export default function PropertyDetail() {
             <PropertyTrendingProperties properties={trendingProperties} />
           </div>
         </div>
+      </div>
+      <div className="mt-10">
+        <ChatTest />
       </div>
     </section>
   );
