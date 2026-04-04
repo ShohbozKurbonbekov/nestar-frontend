@@ -14,8 +14,38 @@ import { onError } from "@apollo/client/link/error";
 import { getJwtToken } from "../libs/auth";
 import { TokenRefreshLink } from "apollo-link-token-refresh";
 import { sweetErrorAlert } from "@/libs/sweetAlert";
+import { error } from "console";
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
+class LoginWebSocket {
+  private socket: WebSocket;
+
+  constructor(url: string) {
+    this.socket = new WebSocket(url);
+
+    this.socket.onopen = () => {
+      console.log("Web Socket connection enabled");
+    };
+
+    this.socket.onmessage = (msg) => {
+      console.log("WebSocket message: ", msg.data);
+    };
+
+    this.socket.onerror = (error) => {
+      console.log("WebSocket error: ", error);
+    };
+  }
+
+  send(
+    data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView,
+  ) {
+    this.socket.send(data);
+  }
+
+  close() {
+    this.socket.close();
+  }
+}
 function getHeaders() {
   const headers = {} as HeadersInit;
   const token = getJwtToken();
@@ -63,6 +93,7 @@ function createIsomorphicLink() {
           return { headers: getHeaders() };
         },
       },
+      webSocketImpl: LoginWebSocket,
     });
 
     const errorLink = onError(({ graphQLErrors, networkError, response }) => {
@@ -118,20 +149,3 @@ export function initializeApollo(initialState = null) {
 export function useApollo(initialState: any) {
   return useMemo(() => initializeApollo(initialState), [initialState]);
 }
-
-/**
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
-
-// No Subscription required for develop process
-
-const httpLink = createHttpLink({
-  uri: "http://localhost:3007/graphql",
-});
-
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
-
-export default client;
-*/
