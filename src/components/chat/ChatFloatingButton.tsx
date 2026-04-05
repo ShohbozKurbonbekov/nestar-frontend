@@ -5,18 +5,19 @@ import SupportAgentRounded from "@mui/icons-material/SupportAgentRounded";
 import { motion } from "framer-motion";
 import { SetStateType } from "@/libs/types/common";
 import { serverApi } from "@/libs/config";
+import { useChatOwnerContext } from "@/libs/context/ChatOwnerContext";
 
 interface ChatFloatingButtonType {
-  agentImage?: string;
   setOpen: SetStateType<boolean>;
   isOnline: boolean;
 }
 export default function ChatFloatingButton({
   isOnline,
   setOpen,
-  agentImage,
 }: ChatFloatingButtonType) {
-  const imageUrl = agentImage ? `${serverApi}/${agentImage}` : "";
+  const { chatOwnerImage } = useChatOwnerContext();
+
+  const imageUrl = chatOwnerImage ? `${serverApi}/${chatOwnerImage}` : "";
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
       <motion.div

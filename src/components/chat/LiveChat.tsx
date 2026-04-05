@@ -4,10 +4,7 @@ import { useState } from "react";
 import ChatFloatingButton from "./ChatFloatingButton";
 import ChatWindow from "./ChatWindow";
 
-interface PropertyLiveChatType {
-  agentImage?: string;
-}
-export default function PropertyLiveChat({ agentImage }: PropertyLiveChatType) {
+export default function PropertyLiveChat() {
   const [open, setOpen] = useState(false);
   const [isOnline] = useState(true);
 
@@ -21,11 +18,7 @@ export default function PropertyLiveChat({ agentImage }: PropertyLiveChatType) {
 
   return (
     <>
-      <ChatFloatingButton
-        setOpen={setOpen}
-        agentImage={agentImage}
-        isOnline={isOnline}
-      />
+      <ChatFloatingButton setOpen={setOpen} isOnline={isOnline} />
 
       <ChatWindow
         open={open}

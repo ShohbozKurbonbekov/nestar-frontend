@@ -35,7 +35,8 @@ import PropertyTrendingProperties from "../../_components/PropertyTrendingProper
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetProperty } from "@/services/Property.service";
 import Comments from "@/components/ui/Comments";
-import PropertyLiveChat from "@/components/chat/property-chat/PropertyLiveChat";
+import PropertyLiveChat from "@/components/chat/LiveChat";
+import ChatOwnerContextProvider from "../../_components/ChatOwnerContextProvider";
 
 // --------------------------------- Initial Comment ---------------------------
 const initialComment = {
@@ -308,7 +309,13 @@ export default function PropertyDetail() {
 
       {/** Chatting with agents */}
       {property && (
-        <PropertyLiveChat agentImage={property.memberData?.memberImage} />
+        <ChatOwnerContextProvider
+          data={{
+            chatOwnerImage: property.memberData?.memberImage,
+          }}
+        >
+          <PropertyLiveChat />
+        </ChatOwnerContextProvider>
       )}
     </section>
   );

@@ -1,8 +1,13 @@
 import { Box, Avatar, Fade, Divider } from "@mui/material";
 
 import SupportAgentRounded from "@mui/icons-material/SupportAgentRounded";
+import { useChatOwnerContext } from "@/libs/context/ChatOwnerContext";
+import { serverApi } from "@/libs/config";
 
 export default function ChatMessages({ messages }: any) {
+  const { chatOwnerImage } = useChatOwnerContext();
+  const ownerImage = chatOwnerImage ? `${serverApi}/${chatOwnerImage}` : "";
+
   return (
     <>
       <Box
@@ -20,6 +25,7 @@ export default function ChatMessages({ messages }: any) {
             >
               {msg.sender === "agent" && (
                 <Avatar
+                  src={ownerImage}
                   sx={{
                     width: 30,
                     height: 30,
@@ -30,7 +36,7 @@ export default function ChatMessages({ messages }: any) {
                 </Avatar>
               )}
 
-              <Box className="flex flex-col max-w-[72%] ">
+              <Box className="flex flex-col max-w-[72%]">
                 <Box
                   className={`px-4 py-2.5 text-sm shadow-sm ${
                     msg.sender === "user"
