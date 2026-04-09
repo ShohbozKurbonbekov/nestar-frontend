@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatFloatingButton from "./ChatFloatingButton";
 import ChatWindow from "./ChatWindow";
+import { useChatOwnerContext } from "@/libs/context/ChatOwnerContext";
 
 export default function PropertyLiveChat() {
   const [open, setOpen] = useState(false);
-  const [isOnline] = useState(true);
+  const { targetOwnerId } = useChatOwnerContext();
+  const [isChatOwnerOnline, setChatOwnerOnline] = useState<boolean>(false);
 
   const [messages, setMessages] = useState([
     {
@@ -18,14 +20,17 @@ export default function PropertyLiveChat() {
 
   return (
     <>
-      <ChatFloatingButton setOpen={setOpen} isOnline={isOnline} />
+      <ChatFloatingButton
+        setOpen={setOpen}
+        isChatOwnerOnline={isChatOwnerOnline}
+      />
 
       <ChatWindow
         open={open}
         setOpen={setOpen}
         messages={messages}
         setMessages={setMessages}
-        isOnline={isOnline}
+        isOnline={isChatOwnerOnline}
       />
     </>
   );

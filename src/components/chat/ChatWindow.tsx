@@ -11,7 +11,7 @@ export default function ChatWindow({
   setOpen,
   messages,
   setMessages,
-  isOnline,
+  isChatOwnerOnline,
 }: any) {
   return (
     <AnimatePresence>
@@ -27,7 +27,10 @@ export default function ChatWindow({
             elevation={8}
             className="w-full sm:w-105 h-[70vh] sm:h-150 rounded-t-3xl sm:rounded-3xl overflow-hidden flex flex-col"
           >
-            <ChatHeader setOpen={setOpen} isOnline={isOnline} />
+            <ChatHeader
+              setOpen={setOpen}
+              isChatOwnerOnline={isChatOwnerOnline}
+            />
 
             <ChatMessages messages={messages} />
 

@@ -3,6 +3,7 @@ import { makeVar } from "@apollo/client";
 
 export const themeVar = makeVar({});
 
+export const userChatId = makeVar<string>("");
 export const authInitializedVar = makeVar(false);
 export const userVar = makeVar<CustomJwtPayload>({
   _id: "",

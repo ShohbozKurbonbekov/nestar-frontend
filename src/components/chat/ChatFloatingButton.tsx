@@ -9,13 +9,23 @@ import { useChatOwnerContext } from "@/libs/context/ChatOwnerContext";
 
 interface ChatFloatingButtonType {
   setOpen: SetStateType<boolean>;
-  isOnline: boolean;
+  isChatOwnerOnline: boolean;
 }
 export default function ChatFloatingButton({
-  isOnline,
+  isChatOwnerOnline,
   setOpen,
 }: ChatFloatingButtonType) {
-  const { chatOwnerImage } = useChatOwnerContext();
+  const { chatOwnerImage, conversationGroupType, targetId, targetOwnerId } =
+    useChatOwnerContext();
+  const onChat = async () => {
+    if (targetId && targetOwnerId) {
+    }
+  };
+
+  const onClick = () => {
+    setOpen(true);
+    onChat();
+  };
 
   const imageUrl = chatOwnerImage ? `${serverApi}/${chatOwnerImage}` : "";
   return (
@@ -34,7 +44,7 @@ export default function ChatFloatingButton({
 
         <div className="relative">
           <Avatar
-            onClick={() => setOpen(true)}
+            onClick={onClick}
             className="cursor-pointer shadow-2xl border-4 border-white"
             sx={{
               width: 40,
@@ -47,7 +57,7 @@ export default function ChatFloatingButton({
             <SupportAgentRounded />
           </Avatar>
 
-          {isOnline && (
+          {isChatOwnerOnline && (
             <span className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
           )}
         </div>

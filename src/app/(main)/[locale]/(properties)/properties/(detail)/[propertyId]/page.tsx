@@ -22,7 +22,7 @@ import {
 import { Comment } from "@/libs/types/comment/comment";
 import { CommentGroup } from "@/libs/enums/comment.enum";
 import PostComment from "../../../../../../../components/ui/PostComment";
-import { userVar } from "@/apollo/store";
+import { userChatId, userVar } from "@/apollo/store";
 import { CREATE_COMMENT } from "@/apollo/user/mutation";
 import {
   sweetErrorHandling,
@@ -37,6 +37,7 @@ import { likeTargetProperty } from "@/services/Property.service";
 import Comments from "@/components/ui/Comments";
 import PropertyLiveChat from "@/components/chat/LiveChat";
 import ChatOwnerContextProvider from "../../_components/ChatOwnerContextProvider";
+import { ConversationGroupType } from "@/libs/enums/chat.enum";
 
 // --------------------------------- Initial Comment ---------------------------
 const initialComment = {
@@ -51,6 +52,8 @@ const initialComment = {
 
 // --------------------------------- Component ---------------------------
 export default function PropertyDetail() {
+  const isUserOneline = useReactiveVar(userChatId);
+  console.log("Am i oneline: ", isUserOneline);
   const user = useReactiveVar(userVar);
   const params = useParams();
   const [relatedProperties, setRelatedProperties] = useState<Property[]>([]);
@@ -312,6 +315,10 @@ export default function PropertyDetail() {
         <ChatOwnerContextProvider
           data={{
             chatOwnerImage: property.memberData?.memberImage,
+            conversationGroupType: ConversationGroupType.PUBLIC_AGENT,
+            targetId: property._id,
+            targetOwnerId: property?.memberData?._id!,
+            userId: user._id,
           }}
         >
           <PropertyLiveChat />

@@ -6,9 +6,12 @@ import { SetStateType } from "@/libs/types/common";
 
 interface ChatHeaderType {
   setOpen: SetStateType<boolean>;
-  isOnline: boolean;
+  isChatOwnerOnline: boolean;
 }
-export default function ChatHeader({ setOpen, isOnline }: ChatHeaderType) {
+export default function ChatHeader({
+  setOpen,
+  isChatOwnerOnline,
+}: ChatHeaderType) {
   return (
     <Box className="bg-linear-to-r from-green-600 to-emerald-500 text-white p-5">
       <div className="flex items-center justify-between">
@@ -18,7 +21,7 @@ export default function ChatHeader({ setOpen, isOnline }: ChatHeaderType) {
               <SupportAgentRounded />
             </Avatar>
 
-            {isOnline && (
+            {isChatOwnerOnline && (
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full" />
             )}
           </div>
@@ -27,7 +30,7 @@ export default function ChatHeader({ setOpen, isOnline }: ChatHeaderType) {
             <Typography variant="h6">Property Agent</Typography>
 
             <Typography fontSize={12}>
-              {isOnline ? "Online now" : "Offline"}
+              {isChatOwnerOnline ? "Online now" : "Offline"}
             </Typography>
           </div>
         </div>

@@ -1,9 +1,10 @@
 import decodeJWT from "jwt-decode";
 import { initializeApollo } from "../../apollo/client";
-import { userVar } from "../../apollo/store";
+import { userChatId, userVar } from "../../apollo/store";
 import { LOGIN, SIGN_UP } from "../../apollo/user/mutation";
 import { sweetMixinErrorAlert } from "../sweetAlert";
 import { CustomJwtPayload } from "../types/customJwtPayload";
+import { chatSocket } from "@/services/Chat.service";
 
 export function getJwtToken(): any {
   if (typeof window !== "undefined") {
@@ -22,6 +23,7 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
     if (jwtToken) {
       updateStorage({ jwtToken });
       updateUserInfo(jwtToken);
+      chatSocket.authenticate(jwtToken);
     }
   } catch (err: any) {
     console.warn("login err", err);
@@ -81,6 +83,7 @@ export const signUp = async (
     if (jwtToken) {
       updateStorage({ jwtToken });
       updateUserInfo(jwtToken);
+      chatSocket.authenticate(jwtToken);
     }
   } catch (err: any) {
     console.warn("login err", err);
@@ -169,6 +172,8 @@ export const updateUserInfo = (jwtToken: any) => {
 };
 
 export const logOut = () => {
+  chatSocket.logout(localStorage.getItem("accessToken") ?? "");
+
   deleteStorage();
   deleteUserInfo();
 };

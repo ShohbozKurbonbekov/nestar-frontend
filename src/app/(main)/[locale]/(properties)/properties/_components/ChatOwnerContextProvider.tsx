@@ -13,10 +13,6 @@ function ChatOwnerContextProvider({
   children,
   data,
 }: ChatOwnerContextProviderType) {
-  // Mutation
-
-  // Handlers
-
   return (
     <ChatOwnerContext.Provider value={data}>
       {children}
