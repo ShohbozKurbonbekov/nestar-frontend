@@ -8,10 +8,13 @@ import ChatInput from "./ChatInput";
 
 export default function ChatWindow({
   open,
+  startChat,
+  setStartChat,
   setOpen,
   messages,
   setMessages,
-  isChatOwnerOnline,
+  onlineUsers,
+  setOnlineUsers,
 }: any) {
   return (
     <AnimatePresence>
@@ -19,7 +22,7 @@ export default function ChatWindow({
         <motion.div
           initial={{ y: 120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 120, opacity: 0 }}
+          exit={{ y: -120, opacity: 0 }}
           transition={{ duration: 0.35 }}
           className="fixed bottom-0 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[91%] sm:w-auto px-2 sm:px-0"
         >
@@ -29,12 +32,20 @@ export default function ChatWindow({
           >
             <ChatHeader
               setOpen={setOpen}
-              isChatOwnerOnline={isChatOwnerOnline}
+              onlineUsers={onlineUsers}
+              setStartChat={setStartChat}
+              setOnlineUsers={setOnlineUsers}
             />
 
-            <ChatMessages messages={messages} />
+            <ChatMessages
+              messages={messages}
+              startChat={startChat}
+              setStartChat={setStartChat}
+              onlineUsers={onlineUsers}
+              setOnlineUsers={setOnlineUsers}
+            />
 
-            <ChatInput setMessages={setMessages} />
+            <ChatInput setMessages={setMessages} startChat={startChat} />
           </Paper>
         </motion.div>
       )}

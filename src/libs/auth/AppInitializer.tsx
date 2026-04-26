@@ -9,10 +9,14 @@ export default function AppInitializer({ children }: { children: ReactNode }) {
     initializeAuth();
     authInitializedVar(true);
 
-    chatSocket.connect();
-
     return () => {
       chatSocket.disconnect();
+      chatSocket.removeJoinSystem();
+      chatSocket.removePresenceUpdate();
+      chatSocket.removeSystemLeave();
+      chatSocket.removeChatInit();
+      chatSocket.removeSendMessage();
+      chatSocket.removeGetOldMessages();
     };
   }, []);
 

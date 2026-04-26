@@ -36,7 +36,6 @@ import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { likeTargetProperty } from "@/services/Property.service";
 import Comments from "@/components/ui/Comments";
 import PropertyLiveChat from "@/components/chat/LiveChat";
-import ChatOwnerContextProvider from "../../_components/ChatOwnerContextProvider";
 import { ConversationGroupType } from "@/libs/enums/chat.enum";
 
 // --------------------------------- Initial Comment ---------------------------
@@ -309,21 +308,6 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
-
-      {/** Chatting with agents */}
-      {property && (
-        <ChatOwnerContextProvider
-          data={{
-            chatOwnerImage: property.memberData?.memberImage,
-            conversationGroupType: ConversationGroupType.PUBLIC_AGENT,
-            targetId: property._id,
-            targetOwnerId: property?.memberData?._id!,
-            userId: user._id,
-          }}
-        >
-          <PropertyLiveChat />
-        </ChatOwnerContextProvider>
-      )}
     </section>
   );
 }

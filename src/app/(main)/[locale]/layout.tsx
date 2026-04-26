@@ -4,6 +4,7 @@ import { routing } from "@/i18n/routing";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { messageLoaders } from "@/libs/data/static-data";
+import PublicLiveChat from "@/components/chat/LiveChat";
 
 export default async function LocaleLayout({
   children,
@@ -13,7 +14,6 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  console.log("ROOT: ");
   const loadedFiles = await messageLoaders[locale as "en" | "ru" | "ko"]?.();
 
   if (!hasLocale(routing.locales, locale)) {
@@ -30,6 +30,7 @@ export default async function LocaleLayout({
       <NextIntlClientProvider locale={locale} messages={messages}>
         <Navbar />
         {children}
+        <PublicLiveChat />
         <Footer />
       </NextIntlClientProvider>
     </>
