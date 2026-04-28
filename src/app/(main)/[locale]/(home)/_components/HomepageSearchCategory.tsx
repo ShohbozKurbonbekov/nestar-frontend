@@ -12,31 +12,76 @@ import {
   DialogContent,
   DialogActions,
   Slider,
-  Checkbox,
-  FormGroup,
   FormControlLabel as MuiFormControlLabel,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { PropertyLocation, PropertyType } from "@/libs/enums/property.enum";
+import { PRICE_OPTIONS, PROPERTY_SQUARE } from "@/libs/data/static-data";
+import { Direction } from "@/libs/enums/common.enum";
+import { useRouter } from "next/navigation";
+import { PropertiesInquiry } from "@/libs/types/property/property.input";
 
+const select_border_style = {
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "rgb(148, 163, 184)",
+  },
+};
 export default function HomepageSearchCategory() {
+  const router = useRouter();
   const t = useTranslations("HomePage");
   const [location, setLocation] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [rooms, setRooms] = useState("");
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [price, setPrice] = useState<number[]>([50, 5000]);
+  const [price, setPrice] = useState<number[]>([0, 0]);
+  const [square, setSquare] = useState<number[]>([0, 0]);
+  const [title, setTitle] = useState<string>("");
 
-  const propertyLocations = ["Seoul", "Busan", "Gwangju"];
-  const propertyTypes = ["Apartment", "House", "Villa", "Studio"];
-  const roomOptions = ["1", "2", "3", "4+"];
-  const amenities = ["Parking", "Balcony", "Elevator", "Pet Friendly"];
+  const propertyLocations = Object.keys(PropertyLocation);
+  const propertyTypes = Object.keys(PropertyType);
+  const roomOptions = ["0", "1", "2", "3", "4", "5+"];
 
+  const onCancel = () => {
+    setPrice([0, 0]);
+    setSquare([0, 0]);
+    setTitle("");
+    setAdvancedOpen(false);
+  };
+
+  const onSearch = () => {
+    const initialInput: PropertiesInquiry = {
+      page: 1,
+      limit: 6,
+      sort: "createdAt",
+      direction: Direction.DESC,
+      search: {
+        squaresRange: {
+          start: Number(square[0]),
+          end: Number(square[1]),
+        },
+        pricesRange: {
+          start: Number(price[0]),
+          end: Number(price[1]),
+        },
+
+        ...(location ? { locationList: [location] as PropertyLocation[] } : {}),
+        ...(propertyType ? { typeList: [propertyType] as PropertyType[] } : {}),
+        ...(rooms && parseInt(rooms) > 0 ? { roomsList: [Number(rooms)] } : {}),
+        ...(title.trim() ? { text: title.trim() } : {}),
+      },
+    };
+
+    router.push(`/properties?input=${JSON.stringify(initialInput)}`);
+    console.log("Input: ", initialInput);
+  };
   return (
     <div className="max-w-5xl w-full px-6 pb-20 md:pb-25 z-10 mx-auto  text-white">
       <div>
-        {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,7 +96,6 @@ export default function HomepageSearchCategory() {
           </p>
         </motion.div>
 
-        {/* Search Card */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,57 +105,87 @@ export default function HomepageSearchCategory() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
             {/* Location */}
             <div className="md:col-span-3">
-              <TextField
-                select
-                fullWidth
-                label="Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              >
-                {propertyLocations.map((location) => (
-                  <MenuItem key={location} value={location}>
-                    {location}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <FormControl fullWidth>
+                <InputLabel id="location-label" className="text-slate-500">
+                  Location
+                </InputLabel>
+
+                <Select
+                  sx={select_border_style}
+                  labelId="location-label"
+                  value={location}
+                  label="Location"
+                  onChange={(e) =>
+                    e.target.value.trim() === "NONE"
+                      ? setLocation("")
+                      : setLocation(e.target.value)
+                  }
+                >
+                  {["NONE", ...propertyLocations].map((location) => (
+                    <MenuItem key={location} value={location}>
+                      {location}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
 
             {/* Property Type */}
             <div className="md:col-span-3">
-              <TextField
-                select
-                fullWidth
-                label="Property Type"
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                {propertyTypes.map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <FormControl fullWidth>
+                <InputLabel id="property-type-label" className="text-slate-500">
+                  Property Type
+                </InputLabel>
+
+                <Select
+                  sx={select_border_style}
+                  labelId="property-type-label"
+                  value={propertyType}
+                  label="Property Type"
+                  onChange={(e) =>
+                    e.target.value.trim() === "NONE"
+                      ? setPropertyType("")
+                      : setPropertyType(e.target.value)
+                  }
+                >
+                  {["NONE", ...propertyTypes].map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
 
             {/* Rooms */}
             <div className="md:col-span-2">
-              <TextField
-                select
-                fullWidth
-                label="Rooms"
-                value={rooms}
-                onChange={(e) => setRooms(e.target.value)}
-              >
-                {roomOptions.map((room) => (
-                  <MenuItem key={room} value={room}>
-                    {room}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <FormControl fullWidth>
+                <InputLabel id="rooms-label" className="text-slate-500">
+                  Rooms
+                </InputLabel>
+
+                <Select
+                  sx={select_border_style}
+                  labelId="rooms-label"
+                  value={rooms}
+                  label="Rooms"
+                  onChange={(e) =>
+                    e.target.value.trim() === "NONE"
+                      ? setRooms("")
+                      : setRooms(e.target.value)
+                  }
+                >
+                  {["NONE", ...roomOptions].map((room) => (
+                    <MenuItem key={room} value={room}>
+                      {room === "0" ? "Any" : room}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
 
             {/* Advanced Switch */}
-            <div className="md:col-span-2 flex justify-start md:justify-center">
+            <div className="md:col-span-2 flex justify-end md:justify-center">
               <FormControlLabel
                 control={
                   <Switch
@@ -121,11 +195,7 @@ export default function HomepageSearchCategory() {
                   />
                 }
                 label={
-                  <Typography
-                    variant="body1"
-                    className="text-sm! text-gray-700!"
-                  >
-                    {" "}
+                  <Typography variant="body1" className="text-sm text-gray-700">
                     More
                   </Typography>
                 }
@@ -138,7 +208,8 @@ export default function HomepageSearchCategory() {
                 fullWidth
                 variant="contained"
                 size="small"
-                className="h-11.25! rounded-md!"
+                className="h-11.25 rounded-md"
+                onClick={onSearch}
               >
                 <Typography variant="body1" className="text-white capitalize">
                   Search
@@ -161,31 +232,39 @@ export default function HomepageSearchCategory() {
           <div>
             <p className="mb-2 font-medium">Price Range ($)</p>
             <Slider
+              step={500}
               value={price}
               onChange={(_, newValue) => setPrice(newValue as number[])}
               valueLabelDisplay="auto"
-              min={0}
-              max={10000}
+              min={PRICE_OPTIONS[0]}
+              max={PRICE_OPTIONS.at(-1)}
+            />
+          </div>
+          <div>
+            <p className="mb-2 font-medium">Square Range (m²)</p>
+            <Slider
+              value={square}
+              onChange={(_, newValue) => setSquare(newValue as number[])}
+              valueLabelDisplay="auto"
+              min={PROPERTY_SQUARE[0]}
+              max={PROPERTY_SQUARE.at(-1)}
             />
           </div>
 
-          <TextField fullWidth label="District / Area" />
-
-          <div>
-            <p className="mb-2 font-medium">Amenities</p>
-            <FormGroup>
-              {amenities.map((item) => (
-                <MuiFormControlLabel
-                  key={item}
-                  control={<Checkbox />}
-                  label={item}
-                />
-              ))}
-            </FormGroup>
-          </div>
+          <TextField
+            fullWidth
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{
+              ".Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgb(148, 163, 184)",
+              },
+            }}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAdvancedOpen(false)}>Cancel</Button>
+          <Button onClick={onCancel}>Cancel</Button>
           <Button variant="contained" onClick={() => setAdvancedOpen(false)}>
             Apply Filters
           </Button>

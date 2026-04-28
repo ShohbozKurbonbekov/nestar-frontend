@@ -8,7 +8,7 @@ export default function HomeHeader() {
     <section className="min-h-screen w-full flex flex-row items-end justify-center">
       <Image
         src="/images/header-images/homepage-header.jpg"
-        alt="Hero background"
+        alt="homapage background"
         fill={true}
         priority
         className="object-cover bg-no-repeat bg-center "

@@ -80,7 +80,9 @@ export default function PropertiesSearchCategory() {
   const [propertyType, setPropertyType] = useState<PropertyType[]>(
     Object.keys(PropertyType) as PropertyType[],
   );
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>(
+    filters.search.text ?? "",
+  );
   const t = useTranslations("Properties");
 
   const price_options = useMemo(() => PRICE_OPTIONS, [PRICE_OPTIONS]);
@@ -570,7 +572,7 @@ export default function PropertiesSearchCategory() {
             >
               any
             </Button>
-            {[1, 2, 3, 4].map((room: number) => (
+            {[1, 2, 3, 4, 5].map((room: number) => (
               <Button
                 key={room}
                 variant="outlined"
@@ -581,14 +583,6 @@ export default function PropertiesSearchCategory() {
                 {room}
               </Button>
             ))}
-            <Button
-              variant="outlined"
-              size="small"
-              className={`${buttonDefaultClasses} ${filters?.search?.roomsList?.includes(5) ? buttonActiveClasses : ""}`}
-              onClick={() => propertyRoomSelectHandler(5)}
-            >
-              5+
-            </Button>
           </div>
         </AccordionDetails>
       </Accordion>
@@ -608,7 +602,7 @@ export default function PropertiesSearchCategory() {
             >
               any
             </Button>
-            {[1, 2, 3, 4].map((bedroom) => (
+            {[1, 2, 3, 4, 5].map((bedroom) => (
               <Button
                 key={bedroom}
                 variant="outlined"
@@ -619,14 +613,6 @@ export default function PropertiesSearchCategory() {
                 {bedroom}
               </Button>
             ))}
-            <Button
-              variant="outlined"
-              size="small"
-              className={`${buttonDefaultClasses} ${filters?.search?.bedsList?.includes(5) ? buttonActiveClasses : ""}`}
-              onClick={() => propertyBedSelectHandler(5)}
-            >
-              5+
-            </Button>
           </div>
         </AccordionDetails>
       </Accordion>
@@ -708,7 +694,7 @@ export default function PropertiesSearchCategory() {
               options={price_options}
               renderOption={(props, option) => (
                 <li {...props} key={option}>
-                  {priceFormatter(option)}
+                  {option.toLocaleString()}
                 </li>
               )}
               value={filters?.search?.pricesRange?.start}
@@ -728,8 +714,8 @@ export default function PropertiesSearchCategory() {
               )}
               getOptionLabel={(option) =>
                 typeof option === "number"
-                  ? priceFormatter(option)
-                  : priceFormatter(Number(option))
+                  ? String(option).toLocaleString()
+                  : option.toLocaleString()
               }
               sx={inputClasses}
             />
@@ -740,7 +726,7 @@ export default function PropertiesSearchCategory() {
               options={price_options}
               renderOption={(props, option) => (
                 <li {...props} key={option}>
-                  {priceFormatter(option)}
+                  {option.toLocaleString()}
                 </li>
               )}
               value={filters?.search?.pricesRange?.end}
@@ -761,8 +747,8 @@ export default function PropertiesSearchCategory() {
               )}
               getOptionLabel={(option) =>
                 typeof option === "number"
-                  ? priceFormatter(option)
-                  : priceFormatter(Number(option))
+                  ? String(option).toLocaleString()
+                  : option.toLocaleString()
               }
             />
           </div>
