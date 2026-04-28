@@ -96,7 +96,8 @@ export default function TopProperties() {
   };
   // ---------------------------------- Render ------------------------------
 
-  if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
+  if (getPropertiesLoading && !getPropertiesData)
+    return <PropertySkeleton columns={4} />;
   return (
     <div className="overflow-hidden" ref={emblaRef}>
       <div className="flex">

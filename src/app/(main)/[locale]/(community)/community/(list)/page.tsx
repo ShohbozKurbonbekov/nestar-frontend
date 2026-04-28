@@ -99,7 +99,7 @@ export default function Community() {
         search={articlesInput?.search?.text}
         sort={articlesInput?.sort}
       />
-      {articlesLoading ? (
+      {articlesLoading && !articlesData ? (
         <PublicArticleSkeleton wrapperClasses={wrapperClasses} columns={4} />
       ) : articles.length ? (
         <>

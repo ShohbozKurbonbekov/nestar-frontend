@@ -22,7 +22,6 @@ import { likeTargetArticle } from "@/services/Article.service";
 import {
   sweetErrorHandling,
   sweetMixinErrorAlert,
-  sweetMixinSuccessAlert,
   sweetTopSmallSuccessAlert,
 } from "@/libs/sweetAlert";
 import Comments from "@/components/ui/Comments";
@@ -201,7 +200,7 @@ export default function CommunityDetail() {
     [getCommentsRefetch, commentInquery],
   );
   // ------------------------------- Render -----------------------
-  if (!article || articleLoading)
+  if (!article || (articleLoading && !articleData))
     return <DetailPageLoading subtitle="Fetching article detail" />;
   return (
     <section className="py-20  px-4">

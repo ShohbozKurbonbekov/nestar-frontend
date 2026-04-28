@@ -99,7 +99,8 @@ export default function PropularProperties() {
     }
   };
   // ------------------------ Render ------------------------
-  if (getPropertiesLoading) return <PropertySkeleton columns={4} />;
+  if (getPropertiesLoading && !getPropertiesData)
+    return <PropertySkeleton columns={4} />;
   return (
     <div className="relative flex flex-col gap-5">
       <div className="overflow-hidden relative" ref={carouselRef}>

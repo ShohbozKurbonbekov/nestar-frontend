@@ -40,12 +40,14 @@ export default function PublicArticleCard({
     .replace(/<[^>]*>?/gm, "")
     .slice(0, 120);
   const user = useReactiveVar(userVar);
+
   return (
     <Card
       className="rounded-2xl overflow-hidden  hover:shadow-xl transition-all duration-300 bg-white group
     "
     >
-      <CardActionArea
+      <div
+        className="hover:cursor-pointer"
         onClick={() =>
           router.push(`/community/${article._id}`, { scroll: true })
         }
@@ -141,7 +143,7 @@ export default function PublicArticleCard({
             </div>
           </div>
         </CardContent>
-      </CardActionArea>
+      </div>
     </Card>
   );
 }

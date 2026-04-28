@@ -53,7 +53,7 @@ export default function Followings({ isOwner, member }: FollowingsType) {
     } catch (error: any) {
       console.log(
         "Error in handleFollow and onFollow functions: ",
-        error.message
+        error.message,
       );
       await sweetErrorHandling(error);
     }
@@ -67,7 +67,7 @@ export default function Followings({ isOwner, member }: FollowingsType) {
     } catch (error: any) {
       console.log(
         "Error in handleUnFollow and onUnFollow functions: ",
-        error.message
+        error.message,
       );
       await sweetErrorHandling(error);
     }
@@ -87,7 +87,7 @@ export default function Followings({ isOwner, member }: FollowingsType) {
         await sweetMixinErrorAlert(err.message);
       }
     },
-    [refetchFollows, likeTargetMember]
+    [refetchFollows, likeTargetMember],
   );
 
   // --------------------------------- Render ---------------------------------
@@ -120,7 +120,7 @@ export default function Followings({ isOwner, member }: FollowingsType) {
 
         {/* LIST */}
         <Stack className="mt-6 mb-4 gap-3 ">
-          {loading ? (
+          {loading && !follows ? (
             <ProfileFollowCardSkeleton columns={4} />
           ) : !follows.length ? (
             <Emty title="No followings" />

@@ -75,7 +75,6 @@ export default function Property() {
 
         await likeTargetProperty(id);
         getPropertiesRefetch({ input: initial });
-
         await sweetTopSmallSuccessAlert("succes", 1000);
       } catch (err: any) {
         console.log("ERROR, likePropertyHandler:", err.message);
@@ -93,6 +92,7 @@ export default function Property() {
         <PropertiesMain
           properties={properties}
           loading={getPropertiesLoading}
+          getPropertiesData={getPropertiesData}
           likePropertyHandler={likePropertyHandler}
           total={total}
         />

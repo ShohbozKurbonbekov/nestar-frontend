@@ -102,7 +102,7 @@ export default function Agents() {
     <section className="py-2 bg-white">
       <AgentSearchFilter setFilter={setInitial} filter={initial} />
 
-      {getAgentsLoading ? (
+      {getAgentsLoading && !getAgentsData ? (
         <div className={`${wrapperClasses}`}>
           <PublicAgentCardSkeleton num={4} />
         </div>

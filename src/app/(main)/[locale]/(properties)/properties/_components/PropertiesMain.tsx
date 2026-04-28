@@ -9,9 +9,11 @@ import { usePropertiesFilter } from "@/libs/hooks/PropertiesFilter";
 import { useRouter } from "next/navigation";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { useCallback } from "react";
+import { T } from "@/libs/types/common";
 const wrapperClasses = "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6";
 
 interface PropertiesMainType {
+  getPropertiesData: undefined | T;
   properties: Property[];
   loading: boolean;
   total: number;
@@ -21,6 +23,7 @@ export default function PropertiesMain({
   properties,
   loading,
   total,
+  getPropertiesData,
   likePropertyHandler,
 }: PropertiesMainType) {
   const router = useRouter();
@@ -54,7 +57,7 @@ export default function PropertiesMain({
         <div className="lg:col-span-9 flex flex-col justify-between">
           {/* Properties Grid Placeholder */}
 
-          {loading ? (
+          {loading && !getPropertiesData ? (
             <PropertySkeleton classes={wrapperClasses} columns={3} />
           ) : properties.length === 0 ? (
             <Emty title="No results" />

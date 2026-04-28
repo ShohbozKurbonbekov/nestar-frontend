@@ -248,8 +248,13 @@ export default function PropertyDetail() {
     [getCommentsRefetch, commentInquery],
   );
 
-  if (getPropertyLoading || !property || !propertyId)
+  if (
+    (getPropertyLoading && !getPropertyData && !getPropertiesData) ||
+    !property
+  )
     return <DetailPageLoading subtitle="Fetching property detail..." />;
+
+  if (!property) return;
   // ------------------------------- Render -----------------
   return (
     <section className="py-20 bg-white">

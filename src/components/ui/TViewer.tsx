@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
 import { Stack, CircularProgress } from "@mui/material";
 

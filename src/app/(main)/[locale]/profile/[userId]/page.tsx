@@ -17,22 +17,22 @@ import FollowProvider from "../_components/FollowProvider";
 
 // lazy loading
 const AddProperty = dynamic(
-  () => import("../_components/features/AddProperty")
+  () => import("../_components/features/AddProperty"),
 );
 
 const MyProperties = dynamic(
-  () => import("../_components/features/MyProperties")
+  () => import("../_components/features/MyProperties"),
 );
 const MyFavorites = dynamic(
-  () => import("../_components/features/MyFavorites")
+  () => import("../_components/features/MyFavorites"),
 );
 const RecentlyVisited = dynamic(
-  () => import("../_components/features/RecentlyVisited")
+  () => import("../_components/features/RecentlyVisited"),
 );
 const MyArticles = dynamic(() => import("../_components/features/MyArticles"));
 
 const WriteArticle = dynamic(
-  () => import("../_components/features/WriteArticle")
+  () => import("../_components/features/WriteArticle"),
 );
 const Followers = dynamic(() => import("../_components/features/Followers"));
 const Followings = dynamic(() => import("../_components/features/Followings"));
@@ -49,32 +49,33 @@ export default function Profile() {
   const tab = searchParams.get("tab") ?? "myProfile";
 
   /************************ Apollo  **************************/
-  const { loading: getMemberLoading, refetch: getMemberRefetch } = useQuery(
-    GET_MEMBER,
-    {
-      fetchPolicy: "cache-and-network",
-      variables: { input: memberId },
-      skip: !memberId,
-      onCompleted: (data: T) => {
-        const fetchedMember = data.getMember;
-        const isOwnerNow = user?._id === fetchedMember?._id;
-        setMember(fetchedMember);
-        let nextTab = "myProfile";
+  const {
+    loading: getMemberLoading,
+    data: getMember,
+    refetch: getMemberRefetch,
+  } = useQuery(GET_MEMBER, {
+    fetchPolicy: "cache-and-network",
+    variables: { input: memberId },
+    skip: !memberId,
+    onCompleted: (data: T) => {
+      const fetchedMember = data.getMember;
+      const isOwnerNow = user?._id === fetchedMember?._id;
+      setMember(fetchedMember);
+      let nextTab = "myProfile";
 
-        if (!isOwnerNow) {
-          nextTab =
-            fetchedMember?.memberType === MemberType.USER
-              ? "followers"
-              : "myProperties";
-        }
+      if (!isOwnerNow) {
+        nextTab =
+          fetchedMember?.memberType === MemberType.USER
+            ? "followers"
+            : "myProperties";
+      }
 
-        const params = new URLSearchParams(searchParams);
-        params.set("tab", nextTab);
+      const params = new URLSearchParams(searchParams);
+      params.set("tab", nextTab);
 
-        router.replace(`?${params.toString()}`);
-      },
-    }
-  );
+      router.replace(`?${params.toString()}`);
+    },
+  });
 
   /************************ Apollo End  **************************/
 
@@ -108,7 +109,7 @@ export default function Profile() {
     await getMemberRefetch({ input: memberId });
   }, [getMemberRefetch, memberId]);
 
-  if (!memberId || getMemberLoading)
+  if (!memberId || (getMemberLoading && !getMember))
     return <DetailPageLoading subtitle="Fetching user detail" />;
 
   if (!member)

@@ -33,20 +33,21 @@ export default function RecentlyVisited() {
     };
   }, [searchParams]);
   // ******************************* Apollo  *******************************
-  const { loading: getVisitedLoading, refetch: getVisitedRefetch } = useQuery(
-    GET_VISITED,
-    {
-      fetchPolicy: "cache-and-network",
-      variables: {
-        input: initial,
-      },
-      notifyOnNetworkStatusChange: true,
-      onCompleted: (data: T) => {
-        setVisitedProperties(data?.getVisited?.list);
-        setTotal(data?.getVisited?.metaCounter[0]?.total || 0);
-      },
+  const {
+    loading: getVisitedLoading,
+    data: getVisited,
+    refetch: getVisitedRefetch,
+  } = useQuery(GET_VISITED, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      input: initial,
     },
-  );
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setVisitedProperties(data?.getVisited?.list);
+      setTotal(data?.getVisited?.metaCounter[0]?.total || 0);
+    },
+  });
   // ******************************* Apollo  End *******************************
 
   // -------------------------------- Handlers --------------------------------
@@ -88,7 +89,7 @@ export default function RecentlyVisited() {
       <div className="p-4 flex-1 flex flex-col h-full">
         {/* LIST */}
         <Stack className="mb-6 gap-3">
-          {getVisitedLoading ? (
+          {getVisitedLoading && !getVisited ? (
             <PropertySkeleton classes={wrapperClasses} columns={3} />
           ) : !visitedProperties.length ? (
             <Emty title="No properties" />

@@ -91,6 +91,7 @@ export default function TopAgents() {
       if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
       await likeTargetMember(id);
+      await getAgentsRefetch();
 
       await sweetTopSmallSuccessAlert("succes", 1000);
     } catch (err: any) {
@@ -100,7 +101,7 @@ export default function TopAgents() {
   };
 
   // ----------------------------- Render ---------------------
-  if (getAgentsLoading) return <AgentSkeleton columns={4} />;
+  if (getAgentsLoading && !getAgentsData) return <AgentSkeleton columns={4} />;
   return (
     <div className="relative flex flex-col gap-5">
       <div className="overflow-hidden relative" ref={carouselRef}>
