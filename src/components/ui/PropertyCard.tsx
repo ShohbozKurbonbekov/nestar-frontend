@@ -19,6 +19,7 @@ import { PropertyType } from "@/libs/enums/property.enum";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import VillaIcon from "@mui/icons-material/Villa";
 import HomeIcon from "@mui/icons-material/Home";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 const propertyConfig = {
   [PropertyType.APARTMENT]: {
@@ -65,7 +66,7 @@ const PropertyCard: React.FC<PropertyCardType> = React.memo(
     const user = useReactiveVar(userVar);
     const [saved, setSaved] = useState(false);
     const imageUrl = property?.propertyImages[0]
-      ? `${serverApi}/${property?.propertyImages[0]}`
+      ? `${getBaseUrl()}/${property?.propertyImages[0]}`
       : `/images/default-property.png`;
 
     const item = propertyConfig[property?.propertyType];

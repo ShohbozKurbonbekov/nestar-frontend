@@ -14,6 +14,7 @@ import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import { Member } from "@/libs/types/member/member";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface PublicTopAgentsType {
   agents: Member[];
@@ -50,7 +51,7 @@ const PublicTopAgents: React.FC<PublicTopAgentsType> = React.memo(
                     <Image
                       src={
                         agent?.memberImage
-                          ? `${serverApi}/${agent.memberImage}`
+                          ? `${getBaseUrl()}/${agent.memberImage}`
                           : "/images/default-user.png"
                       }
                       alt={agent?.memberNick}

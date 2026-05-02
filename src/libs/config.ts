@@ -1,5 +1,4 @@
-export const serverApi =
-  process.env.NEXT_PUBLIC_INTERNAL_SERVER || "http://nestar-api:3007";
+export const serverApi = process.env.NEXT_PUBLIC_API_URL;
 
 export const availableOptions = ["propertyBarter", "propertyRent"];
 

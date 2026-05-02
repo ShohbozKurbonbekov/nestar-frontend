@@ -22,6 +22,7 @@ import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
 import { FavoriteBorder } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface PublicArticleCardType {
   article: BoardArticle;
@@ -34,7 +35,7 @@ export default function PublicArticleCard({
 }: PublicArticleCardType) {
   const router = useRouter();
   const imageUrl = article?.articleImage
-    ? `${serverApi}/${article.articleImage}`
+    ? `${getBaseUrl()}/${article.articleImage}`
     : "/images/default-blog.png";
   const preview = article.articleContent
     .replace(/<[^>]*>?/gm, "")

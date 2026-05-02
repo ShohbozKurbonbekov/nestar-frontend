@@ -24,6 +24,7 @@ import BlueHoveredBtn from "./Blue-hovered-btn";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface AgentCardType {
   agentFeaturedTag?: React.ReactNode;
@@ -39,7 +40,7 @@ export default function AgentCard({
 }: AgentCardType) {
   const user = useReactiveVar(userVar);
   const imageUrl = agent?.memberImage
-    ? `${serverApi}/${agent.memberImage}`
+    ? `${getBaseUrl()}/${agent.memberImage}`
     : "/images/default-user.png";
   return (
     <motion.div

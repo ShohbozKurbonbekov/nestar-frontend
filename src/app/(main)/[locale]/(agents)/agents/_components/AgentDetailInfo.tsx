@@ -5,6 +5,7 @@ import { Member } from "@/libs/types/member/member";
 import React from "react";
 import { T } from "@/libs/types/common";
 import { serverApi } from "@/libs/config";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 // ------------------------------------- Helper Function  -------------------------------------
 function Stat({ icon, value, label }: T) {
@@ -25,7 +26,7 @@ interface AgentDetailInfoType {
 const AgentDetailInfo: React.FC<AgentDetailInfoType> = React.memo(
   ({ agent, goMemberPage }) => {
     const imageUrl = agent?.memberImage
-      ? `${serverApi}/${agent.memberImage}`
+      ? `${getBaseUrl()}/${agent.memberImage}`
       : "/images/default-user.png";
     return (
       <div className="max-w-8xl mx-auto px-4">

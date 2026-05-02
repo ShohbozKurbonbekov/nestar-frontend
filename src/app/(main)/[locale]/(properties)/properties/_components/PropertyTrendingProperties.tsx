@@ -10,6 +10,7 @@ import { serverApi } from "@/libs/config";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 
 import { priceFormatter } from "@/libs/utils/priceFormatter";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface PropertyTrendingPropertiesType {
   properties: Property[];
@@ -47,7 +48,7 @@ const PropertyTrendingProperties: React.FC<PropertyTrendingPropertiesType> =
                     <Image
                       src={
                         property?.propertyImages[0]
-                          ? `${serverApi}/${property.propertyImages[0]}`
+                          ? `${getBaseUrl()}/${property.propertyImages[0]}`
                           : ""
                       }
                       alt={property?.propertyTitle}

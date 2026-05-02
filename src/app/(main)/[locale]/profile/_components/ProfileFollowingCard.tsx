@@ -9,6 +9,7 @@ import { userVar } from "@/apollo/store";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import { Favorite } from "@mui/icons-material";
 import { CustomJwtPayload } from "@/libs/types/customJwtPayload";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface ProfileFollowingCardType {
   handleFollow: (id?: string) => Promise<void>;
@@ -22,7 +23,7 @@ const ProfileFollowingCard: React.FC<ProfileFollowingCardType> = React.memo(
     const user = useReactiveVar(userVar);
     const router = useRouter();
     const imageUrl = following?.followingData?.memberImage
-      ? `${serverApi}/${following?.followingData?.memberImage}`
+      ? `${getBaseUrl()}/${following?.followingData?.memberImage}`
       : "/images/default-user.png";
 
     const onPushMemberDetail = (id: string | undefined) => {
@@ -142,7 +143,7 @@ const ProfileFollowingCard: React.FC<ProfileFollowingCardType> = React.memo(
         </Stack>
       </div>
     );
-  }
+  },
 );
 
 export default ProfileFollowingCard;

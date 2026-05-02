@@ -9,6 +9,7 @@ import { BoardArticle } from "@/libs/types/board-article/board-article";
 import { serverApi } from "@/libs/config";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { useRouter } from "next/navigation";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface ProfileArticleCardType {
   isOwner: boolean;
@@ -19,7 +20,7 @@ const ProfileArticleCard: React.FC<ProfileArticleCardType> = React.memo(
   ({ article, onDelete, isOwner }) => {
     const router = useRouter();
     const imageUrl = article?.articleImage
-      ? `${serverApi}/${article.articleImage}`
+      ? `${getBaseUrl()}/${article.articleImage}`
       : "/images/default-blog.png";
     const preview = article.articleContent.replace(/<[^>]*>?/gm, "");
 

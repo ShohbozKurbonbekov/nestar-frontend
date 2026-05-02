@@ -7,6 +7,7 @@ import { serverApi } from "@/libs/config";
 import { timeFormatter } from "@/libs/utils/timeFormatter";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 type ArticleCardType = {
   id: string;
@@ -29,7 +30,9 @@ export default function ArticleCard({
   variant,
   id,
 }: ArticleCardType) {
-  const imageUrl = image ? `${serverApi}/${image}` : "/images/default-blog.png";
+  const imageUrl = image
+    ? `${getBaseUrl()}/${image}`
+    : "/images/default-blog.png";
 
   const locale = useLocale();
 

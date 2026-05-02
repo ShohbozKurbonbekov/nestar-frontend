@@ -13,6 +13,7 @@ import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import Emty from "@/components/ui/Emty";
 import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 interface FeaturedArticlesType {
   featuredArticles: BoardArticle[];
 }
@@ -53,7 +54,7 @@ const FeaturedArticles: React.FC<FeaturedArticlesType> = React.memo(
                     <Image
                       src={
                         article?.articleImage
-                          ? `${serverApi}/${article?.articleImage}`
+                          ? `${getBaseUrl()}/${article?.articleImage}`
                           : "/images/default-blog.png"
                       }
                       alt={article?.articleTitle}

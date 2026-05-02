@@ -12,6 +12,7 @@ import ModeIcon from "@mui/icons-material/Mode";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "@/apollo/store";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 
 interface ProfilePropertyCardType {
   isOwner: boolean;
@@ -61,7 +62,7 @@ const ProfilePropertyCard: React.FC<ProfilePropertyCardType> = React.memo(
           >
             <Image
               fill
-              src={`${serverApi}/${property.propertyImages[0]}`}
+              src={`${getBaseUrl()}/${property.propertyImages[0]}`}
               alt={property?.propertyTitle}
               className="w-full h-full object-cover"
             />

@@ -58,16 +58,24 @@ export default function PropertySort() {
             labelId="property-sort-label"
             id="property-sort"
             value={sort}
-            label="Select"
             onChange={(e) => onSort(e.target.value)}
             sx={{
-              "&.MuiOutlinedInput-root .mui-trm6af-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                {
-                  border: "2px solid #CBD5E1",
-                  borderRadius: "10px",
-                },
+              borderRadius: "10px",
+
               "& .MuiOutlinedInput-notchedOutline": {
-                border: "0",
+                border: "2px solid #CBD5E1", // slate-300
+              },
+
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#94A3B8", // slate-400
+              },
+
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#94A3B8", // slate-400
+              },
+
+              "& .MuiSelect-select": {
+                padding: "12px 16px",
               },
             }}
           >

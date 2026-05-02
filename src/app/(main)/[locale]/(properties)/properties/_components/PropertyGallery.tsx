@@ -6,12 +6,11 @@ import { motion } from "framer-motion";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
-import "yet-another-react-lightbox/styles.css";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
+import { getBaseUrl } from "@/libs/utils/getBaseUrl";
 // ---------------------------------- Carousel Options ------------------------------
 const carouselOptions: EmblaOptionsType = {
   loop: true,
@@ -67,7 +66,7 @@ export default function PropertyGallery({ images }: PropertyGalleryType) {
           }}
         >
           <Image
-            src={images?.[0] ? `${serverApi}/${images?.[0]}` : ""}
+            src={images?.[0] ? `${getBaseUrl()}/${images?.[0]}` : ""}
             alt="Main-image"
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
@@ -84,7 +83,7 @@ export default function PropertyGallery({ images }: PropertyGalleryType) {
             }}
           >
             <Image
-              src={img ? `${serverApi}/${img}` : ""}
+              src={img ? `${getBaseUrl()}/${img}` : ""}
               alt="small-image"
               fill
               className="w-full h-ful object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
@@ -97,7 +96,7 @@ export default function PropertyGallery({ images }: PropertyGalleryType) {
         </div>
         <div className="relative flex items-center justify-center">
           <Image
-            src={images?.[0] ? `${serverApi}/${images?.[0]}` : ""}
+            src={images?.[0] ? `${getBaseUrl()}/${images?.[0]}` : ""}
             alt="Main-image"
             fill
             className="object-cover absolute inset-0"
@@ -126,7 +125,7 @@ export default function PropertyGallery({ images }: PropertyGalleryType) {
               <Image
                 fill
                 alt={`image-${i + 1}`}
-                src={img ? `${serverApi}/${img}` : ""}
+                src={img ? `${getBaseUrl()}/${img}` : ""}
                 className="object-cover rounded-xl h-full w-full p-1"
                 onClick={() => {
                   setIndex(i);

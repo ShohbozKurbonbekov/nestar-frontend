@@ -469,18 +469,18 @@ export default function PropertiesSearchCategory() {
           placeholder={t("searchByTitle")}
           variant="outlined"
           sx={{
-            "& .mui-1pzfmz2-MuiInputBase-input-MuiOutlinedInput-input": {
-              padding: "15px  50px 15px",
-            },
-            "& .mui-18p5xg2-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline":
-              {
+            "& .MuiOutlinedInput-root": {
+              "& .MuiOutlinedInput-notchedOutline": {
                 border: "2px solid #CBD5E1CC",
                 borderRadius: "10px",
               },
-            "& .mui-8cmb7g-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#CBD5E1CC",
               },
+            },
+            "& .MuiInputBase-input": {
+              padding: "15px 50px 15px",
+            },
           }}
         />
         <SearchSharp className="p-0 absolute top-1/2 -translate-y-1/2 left-3 text-slate-400 text-3xl " />
