@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
         port: "3007",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "4000",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "nestar-api",
+        port: "3007",
+        pathname: "/uploads/**",
+      },
     ],
     dangerouslyAllowLocalIP: true,
   },

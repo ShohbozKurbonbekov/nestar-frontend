@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  nestar-next:
+    container_name: nestar-next
+    restart: always
+    image: node:25.9.0
+    ports:
+      - 6003:3000
+    environment:
+      - PORT=3000
+    volumes:
+      - ./:/usr/src/nestar-next
+    working_dir: /usr/src/nestar-next
+
+    networks:
+      - nestar_network
+
+    command: bash -c "yarn && yarn run build && yarn run start"
+
+networks:
+  nestar_network:
+    external: true

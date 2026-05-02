@@ -1,4 +1,4 @@
-export const serverApi = `http://localhost:3007`;
+export const serverApi = "http://nestar-api:4000";
 
 export const availableOptions = ["propertyBarter", "propertyRent"];
 
