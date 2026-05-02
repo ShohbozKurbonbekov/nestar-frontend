@@ -54,6 +54,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li>
                 <Link
+                  prefetch={false}
                   href="/buy"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -63,6 +64,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/rent"
+                  prefetch={false}
                   className="hover:text-white transition-colors duration-200"
                 >
                   Rent Property
@@ -70,6 +72,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/agents"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -78,6 +81,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/projects"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -96,6 +100,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li>
                 <Link
+                  prefetch={false}
                   href="/about"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -104,6 +109,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/careers"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -112,6 +118,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/blog"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -120,6 +127,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/contact"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -138,6 +146,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li>
                 <Link
+                  prefetch={false}
                   href="/terms"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -146,6 +155,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/privacy"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -154,6 +164,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch={false}
                   href="/cookies"
                   className="hover:text-white transition-colors duration-200"
                 >
@@ -214,12 +225,14 @@ export default function Footer() {
 
           <div className="flex gap-6">
             <Link
+              prefetch={false}
               href="/privacy"
               className="hover:text-white transition-colors duration-200"
             >
               Privacy
             </Link>
             <Link
+              prefetch={false}
               href="/terms"
               className="hover:text-white transition-colors duration-200"
             >
