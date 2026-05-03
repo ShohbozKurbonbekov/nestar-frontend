@@ -15,6 +15,8 @@ import { chatSocket } from "@/services/Chat.service";
 import { sweetErrorAlert } from "@/libs/sweetAlert";
 import { Message } from "@/libs/enums/common.enum";
 import { useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import {
   ChatMessage,
   Messages,
@@ -114,7 +116,7 @@ export default function ChatMessages({
       setChatItems((prev: any) => {
         const updated = [
           ...prev,
-          { type: "system", id: crypto.randomUUID(), text: data.message },
+          { type: "system", id: uuidv4(), text: data.message },
         ];
 
         setTimeout(() => {
@@ -129,7 +131,7 @@ export default function ChatMessages({
       setChatItems((prev: any) => {
         const updated = [
           ...prev,
-          { type: "system", id: crypto.randomUUID(), text: data.message },
+          { type: "system", id: uuidv4(), text: data.message },
         ];
 
         setTimeout(() => {
