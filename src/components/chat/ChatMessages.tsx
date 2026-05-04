@@ -23,6 +23,8 @@ import {
   PresenceUpdate,
   SystemJoinLeave,
 } from "@/libs/types/chat/message";
+import { SetStateType } from "@/libs/types/common";
+import { timeFormatter } from "@/libs/utils/timeFormatter";
 
 type ChatItem =
   | {
@@ -34,13 +36,16 @@ type ChatItem =
     }
   | { type: "system"; id: string; text: string };
 
+interface ChatMessagesType {
+  startChat: boolean;
+  setStartChat: SetStateType<boolean>;
+  setOnlineUsers: SetStateType<number>;
+}
 export default function ChatMessages({
-  messages,
   startChat,
   setStartChat,
-  onlineUsers,
   setOnlineUsers,
-}: any) {
+}: ChatMessagesType) {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useReactiveVar(userVar);
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
@@ -52,8 +57,9 @@ export default function ChatMessages({
     const el = containerRef.current;
     if (!el) return;
 
-    el.scrollTop = el.scrollHeight;
+    el.scrollTop = el.scrollHeight + 50;
   };
+
   const loadMore = () => {
     if (!hasMore || !chatItems.length) return;
 
@@ -78,7 +84,6 @@ export default function ChatMessages({
     setStartChat(true);
     chatSocket.connect();
     chatSocket.chatInit("chat:init", (data: Messages) => {
-      setLoading(false);
       setChatItems(
         data.messages.map((msg: any) => ({
           type: "message",
@@ -88,6 +93,7 @@ export default function ChatMessages({
           createdAt: msg.createdAt,
         })),
       );
+      setLoading(false);
       setHasMore(data.hasMore);
     });
 
@@ -237,16 +243,28 @@ export default function ChatMessages({
                           </Avatar>
                         )}
 
-                        <Box className="max-w-[72%]">
+                        <Box className="max-w-[72%] flex flex-col">
                           <Box
                             className={`px-4 py-2 text-sm rounded-4xl ${
                               item.sender === user._id
-                                ? "bg-green-500 text-white rounded-br-none"
-                                : "bg-white text-gray-800 rounded-bl-none"
+                                ? "bg-green-500 text-white rounded-br-none self-end"
+                                : "bg-white text-gray-800 rounded-bl-none self-start"
                             }`}
                           >
                             {item.text}
                           </Box>
+
+                          {/* Timestamp */}
+                          <Typography
+                            variant="caption"
+                            className={`mt-1 text-gray-400 ${
+                              item.sender === user._id
+                                ? "text-right pr-1"
+                                : "text-left pl-1"
+                            }`}
+                          >
+                            {timeFormatter(item.createdAt)}
+                          </Typography>
                         </Box>
                       </div>
                     </Fade>

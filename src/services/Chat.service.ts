@@ -32,15 +32,16 @@ class ChatSocket {
 
     this.socket.on("disconnect", () => {
       console.log("Disconnected");
+      this.disconnect();
     });
 
     this.socket.on("chat:error", (error) => {
       console.log("Chat Error:", error);
-      sweetErrorHandling(error ?? "Chat error");
+      sweetErrorHandling(error ?? { message: "Chat error" });
     });
   }
 
-  chatInit(event: "chat:init", callback: (data: any) => void) {
+  chatInit(event: "chat:init", callback: (data: Messages) => void) {
     this.socket?.on(event, callback);
   }
 
@@ -74,15 +75,16 @@ class ChatSocket {
     this.socket?.on(event, callback);
   }
 
+  removeJoinSystem() {
+    this.socket?.off("system:join");
+  }
+
   leaveSystem(event: "system:leave", callback: (data: any) => void) {
     this.socket?.on(event, callback);
   }
+
   removeSystemLeave() {
     this.socket?.off("system:leave");
-  }
-
-  removeJoinSystem() {
-    this.socket?.off("system:join");
   }
 
   presenceUpdate(event: "presence:update", callback: (data: any) => void) {

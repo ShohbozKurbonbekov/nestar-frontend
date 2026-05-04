@@ -16,16 +16,16 @@ export default function ChatFloatingButton({
   };
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       <motion.div
-        whileHover={{ scale: 1.08 }}
+        whileHover={{ scale: 1.1 }}
         animate={{ y: [0, -4, 0] }}
         transition={{ repeat: Infinity, duration: 3 }}
         className="relative"
       >
         <motion.div
           className="absolute -inset-2 rounded-full  bg-green-400 blur-xl opacity-30"
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
           transition={{ repeat: Infinity, duration: 2 }}
         />
 
@@ -34,12 +34,11 @@ export default function ChatFloatingButton({
             onClick={onClick}
             className="cursor-pointer shadow-2xl border-4 border-white"
             sx={{
-              width: 40,
-              height: 40,
-              "@media (min-width:640px)": { width: 50, height: 50 },
+              width: 50,
+              height: 50,
+              "@media (min-width:640px)": { width: 60, height: 60 },
               bgcolor: "#16a34a",
             }}
-            src={""}
           >
             <GroupsRoundedIcon />
           </Avatar>

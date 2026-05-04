@@ -8,7 +8,6 @@ export default function PublicLiveChat() {
   const [open, setOpen] = useState(false);
   const [startChat, setStartChat] = useState<boolean>(false);
   const [onlineUsers, setOnlineUsers] = useState<number>(0);
-  const [messages, setMessages] = useState([]);
 
   return (
     <>
@@ -19,8 +18,6 @@ export default function PublicLiveChat() {
         setStartChat={setStartChat}
         open={open}
         setOpen={setOpen}
-        messages={messages}
-        setMessages={setMessages}
         setOnlineUsers={setOnlineUsers}
         onlineUsers={onlineUsers}
       />
