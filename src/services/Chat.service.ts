@@ -13,15 +13,18 @@ class ChatSocket {
   private socket: Socket | null = null;
   connect() {
     if (this.socket) return;
-    this.socket = io(process.env.NEXT_APP_API_WS ?? "http://127.0.0.1:3006", {
-      transports: ["websocket"],
-      timeout: 30000,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      auth: {
-        token: getJwtToken(),
+    this.socket = io(
+      process.env.NEXT_PUBLIC_API_WS ?? "http://127.0.0.1:3006",
+      {
+        transports: ["websocket"],
+        timeout: 30000,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        auth: {
+          token: getJwtToken(),
+        },
       },
-    });
+    );
 
     this.socket.on("connect", () => {
       console.log("Websocket connected");
