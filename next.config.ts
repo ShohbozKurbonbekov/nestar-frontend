@@ -19,8 +19,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "nestar-api",
-        port: "3007",
+        hostname: "187.127.124.85",
         pathname: "/uploads/**",
       },
     ],
