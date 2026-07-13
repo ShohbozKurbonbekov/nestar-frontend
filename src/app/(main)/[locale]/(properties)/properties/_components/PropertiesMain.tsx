@@ -84,7 +84,7 @@ export default function PropertiesMain({
           <div className="mt-10 flex justify-center">
             {!!properties.length && (
               <Pagination
-                count={Math.ceil(total / filters?.limit)}
+                count={Math.ceil(properties.length / filters?.limit)}
                 variant="outlined"
                 page={filters?.page ?? 1}
                 size="large"
